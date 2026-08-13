@@ -1,3 +1,8 @@
+"What does R2D2_AUTH_MODE=h2m actually require before I run this — do I need to authenticate interactively first, and if so how?" Get that answered before running run_diagnosis.ps1, or it'll likely fail on auth rather than giving you a clean Track A–D read.
+Then run it as instructed: save step1_diagnose.py to the backend folder, run run_diagnosis.ps1, capture the full output.
+Paste the TRACK SUMMARY section back to your internal agent (not to me) — it has the actual codebase context to write the scoped fix.
+
+
 
 . Two generation paths (Trigger 1 = ADK market scanner in
 market_event_scout.py, Trigger 2 = R2D2 narrative enrichment in
