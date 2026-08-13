@@ -1,6 +1,5 @@
 
-Context: This is the backend for "ICM PM — AI-assisted Rapid Portfolio Review",
-a Citi internal tool. Two generation paths (Trigger 1 = ADK market scanner in
+. Two generation paths (Trigger 1 = ADK market scanner in
 market_event_scout.py, Trigger 2 = R2D2 narrative enrichment in
 narrative_enricher.py / r2d2_prompt.py) both currently return empty or
 "NO DATA" sections in production testing.
