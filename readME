@@ -1,4 +1,8 @@
+Before I dig further myself, list every GitHub Enterprise repo you can find — via search or direct access — that contains the string helix_adk_adapter, custom_anthropic_llm, or HelixClaude, either in the repo name, file contents, or package metadata (pyproject.toml/setup.py). Also include any repo whose README shows it publishing a package literally named helix_adk_adapter or helix-adk-adapter — the same way citi_adk_adapter's README shows pip install citi-adk-adapter.
 
+For each hit: give the exact repo path (org/repo), the file path where the string appears, and whether it's a doc reference or actual source code.
+
+If you don't have direct GitHub Enterprise repo access and can only search techstrategy.citi.net, say that explicitly rather than giving me docs-site results relabeled as repo results — I need to know which one I'm getting
 
 med owner + review status / confirmed coincidental similarity / unconfirmed — with evidence either way. If unconfirmed, note whether it's worth directly comparing file hashes or diffing the two repos as a next step.
 Output
