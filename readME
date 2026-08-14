@@ -1,46 +1,40 @@
-# Final Verification Request — MCP Search Connector & LangChain+Tavily Sanctioning
+Verification Round 3 — Adapter Lineage & Scaffold Provenance
 
-## Why this needs to be definitive
+Same standard as last time: every claim needs a direct quote + exact source, or an explicit "not confirmed." No inference stated as fact.
 
-This is going into a client-facing email as a statement of fact, not a working theory. Before, a claim that `helix_adk_adapter.custom_anthropic_llm.HelixClaude` was "confirmed from the Arc ADK Starter docs" turned out not to match what was actually on that page when checked directly. That mistake can't happen here — if you can't verify something with a direct quote and exact source, say so explicitly rather than stating it as confirmed.
+Question 1: What is the relationship between citi_adk_adapter and helix_adk_adapter?
 
-**For every claim below, either:**
-- Quote the exact sentence and give the exact URL/page/section it came from, or
-- State plainly: "Not confirmed — no documentation found," or
-- State plainly: "I don't have access to verify this — recommend asking [specific team/person] directly."
+Both are now independently confirmed real:
 
-Do not paraphrase a "seems to suggest" into a "confirmed." Do not infer official sanction from a tool merely being technically usable or present in a repo.
+citi_adk_adapter — real GitHub repo (CitiInternalLS10/177199.digital-asst-app.citi-adk-adapter), real pip package (pip install citi-adk-adapter), with models.Vertex, models.Anthropic, models.Stellar. Maintainer: vd48527_citi.
+helix_adk_adapter — referenced in the official techstrategy.citi.net/docs/genai/arc/adk_starter scaffold, which lists Anthropic[vertex] as a standard dependency and is what helix agent create python-adk-agent generates.
 
----
+What's not yet known: are these the same underlying project under two names, is one a fork of the other, does one supersede the other, or are they genuinely independent/parallel efforts? Check:
 
-## Question 1: Is there an approved MCP-based search connector usable with a non-Gemini model (e.g., Claude via `citi_adk_adapter`/`helix_adk_adapter`)?
+Does citi_adk_adapter's README, CHANGELOG, or repo description mention helix_adk_adapter anywhere (as a predecessor, successor, or unrelated project)?
+Does any Arc/Helix documentation page mention citi_adk_adapter by name?
+Do the two packages' constants.py / default config values match exactly (project ID prj-gen-ai-9571, same Vertex endpoint, etc.), or differ in any way that would suggest they're diverging over time rather than being the same thing?
+Is there a stated "current standard" anywhere — i.e., does Citi's GenAI platform team have a documented position on which adapter new projects should use?
 
-Check specifically:
-- The `STYLUS & MCP INTEGRATION` section of `techstrategy.citi.net/docs/genai/` — does it list any search-capable MCP server, and does it state which models can call it?
-- The `TOOLS@ENG&PLATFORMS` section — same question.
-- Any internal MCP server/connector catalog or registry (if one exists) — is there a search or web-retrieval MCP server listed as approved for general use, not just for a specific team's Stylus workspace?
-- The Arc FAQ statement about MCP being "the mandatory intermediary for business system access" — does it specifically cover *search*, or is that referring to a different category of business-system access (e.g., internal databases, ticketing systems)? Don't assume it covers search unless the text says so.
+Answer needed: Same lineage / fork / independent parallel efforts / unconfirmed — with the specific evidence for whichever it is. If unconfirmed, name who to ask (likely vd48527_citi for citi_adk_adapter, or whoever owns the Arc docs for helix_adk_adapter).
 
-**Answer needed:** Yes (with exact source + quote) / No documentation found / Need to ask a specific person — name them if you know who owns MCP tooling at Citi.
+Question 2: Is stresstestingai a centrally-maintained internal scaffold, and has it been reviewed?
 
----
+We've now found the same stresstestingai package structure (src/stresstestingai/fst/{ai,issuerShock,si,ui,utils,validation,langchain,llm,reporting_agent,scenarios}, same file names like marx.py, netCE_base.py, olymClient.py, xdrScenParser.py, same .env.example variable names) in two independent GitHub orgs:
 
-## Question 2: Is the LangChain + Tavily pattern in `167433.omc-gen-ai.polaris-poc` (branch `fst`, `src/stresstestingai/`) officially sanctioned for production use, or an unofficial/POC pattern?
+CitiInternalLS10/167433.omc-gen-ai.polaris-poc (branch fst, contributor hz20691_citi)
+CitiInternalLS4/172878.clientprofitability.stress-testing-ai (contributor unknown from what we've seen)
 
-Check specifically:
-- Does Tavily (or any external search API) appear on any approved third-party vendor or tool list at Citi?
-- Does the repo itself, its README, or any linked documentation state its status (POC, pilot, approved, deprecated)?
-- Is there a data-governance or security-approval record for this repo or for Tavily specifically — even an informal one (Jira ticket, approval email thread, architecture review sign-off)?
-- Does `stresstestingai`'s `.env.example` or `pyproject.toml` reference any Citi-internal proxy/gateway for Tavily calls (which would suggest a reviewed integration), or does it call Tavily directly from the client machine (which would suggest an ungoverned POC)?
+This strongly suggests a shared template rather than two people independently building the same thing from scratch. If true, this matters directly for the earlier open question about whether the LangChain+Tavily search pattern inside it is sanctioned — a template-level review would settle it for both repos at once, rather than needing to ask each repo owner separately.
 
-**Answer needed:** Yes, sanctioned (with exact source) / No — POC/unofficial only (with what indicates this) / Unconfirmed — recommend asking [who owns this repo, e.g., `hz20691_citi`] directly whether it has been through a security/compliance review.
+Check:
 
----
+Is there a canonical/origin repo for stresstestingai — a template repo, an internal cookiecutter/scaffold generator, or a platform team that distributes it?
+Does either repo's README, commit history, or a linked wiki page identify it as based on a shared template, and if so, name the owning team?
+Has that canonical template (if one exists) been through a security or architecture review — specifically regarding its TavilyClient/external search integration?
+If no canonical source is found: are the two repos' .env.example and marx.py files identical, near-identical, or meaningfully different? (This affects whether they're truly the same lineage or just superficially similar.)
 
-## What "done" looks like
-
-A one-line answer to each question that could be quoted directly in a client email without further hedging — either a real citation, or an honest "not confirmed, here's who to ask." No guesses framed as findings.
-
+Answer needed: Confirmed shared template with named owner + review status / confirmed coincidental similarity / unconfirmed — with evidence either way. If unconfirmed, note whether it's worth directly comparing file hashes or diffing the two repos as a next step.
 Output
 
 European Call Price (1-step): $12.17
