@@ -1,48 +1,4 @@
-"What does R2D2_AUTH_MODE=h2m actually require before I run this — do I need to authenticate interactively first, and if so how?" Get that answered before running run_diagnosis.ps1, or it'll likely fail on auth rather than giving you a clean Track A–D read.
-Then run it as instructed: save step1_diagnose.py to the backend folder, run run_diagnosis.ps1, capture the full output.
-Paste the TRACK SUMMARY section back to your internal agent (not to me) — it has the actual codebase context to write the scoped fix.
-
-
-
-. Two generation paths (Trigger 1 = ADK market scanner in
-market_event_scout.py, Trigger 2 = R2D2 narrative enrichment in
-narrative_enricher.py / r2d2_prompt.py) both currently return empty or
-"NO DATA" sections in production testing.
-
-rpr-empty-output-fix-brief.md is the authoritative task spec. Follow it in
-order — do not skip to fixes before completing Section 1 (root-cause
-diagnosis). Report back which failure track (A/B/C/D) the diagnosis
-actually surfaces before writing any patch.
-
-Constraints, non-negotiable:
-- Do not rewrite market_event_scout.py wholesale. Every change must be
-  scoped to the specific function named in the brief. Preserve all other
-  behavior, structure, and the existing web_search_agent import exactly
-  as-is — that module is internal ADK infrastructure I cannot regenerate
-  and you should not attempt to either.
-- Do not modify r2d2_prompt.py's Role/Context/Objective/Guidelines/Output
-  Format/Demonstration Example structure or wording. It has already been
-  reviewed and approved in this exact form.
-- narrative_enricher.py's LLMClient class is intentionally built to read
-  connection details from environment variables (RPR_LLM_BASE_URL,
-  RPR_LLM_API_KEY, RPR_LLM_AUTH_HEADER, RPR_LLM_MODEL) rather than a
-  hardcoded key. Wire it to our actual internal LLM gateway by setting
-  these env vars — do not hardcode credentials or a base URL into the
-  Python source anywhere.
-- Do not touch the frontend (rpr-step1-test-v2.html) in this pass.
-
-After diagnosis and fix:
-1. Confirm scout.preflight()['adk_available'] is True before considering
-   Trigger 1 fixed.
-2. Run scout.fetch_events() against at least one real theme and paste the
-   actual section text lengths (not just "success") as evidence.
-3. Run enrich_narrative() against the demonstration-example narrative from
-   r2d2_prompt.py and confirm all 8 sections return non-empty content (or
-   an explicit, correctly-triggered "no data" state, not a crash).
-4. Summarize exactly what changed, file by file, in a short diff-level list
-   — no unrelated refactors.
-
-
+"In web_search_agent.py, is the web search implemented as Gemini's native search-grounding tool, or a standalone search tool the ADK agent calls independently of which model is configured? I want to swap the model from Gemini to Claude Sonnet — will the search tool still work unmodified, or does it need to change too?"
 
 
 
