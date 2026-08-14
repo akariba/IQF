@@ -1,8 +1,6 @@
-"In web_search_agent.py, is the web search implemented as Gemini's native search-grounding tool, or a standalone search tool the ADK agent calls independently of which model is configured? I want to swap the model from Gemini to Claude Sonnet — will the search tool still work unmodified, or does it need to change too?"
+Read narrative_enricher.py, r2d2_prompt.py, and requirements.txt. This is meant to make Trigger 2 (narrative enrichment) share the exact same ADK call path Trigger 1 already uses in market_event_scout.py — no separate auth, same _adk_search_sync() function.
 
-
-
-
+Before telling me how to run it: check web_search_agent.py and tell me whether its web search is Gemini's native search-grounding tool or a model-agnostic search tool. I want the underlying model swapped from Gemini to Claude Sonnet — will that swap work with the search tool as currently implemented, or does the tool itself need to change? Answer that first, then give me the run instructions."*
 
 Output
 
