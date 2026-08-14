@@ -1,4 +1,4 @@
-
+The narrative_enricher.py you just gave me uses a LLMClient class calling Anthropic's API directly with its own web_search_20250305 tool — not the ADK-routed version that imports _adk_search_sync/_ADK_AVAILABLE from market_event_scout and shares Trigger 1's auth. We confirmed the ADK-routed design was correct several messages ago specifically to avoid needing separate credentials. Why did this generation revert to the direct-Anthropic design? I need the ADK-routed version, not this one.
 
 Output
 
