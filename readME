@@ -1,4 +1,58 @@
-The narrative_enricher.py you just gave me uses a LLMClient class calling Anthropic's API directly with its own web_search_20250305 tool — not the ADK-routed version that imports _adk_search_sync/_ADK_AVAILABLE from market_event_scout and shares Trigger 1's auth. We confirmed the ADK-routed design was correct several messages ago specifically to avoid needing separate credentials. Why did this generation revert to the direct-Anthropic design? I need the ADK-routed version, not this one.
+# Research Brief for Stylus — Claude + Web Search Compatibility Across Citi's Agent Stacks
+
+## The one question this needs to answer
+
+**Is there a Citi-sanctioned way to run Claude with live web search inside an ADK-based agent — and if so, what is it?**
+
+Everything below is scaffolding to help you find that answer fast and correctly. Verify everything against actual file/doc content — don't infer from names or descriptions.
+
+---
+
+## Confirmed facts so far (with sources)
+
+1. **`citi_adk_adapter`** (GitHub Enterprise: `CitiInternalLS10/177199.digital-asst-app.citi-adk-adapter`) — real repo, active commits (Vignesh Duraisamy / `vd48527_citi`). Provides `models.Vertex`, `models.Anthropic`, `models.Stellar`, `models.Grok`. `Anthropic` extends `google.adk.models.anthropic_llm.Claude`, auth via COIN token (`CLIENT_ID`/`CLIENT_SECRET`) or Helix CLI fallback. Default model `claude-haiku-4-5@20251001`, `supported_models()` = `[r'claude-3-.*', r'claude-.*-4-.*']`.
+
+2. **`helix_adk_adapter`** — confirmed real via `techstrategy.citi.net/docs/genai/arc/adk_starter/`. Per that page: "Vault secrets, tracing, Tiramisu proxy, token refresh, and LLM integration are handled by `helix_adk_adapter`." Listed dependencies explicitly include **`Anthropic[vertex]`: Anthropic's Claude models via Google Cloud Vertex AI integration**, alongside `Google ADK` and `Google GenAI`.
+   - **Open question:** is `helix_adk_adapter` the same lineage as `citi_adk_adapter`, a newer official replacement, or a parallel/unrelated system? Both are real; their relationship is not yet established.
+
+3. **The actual blocker, confirmed via a real stack trace:** `google/adk/tools/enterprise_search_tool.py` (third-party `google-adk` package) raises `ValueError: Enterprise Web Search tool is not supported for model claude-sonnet-4-5` — hard-coded Gemini-only allowlist inside the tool itself, not inside any Citi adapter. This means swapping which Claude adapter class is used (`citi_adk_adapter.models.Anthropic` vs. anything else) does **not** bypass it, because the check runs before the model layer is exercised.
+
+4. **A working, non-ADK alternative already exists** in a different repo: `167433.omc-gen-ai.polaris-poc` (branch `fst`), `src/stresstestingai/`. This uses **LangChain + `deepagents`/LangGraph + CrewAI**, not Google ADK at all:
+   - `llm/vertex.py`: `get_llm_for_langchain(model)` — if `"claude" in model`, returns `ChatAnthropicVertex` (from `langchain_google_vertexai.model_garden`); otherwise `ChatGoogleGenerativeAI`. Both route through the same corporate Vertex proxy (`r2d2-c3p0-icg-msst-genaihub-178909...`, project `prj-gen-ai-9571`) that `citi_adk_adapter` also uses. The file's own `__main__` block tests `get_llm_for_langchain(model="claude-sonnet-4-6")` with a real `.invoke()` call.
+   - `fst/ai/scenario_eventScan.py`: a plain LangChain `@tool`-wrapped Tavily search (`internet_search`), fed into `create_deep_agent(model=model, tools=[internet_search], ...)`. Currently defaults to Gemini (no `model=` override), but structurally there's no reason it wouldn't accept `model="claude-sonnet-4-6"` — the tool-binding is model-agnostic LangChain, with no Gemini-specific gate anywhere in the file.
+   - This is architecturally the same shape as this project's `market_event_scout.py`/`web_search_agent.py`, just on a different stack (LangChain/CrewAI instead of Google ADK).
+
+---
+
+## Specific things to search / open
+
+From the `techstrategy.citi.net/docs/genai/` sidebar already seen — check these first, in this order:
+
+1. **`MODEL SELECTION`** (top priority) — likely documents exactly which models are supported by which built-in tools. This may directly confirm or deny whether `enterprise_web_search` (or any Citi-blessed search tool) works with Claude.
+2. **`TOOLS@ENG&PLATFORMS`** — likely lists all sanctioned tools (search, retrieval, etc.) and their model compatibility.
+3. **`GUARDRAILS`** — check whether guardrails/callbacks impose their own model restrictions independent of the tool-level check.
+4. **`ARC REFERENCE`** — likely has the full API/config reference for the ADK starter, including tool wiring options.
+5. **`R2D2`** section — R2D2 is the auth/proxy layer already confirmed in use; check if it documents Claude-compatible search options.
+6. **`STYLUS & MCP INTEGRATION`** — check whether Stylus itself (or MCP servers available to it) expose a search capability that could be wired into an ADK or LangChain agent independent of `enterprise_web_search`.
+7. **`AGENTFLOW`** and **`SQUAD`** — unclear what these are yet; worth a quick check for relevance.
+
+Also worth doing directly:
+
+8. **Diff `citi_adk_adapter` against `helix_adk_adapter`** — `pip show` both if installed, or compare repos, to resolve which is canonical and whether `citi_adk_adapter.models.Anthropic` is still the right class to use going forward or has been superseded.
+9. **Search Citi's internal docs/GitHub for "Tavily"** — is Tavily officially sanctioned for Citi use, or is `stresstestingai` using it informally? This matters before recommending that pattern for production use in RPR.
+10. **Search for any doc or repo explicitly combining `enterprise_web_search` with a non-Gemini model successfully** — to make sure the Gemini-only block hasn't been patched or worked around somewhere not yet seen.
+
+---
+
+## What "done" looks like
+
+A clear, source-backed answer to:
+- Does any Citi-sanctioned tool let Claude do live web search inside a Google-ADK-based agent? (Yes/no, with the doc or code that proves it.)
+- If not, is the LangChain+Tavily pattern in `stresstestingai` an officially sanctioned approach, or an unofficial POC? (Matters for whether it's safe to port into a production tool like RPR.)
+- Is `helix_adk_adapter` or `citi_adk_adapter` the currently-recommended adapter for new ADK agents needing Claude?
+
+Please cite the actual doc page, file, or command output for each finding — not a paraphrase or recollection.
+
 
 Output
 
