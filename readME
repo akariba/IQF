@@ -1,58 +1,45 @@
-# Research Brief for Stylus — Claude + Web Search Compatibility Across Citi's Agent Stacks
+# Final Verification Request — MCP Search Connector & LangChain+Tavily Sanctioning
 
-## The one question this needs to answer
+## Why this needs to be definitive
 
-**Is there a Citi-sanctioned way to run Claude with live web search inside an ADK-based agent — and if so, what is it?**
+This is going into a client-facing email as a statement of fact, not a working theory. Before, a claim that `helix_adk_adapter.custom_anthropic_llm.HelixClaude` was "confirmed from the Arc ADK Starter docs" turned out not to match what was actually on that page when checked directly. That mistake can't happen here — if you can't verify something with a direct quote and exact source, say so explicitly rather than stating it as confirmed.
 
-Everything below is scaffolding to help you find that answer fast and correctly. Verify everything against actual file/doc content — don't infer from names or descriptions.
+**For every claim below, either:**
+- Quote the exact sentence and give the exact URL/page/section it came from, or
+- State plainly: "Not confirmed — no documentation found," or
+- State plainly: "I don't have access to verify this — recommend asking [specific team/person] directly."
 
----
-
-## Confirmed facts so far (with sources)
-
-1. **`citi_adk_adapter`** (GitHub Enterprise: `CitiInternalLS10/177199.digital-asst-app.citi-adk-adapter`) — real repo, active commits (Vignesh Duraisamy / `vd48527_citi`). Provides `models.Vertex`, `models.Anthropic`, `models.Stellar`, `models.Grok`. `Anthropic` extends `google.adk.models.anthropic_llm.Claude`, auth via COIN token (`CLIENT_ID`/`CLIENT_SECRET`) or Helix CLI fallback. Default model `claude-haiku-4-5@20251001`, `supported_models()` = `[r'claude-3-.*', r'claude-.*-4-.*']`.
-
-2. **`helix_adk_adapter`** — confirmed real via `techstrategy.citi.net/docs/genai/arc/adk_starter/`. Per that page: "Vault secrets, tracing, Tiramisu proxy, token refresh, and LLM integration are handled by `helix_adk_adapter`." Listed dependencies explicitly include **`Anthropic[vertex]`: Anthropic's Claude models via Google Cloud Vertex AI integration**, alongside `Google ADK` and `Google GenAI`.
-   - **Open question:** is `helix_adk_adapter` the same lineage as `citi_adk_adapter`, a newer official replacement, or a parallel/unrelated system? Both are real; their relationship is not yet established.
-
-3. **The actual blocker, confirmed via a real stack trace:** `google/adk/tools/enterprise_search_tool.py` (third-party `google-adk` package) raises `ValueError: Enterprise Web Search tool is not supported for model claude-sonnet-4-5` — hard-coded Gemini-only allowlist inside the tool itself, not inside any Citi adapter. This means swapping which Claude adapter class is used (`citi_adk_adapter.models.Anthropic` vs. anything else) does **not** bypass it, because the check runs before the model layer is exercised.
-
-4. **A working, non-ADK alternative already exists** in a different repo: `167433.omc-gen-ai.polaris-poc` (branch `fst`), `src/stresstestingai/`. This uses **LangChain + `deepagents`/LangGraph + CrewAI**, not Google ADK at all:
-   - `llm/vertex.py`: `get_llm_for_langchain(model)` — if `"claude" in model`, returns `ChatAnthropicVertex` (from `langchain_google_vertexai.model_garden`); otherwise `ChatGoogleGenerativeAI`. Both route through the same corporate Vertex proxy (`r2d2-c3p0-icg-msst-genaihub-178909...`, project `prj-gen-ai-9571`) that `citi_adk_adapter` also uses. The file's own `__main__` block tests `get_llm_for_langchain(model="claude-sonnet-4-6")` with a real `.invoke()` call.
-   - `fst/ai/scenario_eventScan.py`: a plain LangChain `@tool`-wrapped Tavily search (`internet_search`), fed into `create_deep_agent(model=model, tools=[internet_search], ...)`. Currently defaults to Gemini (no `model=` override), but structurally there's no reason it wouldn't accept `model="claude-sonnet-4-6"` — the tool-binding is model-agnostic LangChain, with no Gemini-specific gate anywhere in the file.
-   - This is architecturally the same shape as this project's `market_event_scout.py`/`web_search_agent.py`, just on a different stack (LangChain/CrewAI instead of Google ADK).
+Do not paraphrase a "seems to suggest" into a "confirmed." Do not infer official sanction from a tool merely being technically usable or present in a repo.
 
 ---
 
-## Specific things to search / open
+## Question 1: Is there an approved MCP-based search connector usable with a non-Gemini model (e.g., Claude via `citi_adk_adapter`/`helix_adk_adapter`)?
 
-From the `techstrategy.citi.net/docs/genai/` sidebar already seen — check these first, in this order:
+Check specifically:
+- The `STYLUS & MCP INTEGRATION` section of `techstrategy.citi.net/docs/genai/` — does it list any search-capable MCP server, and does it state which models can call it?
+- The `TOOLS@ENG&PLATFORMS` section — same question.
+- Any internal MCP server/connector catalog or registry (if one exists) — is there a search or web-retrieval MCP server listed as approved for general use, not just for a specific team's Stylus workspace?
+- The Arc FAQ statement about MCP being "the mandatory intermediary for business system access" — does it specifically cover *search*, or is that referring to a different category of business-system access (e.g., internal databases, ticketing systems)? Don't assume it covers search unless the text says so.
 
-1. **`MODEL SELECTION`** (top priority) — likely documents exactly which models are supported by which built-in tools. This may directly confirm or deny whether `enterprise_web_search` (or any Citi-blessed search tool) works with Claude.
-2. **`TOOLS@ENG&PLATFORMS`** — likely lists all sanctioned tools (search, retrieval, etc.) and their model compatibility.
-3. **`GUARDRAILS`** — check whether guardrails/callbacks impose their own model restrictions independent of the tool-level check.
-4. **`ARC REFERENCE`** — likely has the full API/config reference for the ADK starter, including tool wiring options.
-5. **`R2D2`** section — R2D2 is the auth/proxy layer already confirmed in use; check if it documents Claude-compatible search options.
-6. **`STYLUS & MCP INTEGRATION`** — check whether Stylus itself (or MCP servers available to it) expose a search capability that could be wired into an ADK or LangChain agent independent of `enterprise_web_search`.
-7. **`AGENTFLOW`** and **`SQUAD`** — unclear what these are yet; worth a quick check for relevance.
+**Answer needed:** Yes (with exact source + quote) / No documentation found / Need to ask a specific person — name them if you know who owns MCP tooling at Citi.
 
-Also worth doing directly:
+---
 
-8. **Diff `citi_adk_adapter` against `helix_adk_adapter`** — `pip show` both if installed, or compare repos, to resolve which is canonical and whether `citi_adk_adapter.models.Anthropic` is still the right class to use going forward or has been superseded.
-9. **Search Citi's internal docs/GitHub for "Tavily"** — is Tavily officially sanctioned for Citi use, or is `stresstestingai` using it informally? This matters before recommending that pattern for production use in RPR.
-10. **Search for any doc or repo explicitly combining `enterprise_web_search` with a non-Gemini model successfully** — to make sure the Gemini-only block hasn't been patched or worked around somewhere not yet seen.
+## Question 2: Is the LangChain + Tavily pattern in `167433.omc-gen-ai.polaris-poc` (branch `fst`, `src/stresstestingai/`) officially sanctioned for production use, or an unofficial/POC pattern?
+
+Check specifically:
+- Does Tavily (or any external search API) appear on any approved third-party vendor or tool list at Citi?
+- Does the repo itself, its README, or any linked documentation state its status (POC, pilot, approved, deprecated)?
+- Is there a data-governance or security-approval record for this repo or for Tavily specifically — even an informal one (Jira ticket, approval email thread, architecture review sign-off)?
+- Does `stresstestingai`'s `.env.example` or `pyproject.toml` reference any Citi-internal proxy/gateway for Tavily calls (which would suggest a reviewed integration), or does it call Tavily directly from the client machine (which would suggest an ungoverned POC)?
+
+**Answer needed:** Yes, sanctioned (with exact source) / No — POC/unofficial only (with what indicates this) / Unconfirmed — recommend asking [who owns this repo, e.g., `hz20691_citi`] directly whether it has been through a security/compliance review.
 
 ---
 
 ## What "done" looks like
 
-A clear, source-backed answer to:
-- Does any Citi-sanctioned tool let Claude do live web search inside a Google-ADK-based agent? (Yes/no, with the doc or code that proves it.)
-- If not, is the LangChain+Tavily pattern in `stresstestingai` an officially sanctioned approach, or an unofficial POC? (Matters for whether it's safe to port into a production tool like RPR.)
-- Is `helix_adk_adapter` or `citi_adk_adapter` the currently-recommended adapter for new ADK agents needing Claude?
-
-Please cite the actual doc page, file, or command output for each finding — not a paraphrase or recollection.
-
+A one-line answer to each question that could be quoted directly in a client email without further hedging — either a real citation, or an honest "not confirmed, here's who to ask." No guesses framed as findings.
 
 Output
 
