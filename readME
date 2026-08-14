@@ -1,6 +1,28 @@
-Read narrative_enricher.py, r2d2_prompt.py, and requirements.txt. This is meant to make Trigger 2 (narrative enrichment) share the exact same ADK call path Trigger 1 already uses in market_event_scout.py — no separate auth, same _adk_search_sync() function.
+Real progress to register first: the theme-grouping bug from before is fixed. Theme 1 and Theme 2 now correctly split 3/3 instead of all 6 landing under Theme 1, and — importantly — the UI and the backend log now agree with each other. That mismatch was the whole reason we couldn't trust "looks fine in the diagnosis script" before; now what you see in the browser matches what's actually happening server-side.
 
-Before telling me how to run it: check web_search_agent.py and tell me whether its web search is Gemini's native search-grounding tool or a model-agnostic search tool. I want the underlying model swapped from Gemini to Claude Sonnet — will that swap work with the search tool as currently implemented, or does the tool itself need to change? Answer that first, then give me the run instructions."*
+But this run surfaces a new, different problem — and the timing in the log is the interesting part:
+
+02:37:57 → Theme 1 call starts (fetches a fresh auth token first)
+02:39:33 → Theme 1 finishes: 27,848 chars, full real content, 96 seconds elapsed
+02:39:33 → Theme 2 call starts immediately after
+02:39:41 → Theme 2 finishes: "Answer 0 chars" — 8 seconds elapsed
+
+Theme 1 took 96 seconds and returned a fully-populated, real answer. Theme 2, run back-to-back right after, took 8 seconds and came back completely empty. That gap is the tell: a search that genuinely looked and found nothing would still take real time to search — 8 seconds returning zero characters looks much more like the call got refused or cut short than like "we searched and there's no data." That's consistent with the UI: Theme 2's three events all show the amber "No results — try re-scanning" state, matching the backend's [WARNING] Empty answer for theme: Global Monetary Policy.
+
+This is worth treating as its own distinct bug, separate from everything before it. Two candidate explanations, and the fix differs depending on which:
+
+Rate limiting / throttling on back-to-back calls — if so, this isn't a "Global Monetary Policy" problem at all, it's a "second call in quick succession" problem, and it'll happen to whichever theme happens to run second.
+Something specific to how that theme's query resolves — less likely given the instant failure, but worth ruling out.
+
+The fast way to tell them apart: re-run the scan with the theme order swapped (Global Monetary Policy first, US Trade Policy & Tariffs second). If the first theme now succeeds and the second one fails empty regardless of which theme it is, that confirms it's a rate-limit/throttling issue on consecutive calls — not anything about that specific theme's content.
+
+Send Stylus this, with the actual log lines attached:
+
+"Theme 1 succeeded (96s, 27,848 chars). Theme 2, called immediately after, returned 0 chars in 8 seconds. Is there a rate limit or cooldown on back-to-back web_search_agent calls? Check whether the exception handling around that call could be silently swallowing an error and returning empty string instead of raising."
+
+And don't let this new finding bump the Gemini/Claude question off the list — that's still sitting open from last message, unrelated to this bug, and this run doesn't tell us anything new about it either way.
+
+
 
 Output
 
