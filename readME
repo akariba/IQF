@@ -1,17 +1,1020 @@
-Before I dig further myself, list every GitHub Enterprise repo you can find — via search or direct access — that contains the string helix_adk_adapter, custom_anthropic_llm, or HelixClaude, either in the repo name, file contents, or package metadata (pyproject.toml/setup.py). Also include any repo whose README shows it publishing a package literally named helix_adk_adapter or helix-adk-adapter — the same way citi_adk_adapter's README shows pip install citi-adk-adapter.
+Create a COMPLETE knowledge-transfer document from everything you have learned, analysed, generated, modified, inferred, tested, and discussed in THIS conversation about the RPR project.
 
-For each hit: give the exact repo path (org/repo), the file path where the string appears, and whether it's a doc reference or actual source code.
+The purpose is to open a completely NEW Stylus conversation with no previous memory, upload this document together with the relevant source files, and allow the new conversation to continue the implementation immediately without repeating the discovery work.
 
-If you don't have direct GitHub Enterprise repo access and can only search techstrategy.citi.net, say that explicitly rather than giving me docs-site results relabeled as repo results — I need to know which one I'm getting
+This is NOT a short summary.
 
-med owner + review status / confirmed coincidental similarity / unconfirmed — with evidence either way. If unconfirmed, note whether it's worth directly comparing file hashes or diffing the two repos as a next step.
-Output
+I need a highly detailed engineering handover.
 
-European Call Price (1-step): $12.17
-European Put Price (1-step): $7.28
+Generate a downloadable file named:
 
-I’d like to reach out because I’m working toward transitioning into model risk and validation, and your career path is very close to the direction I’m aiming for.
+`RPR_STEP1_FULL_KNOWLEDGE_TRANSFER.md`
 
-My background is in risk analytics across derivatives and capital markets. When working with models, I increasingly find myself wanting to understand not only the output but also the underlying design, mathematics, and implementation — and how to independently challenge them.
+Do not rely on the next Stylus conversation having access to any previous conversation history.
 
+Everything important must be explicitly written into this `.md`.
 
+---
+
+# 1. PROJECT PURPOSE
+
+Explain clearly what the RPR application is and, specifically, what Step 1 does.
+
+Document the two Step-1 entry paths:
+
+### Trigger 1 — Market Scanner
+
+Explain:
+
+* what starts Trigger 1
+* how themes are processed
+* how market searches are generated
+* how retrieved events are transformed
+* how the eight Step-1 sections are produced
+* how events are identified
+* how existing refinement/feedback works
+* which Python classes/functions implement this
+
+### Trigger 2 — User Narrative / R2D2
+
+Explain:
+
+* what starts Trigger 2
+* what user input it receives
+* how retrieval works
+* how the R2D2 prompt is invoked
+* how the eight sections are created
+* which Python classes/functions implement this
+* whether multiple Trigger-2 implementations were discovered
+* which one appears to be active and why
+
+Do not give generic descriptions.
+
+Reference actual filenames, classes, functions, methods, and data structures found in the uploaded code.
+
+---
+
+# 2. BUSINESS PROBLEM WE ARE SOLVING
+
+Explain the exact feature being developed.
+
+The problem is NOT simply “improve the prompt.”
+
+The intended workflow is:
+
+**Step-1 run
+→ analyse the resulting report/retrieval quality
+→ identify whether a concrete fixable weakness exists
+→ if appropriate recommend a targeted enhancement
+→ present that recommendation to the user
+→ user may accept, edit, or dismiss
+→ if accepted/edited, consolidate the feedback
+→ only after explicit user action perform a rescan/re-enrichment
+→ display the improved Step-1 result.**
+
+Explain why this design was chosen.
+
+Important principles:
+
+* user remains in control
+* enhancement is advisory
+* no automatic rescan
+* no automatic permanent modification of master prompts
+* do not invent additional research directions
+* do not repeatedly bother the user when no meaningful enhancement exists
+* `NOT_RECOMMENDED` is a valid and important diagnosis
+* preserve normal manual feedback
+* runtime refinement rather than uncontrolled prompt mutation
+
+---
+
+# 3. CURRENT SCOPE
+
+Make extremely clear that the CURRENT IMPLEMENTATION/TESTING SCOPE IS:
+
+# STEP 1 ONLY
+
+We are currently NOT implementing or testing:
+
+* Step 2
+* Step 2A
+* Step 2B
+* Step 3
+* Step 3B
+* Step 4
+* portfolio aggregation
+* scoring
+* downstream publishing
+* later RPR workflow
+
+Any references to those modules should only be included when they are relevant dependencies or were discovered during code analysis.
+
+The next Stylus session must not expand the scope beyond Step 1 unless explicitly requested.
+
+---
+
+# 4. ORIGINAL FILES ANALYSED
+
+Create a comprehensive inventory of every original source file that you inspected during this conversation.
+
+For every file provide:
+
+* exact filename
+* directory/path if known
+* whether it belongs to backend/UI/prompts/etc.
+* purpose
+* important classes/functions/constants
+* how it participates in Step 1
+* whether you modified it
+* whether you recommended modifying it
+* whether it should remain untouched
+
+Include at least all files that appeared in your analysis, such as where applicable:
+
+* `market_event_scout.py`
+* `rpr_service.py`
+* `narrative_enricher.py`
+* `r2d2_prompt.py`
+* `llm_gateway.py`
+* `prompt_loader.py` if it was available
+* route/server/API files if available
+* Step-1 HTML
+* other files you inspected
+
+Do not claim you inspected a file if you only inferred its existence.
+
+Clearly distinguish:
+
+**INSPECTED**
+
+from
+
+**REFERENCED BUT NOT PROVIDED**
+
+from
+
+**GENERATED BY YOU**
+
+---
+
+# 5. TRIGGER 1 — ACTUAL CODE ARCHITECTURE
+
+Document Trigger 1 in substantial technical detail.
+
+Include the actual flow you discovered, for example:
+
+`MarketEventScout.fetch_events()`
+
+and related functions/classes such as:
+
+* `_build_query()`
+* `MarketEventParser`
+* `refine_event()`
+
+Document:
+
+* function signatures if known
+* important parameters
+* important return values
+* ID types
+* current event ID behaviour
+* whether IDs are sequential integers
+* theme processing
+* query construction
+* retrieval mechanism
+* event parsing
+* eight-section generation
+* refinement flow
+* error handling
+* retry behaviour
+* timeouts if known
+* sequential versus parallel execution
+* relevant latency implications
+
+Include the important discovery that the real Trigger-1 identifiers must be preserved.
+
+If the backend uses sequential integer IDs, state explicitly:
+
+**Do NOT replace the existing event IDs with UUID assumptions.**
+
+Also explain whether an `executed_query_log` currently exists or whether it was an assumption in the enhancement prototype.
+
+Explain exactly what metadata must be added or exposed for diagnosis.
+
+---
+
+# 6. TRIGGER 2 — ACTUAL CODE ARCHITECTURE
+
+Document Trigger 2 in the same depth.
+
+Explain the discovered implementations, including where applicable:
+
+* `narrative_enricher.enrich_narrative()`
+* `RPRService.enrich_narrative()`
+
+Explain what is known about each.
+
+Document:
+
+* which one appears to be used by the current Step-1 application
+* whether this was conclusively determined
+* what route/server information was missing if it could not be determined
+* their retrieval mechanisms
+* their Claude/LLM call mechanisms
+* their eight-section output structures
+* their prompts
+* any duplicate/parallel implementation risk
+
+Explain the relationship with:
+
+`R2D2_PROMPT`
+
+inside:
+
+`r2d2_prompt.py`
+
+State explicitly that the existing R2D2 production prompt is NOT the same thing as the new enhancement prompts and must not be blindly replaced.
+
+---
+
+# 7. LLM GATEWAY
+
+Document exactly what you found regarding:
+
+`llm_gateway.py`
+
+including relevant classes/methods such as:
+
+* `R2D2LLMGateway.call()`
+* `R2D2LLMGateway.call_raw()`
+
+Explain whether this file was actually changed.
+
+If it was NOT changed, say explicitly:
+
+**`llm_gateway.py` was inspected/identified as an integration point but was NOT modified.**
+
+Explain why the existing gateway is sufficient or where limitations remain.
+
+Document retry behaviour and timeout behaviour if discovered.
+
+Do not imply that a file was changed merely because it was discussed.
+
+---
+
+# 8. PROMPT ARCHITECTURE
+
+Document the complete prompt architecture discovered in the source.
+
+Explain clearly:
+
+### Existing production prompts
+
+For example:
+
+* where `R2D2_PROMPT` is stored
+* how it is imported
+* whether it is an in-code Python string
+* which functions use it
+
+### PromptLoader
+
+If `prompt_loader.py` was inspected:
+
+document exactly:
+
+* how it resolves prompt names
+* directory used
+* filename extension
+* caching behaviour if relevant
+* method signatures such as `get_prompt()`
+* exact expected path/name convention
+
+If `prompt_loader.py` was NOT available, explicitly state that prompt filename/path compatibility remains unverified.
+
+Do not guess.
+
+---
+
+# 9. THE THREE NEW APPROVED PROMPTS
+
+Document these THREE specific approved prompts:
+
+1. `trigger1_market_scanner`
+2. `enhancement_diagnosis`
+3. `feedback_consolidation`
+
+For each prompt explain:
+
+* purpose
+* when it is called
+* required inputs
+* expected output
+* where it belongs in the workflow
+* whether it replaces an existing prompt or complements it
+* exact filename generated, if known
+* exact expected prompt-loader lookup name, if known
+* exact intended destination directory, if known
+
+Important:
+
+The next session must understand that these are different roles.
+
+### trigger1_market_scanner
+
+Explain whether this becomes part of Trigger-1 runtime search generation or how the implementation uses it.
+
+### enhancement_diagnosis
+
+Used after the initial Step-1 result to determine whether improvement should be recommended.
+
+### feedback_consolidation
+
+Used only after the user accepts/edits an enhancement, to create a clean runtime refinement instruction.
+
+Include the actual required status semantics such as:
+
+`RECOMMENDED`
+
+and
+
+`NOT_RECOMMENDED`
+
+where applicable.
+
+---
+
+# 10. EVIDENCE AND RETRIEVAL METADATA
+
+Explain the design in detail.
+
+The diagnosis must be able to distinguish evidence quality from technical retrieval state.
+
+Document the approved/implemented evidence tiers, such as where applicable:
+
+* `SUFFICIENT`
+* `LIMITED`
+* `NONE`
+* `NOT_ASSESSED`
+
+and retrieval states such as:
+
+* `SUCCESS`
+* `TECHNICAL_FAILURE`
+* `PARTIAL_TECHNICAL_FAILURE`
+* `NOT_ASSESSED`
+
+Explain the critical semantic rule:
+
+**Technical retrieval failure ≠ no evidence exists.**
+
+Explain:
+
+* what metadata already exists
+* what metadata did not previously exist
+* what needs to be captured during Trigger 1
+* what needs to be captured during Trigger 2
+* how this information is fed to `enhancement_diagnosis`
+* whether textual tags such as `[EVIDENCE_TIER: ...]` and `[RETRIEVAL_STATUS: ...]` are required by the approved prompt
+* whether structured backend values were introduced
+
+---
+
+# 11. IDENTIFIED BUGS / RISKS
+
+Document every important backend risk you discovered.
+
+Include, where applicable:
+
+### Trigger-2 None issue
+
+Explain the condition where:
+
+`web_content = None`
+
+could reach Claude or be converted to the string `"None"`.
+
+Explain why that is dangerous:
+
+* it falsely looks like retrieved content
+* retrieval failure should be represented explicitly
+
+Explain whether this was fixed in generated code.
+
+### API timeout
+
+Document whether Claude/LLM calls currently have explicit timeouts.
+
+### JSON retry
+
+Document existing retry behaviour if known.
+
+### Trigger-1 latency
+
+Explain whether themes are processed sequentially and any observed timeout budget such as the previously identified long per-theme runtime.
+
+### Duplicate recommendations
+
+Explain why repeated identical enhancement recommendations should be prevented within the same Step-1 session.
+
+### Static demo versus live backend
+
+Explain the current HTML's use of static/demo data and how the enhancement changes preserve or interact with it.
+
+Include all other material risks you identified.
+
+---
+
+# 12. GENERATED / MODIFIED FILES
+
+Create a COMPLETE inventory of every file YOU GENERATED or MODIFIED during this Stylus conversation.
+
+For each file provide:
+
+* exact filename
+* intended directory
+* new or modified
+* source/original file it is based on
+* exact purpose
+* important new classes/functions
+* important changed functions
+* dependencies
+* assumptions
+* whether it was syntax checked
+* whether it was actually runtime tested
+* whether it is safe to copy into the project now
+* any unresolved dependency before using it
+
+This section is extremely important because I downloaded these files and may upload them into a new Stylus conversation.
+
+The new session needs to know what these generated files contain and why.
+
+If you generated files that are now obsolete or superseded, identify them clearly.
+
+---
+
+# 13. `rpr_enhancement.py`
+
+If you generated `rpr_enhancement.py`, explain it thoroughly.
+
+Document:
+
+* every important model/class
+* recommendation data model
+* diagnosis model
+* evidence/retrieval enums
+* feedback consolidation
+* state/duplicate recommendation handling
+* Trigger-1 integration assumptions
+* Trigger-2 integration assumptions
+* ID assumptions that were corrected or still need correction
+* functions exposed to the rest of the backend
+
+If the first version assumed:
+
+* UUID IDs
+* `narrative_segment_id`
+* `executed_query_log`
+
+but those do not exist in the real backend, document this explicitly.
+
+State whether the latest generated version corrected these assumptions.
+
+---
+
+# 14. STEP-1 HTML / FRONTEND
+
+Document the Step-1 HTML structure that you analysed.
+
+Explain:
+
+* Trigger-1 tab
+* Trigger-2 tab
+* eight-section presentation
+* existing feedback icon/control at the bottom
+* confirm behaviour
+* static/demo data
+* existing JavaScript functions relevant to Step 1
+* API calls if present
+* current backend wiring if present
+
+Document exactly how the enhancement feature is intended to appear.
+
+The design is NOT a separate page.
+
+It should integrate around the existing feedback area.
+
+When diagnosis returns `RECOMMENDED`, show something equivalent to:
+
+**Potential improvement detected**
+
+with:
+
+* reason/diagnosis
+* suggested refinement
+* edit capability
+* `Apply & Rescan`
+* `Dismiss`
+
+Explain expected behaviour for each action.
+
+### Dismiss
+
+No rescan.
+
+### Edit
+
+User can modify the suggestion.
+
+### Apply & Rescan
+
+Only then:
+
+* call feedback consolidation
+* produce final runtime refinement instruction
+* invoke Trigger-1 refinement or Trigger-2 re-enrichment
+* replace/update the Step-1 report
+
+Document any HTML/JS changes you already generated.
+
+---
+
+# 15. EXISTING MANUAL FEEDBACK
+
+Explain the relationship between the new enhancement feature and the feedback control already present in the UI.
+
+The new feature must NOT remove the existing manual feedback capability.
+
+Explain how they coexist.
+
+---
+
+# 16. RESCAN PATHS
+
+Document exact intended rescan behaviour.
+
+### Trigger 1
+
+Reuse the existing:
+
+`MarketEventScout.refine_event(...)`
+
+where applicable.
+
+Document its known arguments and output if available.
+
+Explain how consolidated enhancement feedback should be passed to it.
+
+### Trigger 2
+
+Document the active enrichment function/path that should be rerun.
+
+If this remains unresolved because the server route was not provided, state exactly what information is still required.
+
+Do not fabricate an API route.
+
+---
+
+# 17. SERVER / ROUTE INTEGRATION
+
+Document all API/server/route information discovered.
+
+For every relevant endpoint or function:
+
+* route name
+* HTTP method if known
+* request shape
+* response shape
+* backend function invoked
+* frontend function invoking it
+
+If route/server code was NOT available, clearly state that.
+
+Explain what minimal route integration would still be necessary to test the feature with the backend.
+
+Do not invent endpoint names unless they were actually generated as part of the implementation; if generated, label them as generated rather than original.
+
+---
+
+# 18. DATA CONTRACTS
+
+Document the important Step-1 data structures.
+
+Include examples or schemas for:
+
+* Trigger-1 event
+* Trigger-2 narrative result
+* eight-section report
+* enhancement diagnosis result
+* recommendation object
+* evidence metadata
+* retrieval metadata
+* feedback-consolidation request/response
+* rescan request/response
+
+Use actual field names from the implementation.
+
+Explicitly identify fields that were assumptions versus fields confirmed in source.
+
+---
+
+# 19. IDENTIFIER TYPES
+
+Create a dedicated section because this caused an important integration issue.
+
+Document:
+
+* Trigger-1 event ID type
+* theme identifier type
+* Trigger-2 narrative identifier type if one exists
+* whether `narrative_segment_id` exists
+* any IDs assumed by early enhancement code but absent from the actual backend
+
+State what the latest implementation should use.
+
+---
+
+# 20. CHANGES THAT MUST NOT BE MADE
+
+Create a clear guardrail section for the next Stylus conversation.
+
+Include:
+
+* do not redesign Step 1
+* do not implement Steps 2–4
+* do not replace `R2D2_PROMPT` with an enhancement prompt
+* do not automatically modify production prompts
+* do not automatically trigger a rescan
+* do not fabricate evidence
+* do not treat retrieval failure as no evidence
+* do not change integer event IDs into UUIDs
+* do not invent `narrative_segment_id`
+* do not modify `llm_gateway.py` merely because it was identified as an integration point
+* do not create unnecessary database/state infrastructure
+* do not remove existing manual feedback
+* do not rewrite unrelated backend modules
+
+Add any other important constraints discovered during this conversation.
+
+---
+
+# 21. WHAT WAS ACTUALLY CHANGED VS ONLY SUGGESTED
+
+This section must be extremely precise.
+
+Create a table:
+
+| File | Inspected | Modified | New | Suggested only | Reason |
+| ---- | --------: | -------: | --: | -------------: | ------ |
+
+Do not confuse:
+
+* a file mentioned in an architecture discussion
+* a file recommended for future modification
+* a file actually modified/generated
+
+This is especially important for files like:
+
+`llm_gateway.py`
+
+---
+
+# 22. CURRENT TEST STATUS
+
+Document exactly what was and was not tested.
+
+For example:
+
+* Python syntax checked?
+* imports checked?
+* unit tests run?
+* JavaScript syntax checked?
+* backend started?
+* Step-1 page loaded?
+* Trigger 1 actually called?
+* Trigger 2 actually called?
+* enhancement diagnosis actually called?
+* `NOT_RECOMMENDED` tested?
+* `RECOMMENDED` tested?
+* Edit tested?
+* Dismiss tested?
+* Apply & Rescan tested?
+* PromptLoader tested with the new prompt files?
+* Claude/LLM credentials available during test?
+* retrieval service available?
+* static mode tested?
+* live backend integration tested?
+
+Use:
+
+`PASSED`
+
+`NOT TESTED`
+
+`BLOCKED`
+
+`PARTIAL`
+
+Do not claim something worked if it was only reasoned about.
+
+---
+
+# 23. FILES I SHOULD UPLOAD TO THE NEXT STYLUS CHAT
+
+Create a definitive handoff manifest.
+
+Separate into:
+
+## Required source files
+
+## Generated/modified files
+
+## Prompt files
+
+## UI files
+
+## Optional diagnostic/context files
+
+Include exact filenames.
+
+For each file explain in one short sentence why the next session needs it.
+
+---
+
+# 24. PROJECT DIRECTORY STRUCTURE
+
+Reconstruct the known directory structure as accurately as possible.
+
+Example only:
+
+```text
+project/
+├── backend/
+│   ├── market_event_scout.py
+│   ├── ...
+├── prompts/
+│   ├── ...
+└── UI/
+    └── ...
+```
+
+Use the actual known structure.
+
+For anything uncertain, mark it:
+
+`[PATH NOT CONFIRMED]`
+
+Do not invent paths.
+
+---
+
+# 25. PROMPTLOADER MAPPING
+
+Create a dedicated mapping table:
+
+| Prompt logical name | Lookup used in Python | Actual filename | Actual directory | Confirmed? |
+| ------------------- | --------------------- | --------------- | ---------------- | ---------- |
+
+Include:
+
+* `trigger1_market_scanner`
+* `enhancement_diagnosis`
+* `feedback_consolidation`
+
+If this could not be confirmed because `prompt_loader.py` was unavailable, say so explicitly.
+
+This is one of the first things the next conversation must verify.
+
+---
+
+# 26. CURRENT IMPLEMENTATION DECISION LOG
+
+Summarize important decisions made during this conversation and why.
+
+Examples:
+
+* guided recommendation instead of silent prompt mutation
+* diagnosis only after initial run
+* explicit user approval before rescan
+* use existing Trigger-1 `refine_event()`
+* maintain R2D2 base prompt
+* use structured evidence/retrieval metadata
+* preserve static Step-1 UI
+* no database for duplicate recommendation state
+* focus only on Step 1
+
+Include all significant decisions.
+
+---
+
+# 27. OPEN QUESTIONS / UNRESOLVED ITEMS
+
+List ONLY genuinely unresolved technical issues.
+
+For every unresolved item provide:
+
+* question
+* why it matters
+* file needed to resolve it
+* what evidence would resolve it
+* likely impact
+
+Potential examples, only if still unresolved:
+
+* exact active Trigger-2 route
+* PromptLoader filename convention
+* live frontend API route
+* static HTML versus backend-connected HTML
+* enhancement prompt placement
+
+Do not list already resolved issues.
+
+---
+
+# 28. NEXT SESSION — FIRST ACTIONS
+
+Give the new Stylus conversation a precise sequence of what to do once I upload this knowledge transfer and the source files.
+
+It should start with something like:
+
+1. Read this entire knowledge-transfer document.
+2. Inspect uploaded current source files.
+3. Compare source files against previously generated files.
+4. Verify PromptLoader mapping.
+5. Verify actual Trigger-2 route.
+6. Verify generated files against actual backend identifiers.
+7. Make only the minimum Step-1 changes.
+8. Generate complete replacement files.
+9. Package them for a Step-1 test.
+10. Do not work on later RPR steps.
+
+Make this detailed enough that the new chat can continue immediately.
+
+---
+
+# 29. TARGET STEP-1 TEST
+
+Define the exact target test that we are trying to reach.
+
+The immediate goal is NOT full RPR end-to-end testing.
+
+It is:
+
+### Trigger 1
+
+* open Step 1
+* run/view Trigger-1 output
+* eight sections render
+* enhancement diagnosis runs
+* either no recommendation or a recommendation is shown
+* user can dismiss
+* user can edit
+* user can Apply & Rescan
+* feedback consolidation occurs
+* existing Trigger-1 refinement executes
+* updated Step-1 result appears
+
+### Trigger 2
+
+Same concept using the user narrative path.
+
+The next session should optimise only for making THIS test possible.
+
+---
+
+# 30. EXACT FINAL STATE YOU RECOMMEND
+
+Based on everything known in the current conversation, state what the ideal file set should look like immediately before I start the Step-1 test.
+
+For every file state:
+
+* existing unchanged
+* replace with generated version
+* add new
+* prompt to copy
+* UI to replace
+* unresolved/do not copy yet
+
+This should be the most practical section of the handover.
+
+---
+
+# 31. SOURCE-OF-TRUTH RULE
+
+Tell the next Stylus conversation explicitly:
+
+The original uploaded backend code is the source of truth for architecture and identifiers.
+
+The approved prompt files are the source of truth for prompt business logic.
+
+The current Step-1 HTML is the source of truth for UI layout.
+
+Previously generated enhancement code may be adapted if it conflicts with the actual backend.
+
+Do not force the real backend to conform to assumptions made in an earlier generated enhancement prototype.
+
+---
+
+# 32. INCLUDE RELEVANT CODE EXCERPTS
+
+For the most important integration points, include concise code excerpts from the actual source where legally/technically appropriate, especially:
+
+* `fetch_events()`
+* `_build_query()`
+* `refine_event()`
+* active `enrich_narrative()`
+* R2D2 prompt invocation
+* LLM gateway invocation
+* PromptLoader calls
+* Step-1 frontend feedback handling
+
+Do not dump entire files into the knowledge transfer.
+
+Include enough surrounding code to make the architecture understandable.
+
+---
+
+# 33. INCLUDE THE ORIGINAL ANALYSIS FINDINGS
+
+Preserve all significant findings from your previous backend assessment, including findings that influenced later decisions.
+
+Do not omit something simply because it did not result in a code modification.
+
+I want the new conversation to have the benefit of the full investigation.
+
+---
+
+# 34. NO GENERIC CONTENT
+
+Avoid generic software engineering explanations.
+
+Every section should be specific to THIS RPR codebase and THIS Step-1 enhancement.
+
+Where something is unknown, say:
+
+`UNKNOWN / NOT PROVIDED`
+
+rather than making an assumption.
+
+Where something is inferred, say:
+
+`INFERRED`
+
+Where something was directly confirmed in source, say:
+
+`CONFIRMED`
+
+---
+
+# 35. FINAL OUTPUT REQUIREMENTS
+
+Generate:
+
+`RPR_STEP1_FULL_KNOWLEDGE_TRANSFER.md`
+
+It must be individually downloadable.
+
+It should be detailed enough that I can upload it to a brand-new Stylus conversation and say only:
+
+> Read this knowledge transfer and continue the Step-1 implementation.
+
+and the new conversation should understand:
+
+* the business problem
+* the architecture
+* both triggers
+* existing feedback
+* the three prompts
+* files already generated
+* files actually changed
+* files deliberately untouched
+* outstanding issues
+* required uploads
+* target test
+* exact next implementation work
+
+Before generating it, review the ENTIRE conversation and all files you inspected so that no significant engineering context is lost.
+
+At the very end of the `.md`, add:
+
+# HANDOFF CONFIDENCE CHECK
+
+with a table:
+
+| Area                   | Complete | Confidence | Missing information |
+| ---------------------- | -------: | ---------: | ------------------- |
+| Trigger 1 architecture |          |            |                     |
+| Trigger 2 architecture |          |            |                     |
+| Prompt architecture    |          |            |                     |
+| Enhancement design     |          |            |                     |
+| Backend changes        |          |            |                     |
+| UI changes             |          |            |                     |
+| PromptLoader mapping   |          |            |                     |
+| API/routes             |          |            |                     |
+| Step-1 test readiness  |          |            |                     |
+
+Be rigorous.
+
+Do not start implementing new changes in this task.
+
+This task is ONLY to capture and export the full knowledge of the current conversation into the `.md`.
