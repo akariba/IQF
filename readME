@@ -1,686 +1,1145 @@
-You now have the COMPLETE Step-1 source set, including the real server/router files that were previously missing.
+Create a **complete engineering knowledge-transfer document** for the current RPR Step-1 project.
 
-This is no longer an analysis task.
+This document will be uploaded into a completely new Stylus conversation that has ZERO memory of this conversation.
 
-**Implement the Step-1 changes now and generate the complete downloadable files required for testing.**
+The new conversation must be able to understand:
 
-# 1. SCOPE — STEP 1 ONLY
+* what the project is
+* what was working before the enhancement work
+* what the previous baseline architecture looked like
+* what has now been changed
+* why each change was made
+* what currently works
+* what is only statically verified
+* what remains untested
+* known bugs and risks
+* how to run the backend
+* how to open/test the frontend
+* which AI models/services are used
+* which prompts are used
+* which files are active
+* which files are legacy or intentionally untouched
+* exact API routes
+* exact Step-1 workflows
+* how the enhancement feature works
+* how to continue debugging without repeating discovery
 
-Implement only:
+Do NOT modify any code.
 
-* Trigger 1 — Market Scanner
-* Trigger 2 — User Narrative / R2D2
-* existing 8-section Step-1 output
-* guided enhancement/feedback capability
-* Step-1 rescan/re-enrichment
+Do NOT generate replacement implementation files.
 
-Do NOT modify Steps 2–4 or unrelated RPR functionality.
+This task is **knowledge preservation only**.
 
----
+Generate one downloadable Markdown file:
 
-# 2. IMPORTANT UI RULE
-
-There are TWO HTML concepts:
-
-### HTML v31
-
-This is the **tech-lead-provided static baseline/reference design**.
-
-It contains static/mock data and defines the approved visual design.
-
-**DO NOT MODIFY HTML v31.**
-
-### API-connected Step-1 HTML
-
-This is the newer HTML derived from v31 but connected to the real backend APIs.
-
-THIS is the HTML you may modify.
-
-However:
-
-* preserve the v31 appearance exactly
-* no redesign
-* no layout restructuring
-* no new visual style
-* preserve tabs, panels, eight-section accordions, feedback area, confirm/edit behaviour and general interaction model
-
-Only make the minimum JavaScript/API/UI additions necessary for the enhancement feature.
+`RPR_STEP1_MASTER_KNOWLEDGE_TRANSFER.md`
 
 ---
 
-# 3. FIRST RESOLVE THE REAL ACTIVE ROUTES
+# 1. EXECUTIVE SUMMARY
 
-Now that the server/router files are uploaded, trace the actual imports and route registration.
+Start with a concise explanation of:
 
-Determine conclusively:
+* RPR / Rapid Portfolio Review
+* Step 1 purpose
+* Trigger 1 Market Scanner
+* Trigger 2 User Narrative / R2D2
+* eight-section risk narrative
+* new guided enhancement capability
 
-### Trigger 1
+Clearly state:
 
-Which endpoint calls `MarketEventScout.fetch_events()`.
+**Current scope = Step 1 only.**
 
-### Trigger 2
-
-Which endpoint actually powers the API-connected Step-1 HTML.
-
-Resolve whether the active implementation is:
-
-`narrative_enricher.enrich_narrative()`
-
-or
-
-`RPRService.enrich_narrative()`
-
-Do NOT maintain two enhancement implementations unnecessarily.
-
-Modify the ACTIVE path.
-
-Then register the enhancement router correctly in the real FastAPI application.
+Steps 2–4 are outside the current development/test scope.
 
 ---
 
-# 4. TRIGGER 1 — IMPROVE INITIAL RESULTS
+# 2. THREE PROJECT STATES
 
-Use the approved Trigger-1 prompt/specification where appropriate to improve the quality of the initial Market Scanner result.
+This is extremely important.
 
-Do not replace the existing ADK/web-search architecture.
+Document the project in THREE states.
 
-Preserve:
+## STATE A — Original Tech-Lead Baseline
 
-`MarketEventScout.fetch_events()`
+Document the original/static baseline provided by the tech lead.
 
-`_build_query()`
+Important distinction:
 
-`MarketEventParser`
+`HTML v31`
 
-existing event IDs
+is the original visual/product baseline with static/mock data.
 
-existing retrieval mechanism.
+It is the DESIGN SOURCE OF TRUTH.
 
-Integrate the approved business requirements into the actual Trigger-1 execution in the smallest correct way.
+It should NOT be modified by enhancement work.
 
-The output should remain the same Step-1 8-section structure expected by the frontend.
+Document:
 
-Preserve integer sequential event IDs.
-
-Do NOT introduce UUIDs.
+* its purpose
+* what was static
+* what interactions/layout it defined
+* what visual structure we must preserve
 
 ---
 
-# 5. TRIGGER 1 METADATA
+## STATE B — Previous Working API-Connected Step-1
 
-Ensure the Trigger-1 result retains the metadata required for diagnosis:
+Document the version that existed BEFORE the latest enhancement implementation.
 
-* actual executed query
-* retrieval status
-* evidence tier per section
-* technical retrieval failure where applicable
+This is important because it represents the known working foundation.
+
+Document:
+
+* API-connected Step-1 HTML
+* Trigger 1 backend path
+* Trigger 2 backend path
+* existing routes
+* existing manual feedback
+* event rendering
+* eight-section rendering
+* Confirm/Edit behaviour
+* what was already working
+* what was missing
+
+Explicitly distinguish this from HTML v31.
+
+HTML v31 = static tech-lead baseline.
+
+API-connected HTML = functional version derived from v31.
+
+---
+
+## STATE C — Current Enhanced Step-1
+
+Document the CURRENT implementation after the latest Stylus changes.
+
+Explain exactly what was added or changed:
+
+* improved Trigger-1 query construction
 * enhancement metadata
-
-Preserve the enhancement additions already correctly present in `market_event_scout.py`.
-
-Fix only the issues identified in the architecture reconciliation.
-
-Specifically correct `_placeholder()` defaults so placeholder events consistently contain:
-
-* `enhancement_meta`
-* `executed_query`
-
-without relying on scattered post-assignment.
-
-Do not redesign the class.
-
----
-
-# 6. TRIGGER 2 — IMPROVE INITIAL RESULTS
-
-Integrate the approved Step-1/R2D2 behaviour into the ACTUAL Trigger-2 implementation determined from the real route file.
-
-Keep:
-
-`R2D2_PROMPT`
-
-as the production Trigger-2 prompt where it is genuinely used.
-
-**Do not replace or permanently rewrite `R2D2_PROMPT`.**
-
-Ensure Trigger 2 produces the same expected eight sections and enough enhancement metadata for diagnosis.
-
-If `narrative_enricher.py` is the active implementation, preserve its existing enhancement metadata structure and make only the required corrections.
-
-If `RPRService.enrich_narrative()` is actually active, integrate the enhancement contract there instead of creating a parallel unused implementation.
+* evidence tier
+* retrieval status
+* executed query retention
+* enhancement diagnosis
+* feedback consolidation
+* recommendation UI
+* Apply & Rescan
+* Trigger-1 refinement
+* Trigger-2 re-enrichment
+* router registration
+* new prompt files
+* original Trigger-2 narrative preservation
+* refinement guidance separation
+* duplicate recommendation state
+* any other implemented change
 
 ---
 
-# 7. FIX THE CONFIRMED `None` BUG IF RELEVANT
-
-The architecture analysis found that `RPRService.enrich_narrative()` can potentially continue after failed web retrieval with:
-
-`web_content = None`
-
-which can become literal `"None"` inside the Claude prompt.
-
-If this function is part of the active Step-1 Trigger-2 path, fix it.
-
-A technical retrieval failure must be represented explicitly.
-
-Do NOT send `"None"` to Claude as though it were retrieved market evidence.
-
-If `RPRService.enrich_narrative()` is not the active Step-1 path, do not modify it unnecessarily.
-
----
-
-# 8. THE THREE APPROVED ENHANCEMENT PROMPTS
-
-Create/use the three actual `.txt` prompt files:
-
-* `trigger1_market_scanner.txt`
-* `enhancement_diagnosis.txt`
-* `feedback_consolidation.txt`
-
-Use the exact approved prompt contents already uploaded.
-
-Do NOT paraphrase them.
-
-Place them in the exact prompt directory expected by the enhancement implementation.
-
-From the previous analysis this was expected to be the `prompts/` directory associated with `rpr_enhancement_routes.py`, but now verify this against the actual project structure before generating files.
-
----
-
-# 9. `trigger1_market_scanner.txt`
-
-Previously this prompt existed as business/reference material but was not wired into the active Trigger-1 runtime.
-
-Now determine the safest minimal way to use it to improve Trigger-1 output.
-
-Do NOT create a second independent Trigger-1 engine.
-
-The existing:
-
-`web_search_agent.py`
-
-and
-
-`MarketEventScout`
-
-architecture remains authoritative.
-
-Integrate only where it genuinely improves the active Step-1 search/report behaviour.
-
----
-
-# 10. ENHANCEMENT DIAGNOSIS
-
-After an initial Trigger-1 or Trigger-2 Step-1 result has been produced, run:
-
-`enhancement_diagnosis`
-
-using the actual report plus actual search/retrieval metadata.
-
-The diagnosis must distinguish:
-
-### Evidence quality
-
-Use the enum/value definitions already established in the real modified backend.
-
-### Retrieval status
-
-Distinguish success from technical failure.
-
-Critical rule:
-
-**TECHNICAL FAILURE ≠ NO EVIDENCE.**
-
-Do not infer missing evidence merely because retrieval failed.
-
----
-
-# 11. DIAGNOSIS BEHAVIOUR
-
-If diagnosis returns:
-
-`NOT_RECOMMENDED`
-
-then:
-
-* do not show an enhancement card
-* do not rescan
-* do not modify a prompt
-* normal Step-1 workflow continues
-
-If diagnosis returns:
-
-`RECOMMENDED`
-
-show the recommendation in the API-connected Step-1 HTML.
-
----
-
-# 12. GUIDED FEEDBACK UI
-
-Integrate the recommendation into the EXISTING feedback area of the API-connected HTML.
-
-Preserve the v31 visual language.
-
-Show a compact card similar to:
-
-**Potential improvement detected**
-
-Reason:
-[diagnosis]
-
-Suggested refinement:
-[editable suggestion]
-
-Actions:
-
-* `Apply & Rescan`
-* `Edit`
-* `Dismiss`
-
-Do not create another page.
-
-Do not redesign the feedback area.
-
-Do not change HTML v31 itself.
-
----
-
-# 13. USER CONTROL
-
-### Dismiss
-
-* hide recommendation
-* record it as dismissed for this Step-1 session
-* no rescan
-* no prompt modification
-
-### Edit
-
-* allow modification of the suggested refinement
-
-### Apply & Rescan
-
-Only after this explicit action:
-
-1. send the approved/edited text to `feedback_consolidation`
-2. obtain the final runtime refinement guidance
-3. invoke the correct existing Trigger-1 or Trigger-2 refinement path
-4. render the updated eight-section result
-
-Nothing should run automatically after recommendation generation.
-
----
-
-# 14. FEEDBACK CONSOLIDATION
-
-Use:
-
-`feedback_consolidation.txt`
-
-exactly as approved.
-
-Inputs must preserve:
-
-* original user intent
-* original theme/narrative/event context
+# 3. STATE COMPARISON
+
+Create a table:
+
+| Capability | Original v31 | Previous API Version | Current Enhanced Version |
+| ---------- | ------------ | -------------------- | ------------------------ |
+
+Include at least:
+
+* static/live data
+* Trigger 1
+* Trigger 2
+* backend APIs
+* eight sections
+* section editing
+* manual feedback
+* Confirm
+* search
+* AI enrichment
 * diagnosis
-* suggested refinement
-* final user-approved or edited feedback
+* enhancement recommendation
+* feedback consolidation
+* rescan
+* evidence metadata
+* executed queries
+* prompt files
+* error handling
 
-The consolidated output is **runtime guidance only**.
-
-Never permanently modify:
-
-* `R2D2_PROMPT`
-* ADK master prompt
-* production source prompt files
-
----
-
-# 15. TRIGGER 1 RESCAN
-
-Use the existing:
-
-`MarketEventScout.refine_event(...)`
-
-path.
-
-Do not create another Trigger-1 rescan engine.
-
-Pass the consolidated user guidance through the existing feedback/refinement mechanism.
-
-Preserve integer event IDs.
+This should allow the new conversation to understand what changed immediately.
 
 ---
 
-# 16. TRIGGER 2 RESCAN
+# 4. EXACT CHANGE HISTORY
 
-Use the actual active Trigger-2 implementation identified from the server/router source.
+Create a change log showing the major evolution of Step 1.
 
-Do not blindly append enhancement text to the narrative if that causes it to be treated incorrectly as original narrative.
+For each major change state:
 
-Correct the previously identified `applyT2Rescan()` weakness.
+* original behaviour
+* problem
+* decision
+* implementation
+* current status
 
-Keep:
+Example structure:
 
-**original narrative**
+| Change | Previous Behaviour | Problem | Current Solution | Status |
+| ------ | ------------------ | ------- | ---------------- | ------ |
 
-separate from:
-
-**runtime refinement guidance**
-
-where the active backend architecture permits this.
-
-The rescan should use the guidance to improve the search/enrichment, not corrupt or truncate the user's original narrative.
-
----
-
-# 17. FIX THE T2 1000-CHARACTER TRUNCATION PROBLEM
-
-The architecture analysis found the API-connected HTML's `applyT2Rescan()` could append enhancement context to the narrative textarea and then truncate to 1000 characters.
-
-Fix this.
-
-Do not truncate or overwrite the user's original narrative merely to insert enhancement guidance.
-
-Preserve the complete original narrative and pass refinement guidance separately where possible.
-
-If the real backend route needs a minimal request-model extension to support:
-
-`narrative`
-
-plus
-
-`refinement`
-
-implement that minimal change.
+Include all significant changes made during this conversation.
 
 ---
 
-# 18. `rpr_enhancement_routes.py`
+# 5. ACTIVE STEP-1 ARCHITECTURE
 
-Regenerate this file based on the now-complete source set.
+Reconstruct the current real architecture from the uploaded source files.
 
-Correct:
+Do not rely solely on previous summaries.
 
-* real PromptLoader/path behaviour
-* exact approved prompt content/fallback behaviour
-* enum comparisons
-* actual Trigger-1 identifier types
-* actual Trigger-2 active path
-* actual response contracts
-* rescan calls
-* router registration assumptions
-
-Do not use the previous generated file blindly.
-
-Use the architecture reconciliation as guidance but the actual uploaded code as source of truth.
+Use actual filenames/functions.
 
 ---
 
-# 19. ROUTER REGISTRATION
+# 6. TRIGGER 1 — CURRENT FLOW
 
-Modify the actual uploaded FastAPI server/router registration file.
+Document exact current Trigger-1 flow.
 
-Add the enhancement router correctly.
+Start from frontend action and finish with rendered event.
+
+Include actual route and functions.
 
 For example conceptually:
 
-`app.include_router(enhancement_router)`
+`HTML → POST route → MarketEventScout.fetch_events() → _build_query() → ADK/web search → parser → MarketEvent → eight sections → frontend`
 
-but use the actual project import style and structure.
+Use the REAL route/function names.
 
-Do not invent a second application.
+Document:
 
-Verify that these enhancement endpoints are reachable.
-
----
-
-# 20. EXISTING MANUAL FEEDBACK
-
-Preserve the existing manual Step-1 feedback/editing capability.
-
-The new guided recommendation is ADDITIONAL functionality.
-
-Do not remove:
-
-* manual section editing
-* existing feedback textbox/icon
-* Confirm Edit
-* existing navigation behaviour
-
----
-
-# 21. DUPLICATE RECOMMENDATIONS
-
-Prevent the same recommendation from appearing repeatedly for the same event/narrative during the same Step-1 session.
-
-Use lightweight state only.
-
-No database.
-
-Use the actual IDs available:
-
-* Trigger-1 integer event ID + theme context
-* appropriate Trigger-2 session/narrative scope
-
-Do NOT invent `theme_id` UUIDs or `narrative_segment_id`.
+* endpoint
+* HTTP method
+* request body
+* response structure
+* theme handling
+* event ID type
+* query creation
+* retrieval
+* parsing
+* event creation
+* evidence metadata
+* executed query
+* enhancement metadata
+* errors/timeouts
+* rendering
+* feedback/rescan path
 
 ---
 
-# 22. DO NOT MODIFY THESE UNLESS NOW PROVEN NECESSARY
+# 7. TRIGGER 1 RESCAN FLOW
 
-Prefer KEEP for:
+Document:
 
-* `llm_gateway.py`
-* `prompt_loader.py`
-* `r2d2_prompt.py`
-* `web_search_agent.py`
-* `evidence_service.py`
+`MarketEventScout.refine_event()`
 
-The previous analysis concluded these generally do not require Step-1 changes.
+including:
 
-Only modify one if the now-complete source set proves it is technically necessary.
+* input event
+* feedback/refinement guidance
+* query reconstruction
+* retrieval
+* parsing
+* returned status
+* frontend update
 
-If unchanged, return it in the final status as:
-
-`INSPECTED — NOT MODIFIED`
-
----
-
-# 23. STATIC BASELINE PROTECTION
-
-Again:
-
-**HTML v31 must remain untouched.**
-
-It is the tech-lead baseline.
-
-The API-connected HTML may be modified only as necessary while preserving v31 design.
-
-Do not overwrite the baseline file.
+Explain how Apply & Rescan uses this.
 
 ---
 
-# 24. TEST THE REAL STEP-1 CONTRACT
+# 8. TRIGGER 2 — CURRENT FLOW
 
-Validate:
+Document the now-confirmed active Trigger-2 path.
 
-### Trigger 1
+The latest implementation determined that the Step-1 server uses:
 
-* scan endpoint reachable
-* initial scan returns events
-* eight sections render
-* event IDs preserved
-* diagnosis runs
-* NOT_RECOMMENDED works
-* RECOMMENDED card works
-* Dismiss works
-* Edit works
-* Apply & Rescan works
-* `refine_event()` receives consolidated guidance
-* updated event renders
+`server.py`
 
-### Trigger 2
+and:
 
-* actual active endpoint identified
-* initial enrichment works
-* eight sections render
-* enhancement metadata available
-* diagnosis runs
-* NOT_RECOMMENDED works
-* RECOMMENDED works
-* Dismiss works
-* Edit works
-* Apply & Rescan works
-* original narrative preserved
-* updated result renders
+`narrative_enricher.enrich_narrative()`
 
-### Existing UI
+Confirm this again against current uploaded source.
 
-* manual editing works
-* existing feedback still works
-* Confirm works
-* no visual redesign relative to v31
+Document the exact flow:
+
+* frontend submission
+* endpoint
+* original narrative
+* `R2D2_PROMPT`
+* search/retrieval
+* parsing
+* eight sections
+* enhancement metadata
+* frontend rendering
+
+Explicitly document that:
+
+`RPRService.enrich_narrative()`
+
+belongs to another/full RPR server path and is NOT the API-connected Step-1 HTML's active Trigger-2 path, if this remains true.
 
 ---
 
-# 25. VALIDATION
+# 9. TRIGGER 2 RESCAN FLOW
 
-Before delivering:
+Document the new re-enrichment workflow.
 
-* run Python syntax checks
-* verify imports
-* verify FastAPI route registration
-* verify route names against frontend calls
-* verify prompt files can actually be loaded
-* check JavaScript syntax
-* check request/response contracts
-* run available Step-1 tests
-* add focused tests where reasonable
+Explain:
 
-Do not claim runtime success for anything that could not actually be executed in this environment.
+* original narrative preservation
+* `T2_ORIGINAL_NARRATIVE` if that is still the actual implementation
+* separate `refinement_guidance`
+* `/re-enrich` endpoint
+* how guidance is injected
+* why the original narrative is no longer truncated/overwritten
+* how updated eight sections return to the UI
+
+Include exact field names.
+
+---
+
+# 10. THE EIGHT STEP-1 SECTIONS
+
+Document the canonical section order exactly.
+
+Include:
+
+1. Event Overview
+2. Event History
+3. Direct Impact Geographies
+4. Contagious/Contagion Impact Geographies
+5. Equity Market Impact
+6. Credit Market Impact
+7. Commodity Market Impact
+8. Assumptions
+
+Use the exact naming found in the current code.
+
+Explain where these names are defined and how both triggers map into them.
+
+---
+
+# 11. AI / MODEL ARCHITECTURE
+
+Create a dedicated section explaining ALL AI systems used by Step 1.
+
+For each AI/model/service provide:
+
+| Purpose | Model/service | File | Function | Authentication | Used by |
+| ------- | ------------- | ---- | -------- | -------------- | ------- |
+
+Include where applicable:
+
+* ADK web-search agent
+* Gemini model used by `web_search_agent.py`
+* Claude / Helix / R2D2 gateway
+* actual Claude model/configuration
+* mock gateway if present
+* model/environment variables
+
+Use the exact configured model names from the current source where available.
+
+Do NOT guess.
+
+If the exact model is determined by environment configuration, state that.
+
+---
+
+# 12. AUTHENTICATION / ENVIRONMENT
+
+Document all environment variables required to run Step 1.
+
+Examples only:
+
+* `LLM_PROVIDER`
+* R2D2/H2M auth mode
+* certificate path
+* search/model configuration
+
+Use actual names found in source/start scripts.
+
+IMPORTANT:
+
+Do NOT place real passwords, tokens, private keys, certificate contents, bearer tokens, or sensitive credentials into the KT.
+
+Record only:
+
+* environment variable name
+* what it controls
+* expected type/example placeholder
+* whether required
+
+Redact secrets as:
+
+`<REDACTED>`
+
+---
+
+# 13. HOW TO START THE BACKEND
+
+Document the exact current working startup procedure.
+
+Include:
+
+* working directory
+* PowerShell commands
+* required environment variables
+* auth initialization if required
+* `uvicorn` command
+* host
+* port
+* reload setting
+
+Use the actual current startup command.
+
+Also document the existing:
+
+`start_backend.ps1`
+
+if it can be used.
 
 Clearly distinguish:
 
-`PASSED`
+### Recommended startup
 
-`STATICALLY VERIFIED`
+from
 
-`NOT EXECUTABLE HERE`
-
----
-
-# 26. GENERATE COMPLETE FILES
-
-For every file changed, provide the COMPLETE final file.
-
-Do not provide patches only.
-
-For every new file, provide the COMPLETE file.
-
-Preserve exact directory structure.
-
-Do not regenerate unrelated files.
+### Alternative manual startup
 
 ---
 
-# 27. FINAL PACKAGE
+# 14. HOW TO VERIFY BACKEND STARTUP
+
+Document exact checks:
+
+* `/health`
+* `/docs`
+* expected port
+* what success looks like
+* common startup failures
+
+Include exact URLs using localhost/127.0.0.1.
+
+---
+
+# 15. HOW TO OPEN THE FRONTEND
+
+Document which HTML is used for current testing.
+
+Explain clearly:
+
+### HTML v31
+
+Static design baseline — DO NOT USE AS LIVE ENHANCEMENT TEST FILE.
+
+### API-connected Step-1 HTML
+
+Actual current test frontend.
+
+Give exact filename.
+
+Explain whether it can be opened directly with `file://` or requires a local web server.
+
+Document API base URL.
+
+---
+
+# 16. CURRENT API ROUTES
+
+Create an exact route inventory.
+
+| Route | Method | File | Function | Trigger | Purpose |
+| ----- | ------ | ---- | -------- | ------- | ------- |
+
+Include every Step-1 route currently used, including:
+
+* Trigger-1 initial scan
+* Trigger-1 refine/rescan
+* Trigger-2 initial enrichment
+* Trigger-2 re-enrichment
+* enhancement diagnosis
+* feedback consolidation
+* health if applicable
+
+Use exact route strings.
+
+---
+
+# 17. ENHANCEMENT FEATURE — BUSINESS PURPOSE
+
+Explain why this feature exists.
+
+It is NOT an automatic prompt rewriting system.
+
+Workflow:
+
+`Initial Step-1 output`
+→ `inspect output + retrieval quality`
+→ `diagnosis`
+→ `NOT_RECOMMENDED or RECOMMENDED`
+
+If RECOMMENDED:
+
+→ show guided suggestion
+→ user may Edit / Dismiss / Apply & Rescan
+→ feedback consolidation
+→ runtime guidance
+→ rescan/re-enrichment
+
+Explain:
+
+* user remains in control
+* no silent rescan
+* no permanent prompt modification
+* no invented new research direction
+* existing feedback remains available
+
+---
+
+# 18. ENHANCEMENT DIAGNOSIS FLOW
+
+Document exact current implementation.
+
+Include:
+
+* frontend function
+* endpoint
+* backend route function
+* prompt file
+* LLM gateway function
+* input payload
+* expected response
+* RECOMMENDED
+* NOT_RECOMMENDED
+* UI behaviour
+
+---
+
+# 19. FEEDBACK CONSOLIDATION FLOW
+
+Document:
+
+* user acceptance/edit
+* endpoint
+* prompt
+* input fields
+* output
+* how result becomes runtime refinement guidance
+
+Explain that it preserves the user's intent.
+
+---
+
+# 20. EVIDENCE MODEL
+
+Document current:
+
+`EvidenceTier`
+
+enum.
+
+Include exact values.
+
+Explain the current derivation algorithm.
+
+Document any constants/thresholds such as minimum character counts or metric detection patterns.
+
+Explain this important invariant:
+
+**Technical retrieval failure must never become EvidenceTier.NONE.**
+
+---
+
+# 21. RETRIEVAL STATUS MODEL
+
+Document current:
+
+`RetrievalStatus`
+
+enum.
+
+Include exact values.
+
+Explain when each is assigned.
+
+Describe:
+
+* SUCCESS
+* PARTIAL technical failure if present
+* TECHNICAL_FAILURE
+* NOT_ASSESSED if present
+
+Use actual values from source.
+
+---
+
+# 22. EXECUTED QUERY CAPTURE
+
+Explain how Trigger 1 now retains:
+
+`executed_query`
+
+and where it appears in returned JSON.
+
+Explain whether Trigger 2 stores the full executed query or a truncated/logging representation.
+
+Clearly distinguish current limitations from bugs.
+
+---
+
+# 23. PROMPT INVENTORY
+
+Create a complete Step-1 prompt table.
+
+| Prompt | Exact file | Runtime? | Loaded by | Used for |
+| ------ | ---------- | -------: | --------- | -------- |
+
+Include:
+
+* existing `R2D2_PROMPT`
+* Trigger-1 ADK/search system prompt
+* Trigger-1 `_build_query()` instructions
+* `trigger1_market_scanner.txt`
+* `enhancement_diagnosis.txt`
+* `feedback_consolidation.txt`
+* original Step-1 specification document
+
+Clearly explain which are:
+
+* production runtime prompts
+* runtime enhancement prompts
+* reference/business specification only
+
+---
+
+# 24. IMPORTANT — TRIGGER1 PROMPT IMPLEMENTATION
+
+Document exactly how the current implementation uses:
+
+`trigger1_market_scanner.txt`
+
+versus the instructions currently embedded in:
+
+`market_event_scout._build_query()`.
+
+If the `.txt` is currently reference-only while `_build_query()` contains the operational implementation, state this explicitly.
+
+This distinction must not be lost in the next conversation.
+
+---
+
+# 25. PROMPT DIRECTORY
+
+Document exact location:
+
+`backend/prompts/`
+
+and list every file required there.
+
+Explain how `rpr_enhancement_routes.py` resolves this directory.
+
+Also explain that the existing `PromptLoader` used by other RPR steps is a different mechanism if that remains true.
+
+---
+
+# 26. FULL FILE INVENTORY
+
+Create a table of ALL Step-1-relevant files.
+
+| File | Current role | Status | Modified? | Required to run Step 1? |
+| ---- | ------------ | ------ | --------: | ----------------------: |
+
+At minimum include:
+
+* `server.py`
+* `market_event_scout.py`
+* `narrative_enricher.py`
+* `rpr_enhancement_routes.py`
+* `web_search_agent.py`
+* `llm_gateway.py`
+* `r2d2_prompt.py`
+* `prompt_loader.py`
+* `rpr_service.py`
+* `evidence_service.py`
+* `main.py`
+* current API-connected HTML
+* v31 baseline HTML
+* three enhancement prompts
+* start scripts
+
+---
+
+# 27. FILES MODIFIED IN THE LATEST ITERATION
+
+Document the latest generated/replacement versions precisely.
+
+At minimum verify:
+
+* `market_event_scout.py`
+* `narrative_enricher.py`
+* `rpr_enhancement_routes.py`
+* `server.py`
+* API-connected Step-1 HTML
+
+For each provide:
+
+* what changed
+* why
+* main new functions/fields
+* dependencies
+* potential regression risk
+
+---
+
+# 28. FILES ADDED
+
+Document the new files:
+
+* three prompt `.txt` files
+* enhancement router if it was originally new
+* implementation summary if useful
+
+Distinguish executable/runtime files from documentation.
+
+---
+
+# 29. FILES INTENTIONALLY UNCHANGED
+
+Document specifically why these were kept unchanged:
+
+* `llm_gateway.py`
+* `r2d2_prompt.py`
+* `web_search_agent.py`
+* `prompt_loader.py`
+* `rpr_service.py`
+* `main.py`
+* `evidence_service.py`
+
+Do not simply say "unchanged"; explain why they were not needed for the active Step-1 path.
+
+---
+
+# 30. FILENAME / DEPLOYMENT WARNING
+
+Document an important practical issue:
+
+Downloaded generated files may receive Windows suffixes such as:
+
+`market_event_scout (11).py`
+
+or:
+
+`narrative_enricher (2).py`
+
+Before running, they must be renamed to their canonical import names:
+
+`market_event_scout.py`
+
+`narrative_enricher.py`
+
+Explain why leaving suffixes would cause Python to import the wrong/older file.
+
+---
+
+# 31. CURRENT DIRECTORY STRUCTURE
+
+Reconstruct the relevant current directory tree.
+
+For example:
+
+```text
+backend/
+    server.py
+    market_event_scout.py
+    narrative_enricher.py
+    rpr_enhancement_routes.py
+    web_search_agent.py
+    llm_gateway.py
+    r2d2_prompt.py
+    prompts/
+        trigger1_market_scanner.txt
+        enhancement_diagnosis.txt
+        feedback_consolidation.txt
+```
+
+Include frontend location if known.
+
+Mark uncertain paths explicitly.
+
+---
+
+# 32. PREVIOUS ISSUES AND THEIR FIXES
+
+Create a detailed issue history.
+
+For each issue:
+
+| Issue | Previous behaviour | Fix | Current status |
+| ----- | ------------------ | --- | -------------- |
+
+Include all previously identified issues such as:
+
+* enhancement router not registered
+* Trigger-2 active path uncertainty
+* Trigger-2 1000-character truncation
+* guidance mixed into original narrative
+* integer IDs versus UUID assumptions
+* nonexistent `theme_id`
+* nonexistent `narrative_segment_id`
+* placeholder metadata inconsistencies
+* retrieval failure vs no evidence
+* executed query missing
+* prompt path confusion
+* Trigger-1 prompt not initially integrated
+* duplicate recommendation handling
+* any `"None"` web-content issue and why it was irrelevant/not changed for the active Step-1 server if applicable
+
+---
+
+# 33. CURRENT KNOWN ISSUES / LIMITATIONS
+
+Be rigorous.
+
+Do NOT say "no blockers" and then hide untested areas.
+
+Separate:
+
+### Known bugs
+
+### Known design limitations
+
+### Known performance limitations
+
+### Untested areas
+
+Examples to verify:
+
+* sequential Trigger-1 processing
+* 240-second retrieval timeout
+* Claude timeout behaviour
+* heuristic evidence-tier derivation
+* Trigger-1 prompt code/file duplication
+* static browser preview unable to call backend
+* real enterprise environment dependencies
+
+---
+
+# 34. TEST STATUS
+
+Create a test matrix.
+
+Use ONLY:
+
+* LIVE PASSED
+* STATICALLY VERIFIED
+* NOT TESTED
+* FAILED
+* BLOCKED
+
+Include:
+
+* Python syntax
+* imports
+* server startup
+* route registration
+* `/health`
+* `/docs`
+* Trigger-1 live scan
+* Trigger-2 live enrichment
+* eight-section rendering
+* diagnosis NOT_RECOMMENDED
+* diagnosis RECOMMENDED
+* Dismiss
+* Edit
+* Apply & Rescan Trigger 1
+* Apply & Rescan Trigger 2
+* original narrative preservation
+* manual section editing
+* Confirm
+* prompt loading
+
+Do not claim LIVE PASSED unless it actually ran successfully.
+
+---
+
+# 35. PREVIOUS WORKING BASELINE / ROLLBACK
+
+Document how to return to the last known working API-connected Step-1 version if the enhanced version fails.
+
+Identify:
+
+* files that were replaced
+* which original files should be restored
+* new files that can be removed/disabled
+* router line to remove if necessary
+* frontend file to revert to
+
+Do NOT fabricate backup filenames if unavailable.
+
+Instead explain conceptually which canonical files must be restored from source control/backup.
+
+---
+
+# 36. DEBUGGING ORDER
+
+Give the next Stylus session a strict debugging sequence.
+
+If Step 1 fails after deployment, investigate in this order:
+
+1. filenames/canonical imports
+2. Python syntax/import errors
+3. server startup
+4. route registration
+5. `/health`
+6. `/docs`
+7. Trigger-1 base route
+8. Trigger-2 base route
+9. prompt directory
+10. diagnosis endpoint
+11. consolidation endpoint
+12. rescan endpoint
+13. frontend API contract
+14. AI/authentication/retrieval
+
+Explain what evidence to inspect at each step.
+
+---
+
+# 37. EXPECTED LOGGING
+
+Document useful existing logs and what they mean.
+
+Include:
+
+* ADK availability
+* search failures
+* timeout messages
+* enhancement diagnosis failures
+* router startup
+* Trigger-1 scan warnings
+* Trigger-2 enrichment errors
+
+Use actual logging strings where reasonably available.
+
+---
+
+# 38. DATA CONTRACTS
+
+Capture exact current request/response shapes for:
+
+* Trigger-1 scan
+* Trigger-1 refine
+* Trigger-2 enrich
+* Trigger-2 re-enrich
+* enhancement diagnosis
+* feedback consolidation
+
+Use actual JSON field names and types.
+
+This is essential for future reconstruction.
+
+---
+
+# 39. FRONTEND STATE
+
+Document current important JavaScript state such as:
+
+* event list
+* selected event
+* enhancement state
+* dismissed/applied state
+* original Trigger-2 narrative
+* current section edits
+
+Use exact global/object names from source where possible.
+
+---
+
+# 40. V31 DESIGN GUARDRAIL
+
+State prominently:
+
+**HTML v31 is the tech-lead baseline and must remain untouched.**
+
+The API-connected HTML may evolve functionally but should preserve v31's design.
+
+Do not allow a future coding model to redesign the Step-1 UI unless explicitly requested.
+
+---
+
+# 41. CURRENT BUSINESS RULES
+
+Capture the non-negotiable behaviour:
+
+* user remains in control
+* no automatic rescan
+* no automatic permanent prompt rewrite
+* no fabricated evidence
+* technical retrieval failure ≠ no evidence
+* manual feedback remains available
+* eight-section format preserved
+* Trigger-1 integer event IDs preserved
+* no invented UUID/theme/narrative IDs
+* enhancement recommendation only when justified
+* NOT_RECOMMENDED is expected normal behaviour
+* accepted user feedback must preserve original intent
+
+---
+
+# 42. WHAT THE NEXT CHAT SHOULD NOT DO
+
+Create explicit warnings:
+
+Do NOT:
+
+* restart architecture discovery from zero
+* redesign v31
+* switch Trigger-2 to `RPRService` without evidence
+* rewrite `R2D2_PROMPT`
+* change `llm_gateway.py` unnecessarily
+* invent IDs
+* create another parallel enhancement system
+* introduce a database
+* modify Steps 2–4
+* assume static preview API errors mean backend failure
+* overwrite working code before understanding the latest state
+
+---
+
+# 43. WHAT THE NEXT CHAT SHOULD DO FIRST
+
+Give this sequence:
+
+1. Read this KT completely.
+2. Inspect the current deployed versions of the five modified files.
+3. Confirm canonical filenames.
+4. Confirm three `.txt` prompts exist in `backend/prompts/`.
+5. Start backend.
+6. Check `/health`.
+7. Check `/docs`.
+8. Run Trigger 1.
+9. Run Trigger 2.
+10. Test diagnosis.
+11. Test Apply & Rescan.
+12. Fix only real runtime failures.
+
+Do not generate another architecture redesign before these tests.
+
+---
+
+# 44. CURRENT SUCCESS CRITERIA
+
+Define what "Step 1 working" means:
+
+### Trigger 1
+
+* live market scan succeeds
+* events render
+* eight sections populated
+* executed query available
+* evidence metadata available
+* diagnosis works
+* recommendation works
+* Apply & Rescan works
+
+### Trigger 2
+
+* narrative enrichment succeeds
+* eight sections render
+* original narrative preserved
+* diagnosis works
+* recommendation works
+* re-enrichment uses separate guidance
+
+### UI
+
+* v31 design preserved
+* manual editing works
+* Confirm works
+* feedback works
+
+---
+
+# 45. SOURCE-OF-TRUTH HIERARCHY
+
+For the next conversation:
+
+1. CURRENT DEPLOYED SOURCE FILES
+2. HTML v31 for visual design only
+3. approved prompt files for enhancement business logic
+4. original Step-1 specification
+5. this KT
+6. older generated files / older analysis
+
+If this KT conflicts with the current source, inspect source before changing anything.
+
+---
+
+# 46. FINAL HANDOFF MANIFEST
+
+At the end produce a concise upload manifest for the next Stylus chat:
+
+## Essential
+
+List exact files required to continue runtime debugging.
+
+## Helpful
+
+Files useful for understanding architecture.
+
+## Do not need to upload yet
+
+Steps 2–4 and unrelated files.
+
+---
+
+# 47. HANDOFF CONFIDENCE MATRIX
+
+End with:
+
+| Area                   | Confidence | Live verified? | Remaining uncertainty |
+| ---------------------- | ---------- | -------------: | --------------------- |
+| Trigger 1 architecture |            |                |                       |
+| Trigger 2 architecture |            |                |                       |
+| Backend routes         |            |                |                       |
+| Prompt architecture    |            |                |                       |
+| AI models              |            |                |                       |
+| Enhancement workflow   |            |                |                       |
+| Frontend contract      |            |                |                       |
+| Rescan T1              |            |                |                       |
+| Rescan T2              |            |                |                       |
+| Deployment             |            |                |                       |
+| Test readiness         |            |                |                       |
+
+---
+
+# FINAL REQUIREMENTS
 
 Generate:
 
-`rpr_step1_final_test_package.zip`
+`RPR_STEP1_MASTER_KNOWLEDGE_TRANSFER.md`
 
-containing only the files required to deploy/test the updated Step-1 implementation.
+Make it downloadable.
 
-Preserve folder structure.
+Before completing:
 
-Also generate:
+* read the entire current conversation
+* read all currently uploaded relevant files
+* reconcile older analysis against the latest generated files
+* use the latest implementation as current state
+* clearly preserve the previous working state for rollback/debugging
+* do not hide uncertainty
+* do not claim runtime tests that were not executed
+* do not expose secrets
+* do not modify implementation files
 
-`STEP1_FINAL_IMPLEMENTATION_SUMMARY.md`
-
-containing:
-
-* active Trigger-1 route
-* active Trigger-2 route
-* files modified
-* files added
-* files intentionally untouched
-* prompt locations
-* enhancement endpoints
-* exact run/test instructions
-* test results
-* any remaining blocker
-
----
-
-# 28. FINAL RESPONSE
-
-Do not return another architecture analysis.
-
-Return only:
-
-1. **Implementation status**
-2. **Resolved active Trigger-2 path**
-3. **Modified files**
-4. **New files**
-5. **Files intentionally untouched**
-6. **Prompt locations**
-7. **Test results**
-8. **Download links for individual files**
-9. **Download link for `rpr_step1_final_test_package.zip`**
-10. **Remaining blocker only if one genuinely exists**
-
-The architecture-analysis phase is complete.
-
-Implement now.
-
-
-One additional delivery requirement:
-
-If you modify **ANY existing file**, you must generate the **COMPLETE final version of that file as an individually downloadable artifact**.
-
-Do not give me only:
-
-* patches
-* diffs
-* snippets
-* instructions describing what to change
-
-For every file you modify, I want to download the complete replacement file and copy it directly into my project.
-
-This applies to ALL file types, including:
-
-* Python backend files
-* server/router files
-* API-connected Step-1 HTML
-* JavaScript/CSS if separated
-* prompt `.txt` files
-* configuration files
-* tests
-* any other file changed during implementation
-
-For every NEW file, also generate the complete file as an individually downloadable artifact.
-
-At the end, provide a table:
-
-| File     | Status                     | Destination        |
-| -------- | -------------------------- | ------------------ |
-| filename | MODIFIED / NEW / UNCHANGED | exact project path |
-
-Rules:
-
-* `MODIFIED` → MUST have an individual download
-* `NEW` → MUST have an individual download
-* `UNCHANGED` → do not regenerate unnecessarily
-* Never tell me to manually edit a changed file
-* Never omit a changed file from the downloads
-
-Also package **all MODIFIED + NEW files** into:
-
-`rpr_step1_final_test_package.zip`
-
-with the correct project folder structure preserved.
-
-Before finishing, cross-check the implementation against the file-change list and confirm that **every file marked MODIFIED or NEW has been generated and is downloadable**.
+This KT should be detailed enough that a completely new Stylus conversation can continue the project immediately without repeating the discovery work.
