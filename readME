@@ -1,3 +1,21 @@
+$names = @(
+  "RPR_VERTEX_BASE_URL",
+  "R2D2_BASE_URL",
+  "VERTEX_ENDPOINT",
+  "BASE_VERTEX_URL",
+  "R2D2_UAT_URL"
+)
+
+foreach ($name in $names) {
+    $value = [Environment]::GetEnvironmentVariable($name, "Process")
+    if ($value) {
+        $clean = $value.TrimEnd("/") -replace "/v1(?:alpha\d*|beta\d*)?$", ""
+        [Environment]::SetEnvironmentVariable($name, $clean.TrimEnd("/"), "Process")
+    }
+}
+
+
+
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 Unblock-File .\RUNTIME_ENV.ps1
 . .\RUNTIME_ENV.ps1
