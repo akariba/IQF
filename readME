@@ -1,1145 +1,1056 @@
-Create a **complete engineering knowledge-transfer document** for the current RPR Step-1 project.
+Analyse the CURRENT API-connected RPR Step-1 HTML file completely and generate a **detailed reconstruction specification** for another coding model.
 
-This document will be uploaded into a completely new Stylus conversation that has ZERO memory of this conversation.
+Do NOT modify the HTML.
 
-The new conversation must be able to understand:
+Do NOT generate a replacement HTML.
 
-* what the project is
-* what was working before the enhancement work
-* what the previous baseline architecture looked like
-* what has now been changed
-* why each change was made
-* what currently works
-* what is only statically verified
-* what remains untested
-* known bugs and risks
-* how to run the backend
-* how to open/test the frontend
-* which AI models/services are used
-* which prompts are used
-* which files are active
-* which files are legacy or intentionally untouched
-* exact API routes
-* exact Step-1 workflows
-* how the enhancement feature works
-* how to continue debugging without repeating discovery
+Your task is to explain the file so precisely that another strong coding model can recreate a functionally and visually equivalent HTML file from this document alone.
 
-Do NOT modify any code.
+Generate a downloadable file named:
 
-Do NOT generate replacement implementation files.
+`RPR_STEP1_HTML_RECONSTRUCTION_KT.md`
 
-This task is **knowledge preservation only**.
+The target reader has **zero access to this Stylus conversation** and may not have the original HTML.
 
-Generate one downloadable Markdown file:
+The document must therefore preserve:
 
-`RPR_STEP1_MASTER_KNOWLEDGE_TRANSFER.md`
+* exact visual structure
+* exact DOM structure
+* CSS architecture
+* JavaScript architecture
+* frontend state
+* API calls
+* Trigger 1 behaviour
+* Trigger 2 behaviour
+* feedback behaviour
+* enhancement recommendation behaviour
+* rescan behaviour
+* all important IDs/classes/constants
+* differences between static v31 and the current API-connected HTML
 
 ---
 
-# 1. EXECUTIVE SUMMARY
+# 1. FILE IDENTITY
 
-Start with a concise explanation of:
+Start with:
 
-* RPR / Rapid Portfolio Review
-* Step 1 purpose
+* exact filename
+* file type
+* approximate line count
+* purpose
+* current version/status
+* whether this is the API-connected version
+* whether HTML v31 is a separate static baseline
+
+State prominently:
+
+**HTML v31 is the tech-lead static design baseline and must not be modified.**
+
+The current API-connected HTML is derived visually from v31 but contains live backend integrations and enhancement behaviour.
+
+---
+
+# 2. ROLE OF THIS HTML
+
+Explain exactly what the page does.
+
+Cover:
+
+* RPR Step 1
 * Trigger 1 Market Scanner
-* Trigger 2 User Narrative / R2D2
-* eight-section risk narrative
-* new guided enhancement capability
-
-Clearly state:
-
-**Current scope = Step 1 only.**
-
-Steps 2–4 are outside the current development/test scope.
-
----
-
-# 2. THREE PROJECT STATES
-
-This is extremely important.
-
-Document the project in THREE states.
-
-## STATE A — Original Tech-Lead Baseline
-
-Document the original/static baseline provided by the tech lead.
-
-Important distinction:
-
-`HTML v31`
-
-is the original visual/product baseline with static/mock data.
-
-It is the DESIGN SOURCE OF TRUTH.
-
-It should NOT be modified by enhancement work.
-
-Document:
-
-* its purpose
-* what was static
-* what interactions/layout it defined
-* what visual structure we must preserve
-
----
-
-## STATE B — Previous Working API-Connected Step-1
-
-Document the version that existed BEFORE the latest enhancement implementation.
-
-This is important because it represents the known working foundation.
-
-Document:
-
-* API-connected Step-1 HTML
-* Trigger 1 backend path
-* Trigger 2 backend path
-* existing routes
-* existing manual feedback
-* event rendering
-* eight-section rendering
-* Confirm/Edit behaviour
-* what was already working
-* what was missing
-
-Explicitly distinguish this from HTML v31.
-
-HTML v31 = static tech-lead baseline.
-
-API-connected HTML = functional version derived from v31.
-
----
-
-## STATE C — Current Enhanced Step-1
-
-Document the CURRENT implementation after the latest Stylus changes.
-
-Explain exactly what was added or changed:
-
-* improved Trigger-1 query construction
-* enhancement metadata
-* evidence tier
-* retrieval status
-* executed query retention
-* enhancement diagnosis
-* feedback consolidation
-* recommendation UI
-* Apply & Rescan
-* Trigger-1 refinement
-* Trigger-2 re-enrichment
-* router registration
-* new prompt files
-* original Trigger-2 narrative preservation
-* refinement guidance separation
-* duplicate recommendation state
-* any other implemented change
-
----
-
-# 3. STATE COMPARISON
-
-Create a table:
-
-| Capability | Original v31 | Previous API Version | Current Enhanced Version |
-| ---------- | ------------ | -------------------- | ------------------------ |
-
-Include at least:
-
-* static/live data
-* Trigger 1
-* Trigger 2
-* backend APIs
-* eight sections
-* section editing
+* Trigger 2 User Narrative
+* displaying events
+* displaying the eight risk sections
+* editing sections
+* confirming edits
 * manual feedback
-* Confirm
-* search
-* AI enrichment
+* enhancement recommendations
+* Apply & Rescan
+* navigation between Trigger 1 and Trigger 2
+
+Do not discuss Steps 2–4 except where the HTML contains navigation placeholders.
+
+---
+
+# 3. RELATIONSHIP WITH HTML v31
+
+If HTML v31 is available, compare the current HTML against v31.
+
+Create:
+
+| Area        | v31 baseline | Current API-connected HTML |
+| ----------- | ------------ | -------------------------- |
+| Layout      |              |                            |
+| Styling     |              |                            |
+| Trigger 1   |              |                            |
+| Trigger 2   |              |                            |
+| Static data |              |                            |
+| Backend API |              |                            |
+| Feedback    |              |                            |
+| Enhancement |              |                            |
+| Rescan      |              |                            |
+
+Explain which visual elements were deliberately preserved.
+
+Identify functionality added to the API version without changing the baseline design.
+
+---
+
+# 4. COMPLETE DOM MAP
+
+Reconstruct the HTML hierarchy from `<html>` down.
+
+Do not paste the entire source.
+
+Instead produce a structured tree such as:
+
+```text
+html
+├── head
+│   ├── meta...
+│   ├── style
+│   └── ...
+└── body
+    ├── header
+    ├── main
+    │   ├── ...
+```
+
+For every important element include:
+
+* tag
+* exact `id`
+* exact `class`
+* important attributes
+* parent
+* child elements
+* visible label
+* whether JavaScript references it
+
+Do this especially for:
+
+* navigation
+* Trigger tabs
+* Trigger-1 controls
+* Trigger-2 narrative textarea
+* loading indicators
+* event cards
+* section accordions/cards
+* edit controls
+* confirm buttons
+* feedback area
+* enhancement recommendation card
+* Apply/Edit/Dismiss controls
+* error/status banners
+
+---
+
+# 5. DOM ID MANIFEST
+
+Create a dedicated table:
+
+| DOM ID | Element | Purpose | Read by JS? | Written by JS? |
+| ------ | ------- | ------- | ----------: | -------------: |
+
+Include **every ID referenced from JavaScript**.
+
+This is critical.
+
+A future recreated HTML must preserve these IDs unless the JavaScript is changed at the same time.
+
+---
+
+# 6. CSS CLASS MANIFEST
+
+Create:
+
+| CSS class | Elements using it | Visual purpose | JS dependency? |
+| --------- | ----------------- | -------------- | -------------: |
+
+Include all major classes.
+
+Highlight classes that JavaScript uses for:
+
+* selectors
+* active/inactive state
+* hidden/shown state
+* editing
+* error states
+* recommendation states
+* accordion states
+
+---
+
+# 7. CSS VARIABLES AND GLOBAL DESIGN TOKENS
+
+Capture exact CSS custom properties if present.
+
+For example:
+
+```css
+--...
+```
+
+Document exact values for:
+
+* colors
+* backgrounds
+* border colors
+* typography
+* spacing
+* radius
+* shadows
+* widths
+* heights
+
+If no variables exist and values are hardcoded, document the major repeated literal values.
+
+---
+
+# 8. PAGE LAYOUT
+
+Explain the visual layout precisely.
+
+For each major region give:
+
+* position
+* display model: flex/grid/block
+* width behaviour
+* max-width
+* height/min-height
+* margins
+* padding
+* gaps
+* alignment
+* border
+* background
+* scrolling behaviour
+
+Cover:
+
+* header
+* left/right columns if any
+* Trigger tabs
+* input area
+* result area
+* event list
+* detail panel
+* eight sections
+* feedback area
+
+---
+
+# 9. TYPOGRAPHY
+
+Document:
+
+* font family
+* font sizes
+* font weights
+* line heights
+* heading hierarchy
+* labels
+* button text
+* section text
+* status/error text
+
+Record exact important values.
+
+---
+
+# 10. RESPONSIVE BEHAVIOUR
+
+Document all media queries.
+
+For each breakpoint provide:
+
+* exact breakpoint value
+* selectors affected
+* resulting layout change
+
+If the page is effectively desktop-only, say so explicitly.
+
+---
+
+# 11. COMPLETE JAVASCRIPT STATE MODEL
+
+List every important:
+
+* global variable
+* constant
+* object
+* array
+* map/set
+* state flag
+
+Create:
+
+| Variable | Type | Initial value | Purpose | Modified by |
+| -------- | ---- | ------------- | ------- | ----------- |
+
+Include especially:
+
+* events
+* selected event
+* active trigger/tab
+* Trigger-2 original narrative
+* eight sections
+* editing state
+* feedback state
+* enhancement diagnosis state
+* recommendation state
+* dismissed recommendation tracking
+* rescan state
+
+Use the exact variable names.
+
+---
+
+# 12. JAVASCRIPT FUNCTION MANIFEST
+
+For **EVERY JavaScript function**, provide:
+
+| Function | Parameters | Returns | Purpose | Called by | Calls |
+| -------- | ---------- | ------- | ------- | --------- | ----- |
+
+Then explain each function briefly but precisely.
+
+For important functions, provide implementation-order pseudocode.
+
+Especially cover functions responsible for:
+
+* switching Trigger 1 / Trigger 2
+* running Trigger 1
+* running Trigger 2
+* calling APIs
+* rendering results
+* rendering events
+* rendering sections
+* opening/closing sections
+* editing sections
+* confirming edits
+* submitting manual feedback
 * diagnosis
-* enhancement recommendation
-* feedback consolidation
-* rescan
-* evidence metadata
-* executed queries
-* prompt files
+* recommendation rendering
+* Edit
+* Dismiss
+* Apply & Rescan
+* Trigger-1 rescan
+* Trigger-2 rescan
+* error display
+* loading state
+
+---
+
+# 13. EVENT LISTENER MAP
+
+Create:
+
+| UI element | Event | Handler | Result |
+| ---------- | ----- | ------- | ------ |
+
+Include:
+
+* button clicks
+* textarea/input change
+* tab clicks
+* accordions
+* edit buttons
+* confirm
+* manual feedback
+* enhancement controls
+
+State whether listeners are:
+
+* inline HTML attributes
+* registered through `addEventListener`
+* dynamically attached after rendering
+
+---
+
+# 14. TRIGGER 1 FRONTEND FLOW
+
+Document exact Trigger-1 browser flow.
+
+Use actual function names.
+
+For example:
+
+```text
+User clicks ...
+→ JS function ...
+→ fetch(...)
+→ endpoint
+→ response
+→ state updated
+→ render function
+→ selected event
+→ eight sections
+```
+
+Include:
+
+* exact endpoint
+* HTTP method
+* headers
+* request JSON
+* response fields consumed
+* loading state
+* error behaviour
+* event selection
+* rendering
+
+---
+
+# 15. TRIGGER 1 RESPONSE CONTRACT
+
+Document the fields the HTML expects.
+
+For example, where applicable:
+
+```json
+{
+  "event_id": ...,
+  "theme": ...,
+  "sections": ...,
+  "executed_query": ...,
+  "enhancement_meta": ...
+}
+```
+
+Use the actual fields from the HTML.
+
+For each field specify:
+
+* expected type
+* optional/required
+* where JS consumes it
+
+---
+
+# 16. TRIGGER 2 FRONTEND FLOW
+
+Document exact Trigger-2 flow.
+
+Include:
+
+* narrative input
+* submit
+* endpoint
+* request body
+* response
+* eight-section rendering
+* saving original narrative
+* diagnosis
+* re-enrichment
+
+Use exact function names and field names.
+
+---
+
+# 17. ORIGINAL TRIGGER-2 NARRATIVE
+
+Document exactly how the HTML preserves the original narrative.
+
+If the implementation uses something like:
+
+`T2_ORIGINAL_NARRATIVE`
+
+record:
+
+* exact name
+* where it is set
+* where it is read
+* why it exists
+* how it prevents rescan guidance from overwriting the original narrative
+
+Explain the previous 1000-character issue if relevant and how the current implementation avoids it.
+
+---
+
+# 18. EIGHT-SECTION RENDERING
+
+Document the exact canonical section names and order.
+
+For every section explain:
+
+* key used in JSON
+* label displayed
+* rendering function
+* edit behaviour
+* default/empty behaviour
+
+Preserve the exact ordering.
+
+---
+
+# 19. SECTION EDITING
+
+Explain exactly how editing works.
+
+Cover:
+
+* entering edit mode
+* textarea/input creation
+* where edited content is stored
+* Confirm Edit behaviour
+* cancel behaviour if present
+* how the rendered text changes
+* whether backend is called
+
+Use exact function and state names.
+
+---
+
+# 20. EXISTING MANUAL FEEDBACK
+
+Document the original/manual feedback capability separately from the enhancement feature.
+
+Explain:
+
+* location in DOM
+* textbox/button IDs
+* submission handler
+* backend endpoint if any
+* whether it performs rescan
+* whether it modifies sections
+* how its state is handled
+
+This capability must not be accidentally removed in future recreations.
+
+---
+
+# 21. ENHANCEMENT RECOMMENDATION UI
+
+Explain the current guided enhancement feature.
+
+Document the recommendation card exactly:
+
+* where it appears
+* when it is hidden
+* when it is shown
+* heading text
+* reason text
+* suggested refinement
+* editable state
+* buttons
+* visual classes
+
+Document:
+
+* `RECOMMENDED`
+* `NOT_RECOMMENDED`
+
+behaviour.
+
+---
+
+# 22. DIAGNOSIS FRONTEND FLOW
+
+Document:
+
+```text
+Step-1 result
+→ diagnosis JS function
+→ diagnosis endpoint
+→ response
+→ recommendation state
+→ render/hide recommendation
+```
+
+Include exact:
+
+* JS function
+* endpoint
+* method
+* request JSON
+* response JSON
 * error handling
 
-This should allow the new conversation to understand what changed immediately.
+---
+
+# 23. DISMISS FLOW
+
+Document exact behaviour when the user presses Dismiss.
+
+Include:
+
+* state changed
+* DOM elements hidden
+* duplicate recommendation tracking
+* backend call or no backend call
+* whether rescan occurs
 
 ---
 
-# 4. EXACT CHANGE HISTORY
+# 24. EDIT RECOMMENDATION FLOW
 
-Create a change log showing the major evolution of Step 1.
+Document:
 
-For each major change state:
-
-* original behaviour
-* problem
-* decision
-* implementation
-* current status
-
-Example structure:
-
-| Change | Previous Behaviour | Problem | Current Solution | Status |
-| ------ | ------------------ | ------- | ---------------- | ------ |
-
-Include all significant changes made during this conversation.
+* how suggested text becomes editable
+* exact DOM element
+* state value
+* how user text is captured
 
 ---
 
-# 5. ACTIVE STEP-1 ARCHITECTURE
+# 25. APPLY & RESCAN FLOW
 
-Reconstruct the current real architecture from the uploaded source files.
+Document this in exact order:
 
-Do not rely solely on previous summaries.
+```text
+Apply clicked
+→ collect accepted/edited suggestion
+→ feedback consolidation request
+→ consolidation response
+→ determine Trigger 1 or Trigger 2
+→ respective rescan API
+→ receive updated sections
+→ update frontend state
+→ rerender
+```
 
-Use actual filenames/functions.
+Use exact function names and endpoint names.
 
 ---
 
-# 6. TRIGGER 1 — CURRENT FLOW
+# 26. FEEDBACK CONSOLIDATION CONTRACT
 
-Document exact current Trigger-1 flow.
+Document exact request and response consumed by HTML.
 
-Start from frontend action and finish with rendered event.
+Include all fields such as:
 
-Include actual route and functions.
+* trigger type
+* original intent/context
+* diagnosis
+* suggested feedback
+* user-edited feedback
 
-For example conceptually:
+Use exact actual field names.
 
-`HTML → POST route → MarketEventScout.fetch_events() → _build_query() → ADK/web search → parser → MarketEvent → eight sections → frontend`
+---
 
-Use the REAL route/function names.
+# 27. TRIGGER 1 RESCAN FRONTEND CONTRACT
 
 Document:
 
 * endpoint
 * HTTP method
 * request body
-* response structure
-* theme handling
-* event ID type
-* query creation
-* retrieval
-* parsing
-* event creation
-* evidence metadata
-* executed query
-* enhancement metadata
-* errors/timeouts
-* rendering
-* feedback/rescan path
+* event ID
+* theme
+* feedback/refinement field
+* response
+
+Explain how the current event is replaced/updated.
 
 ---
 
-# 7. TRIGGER 1 RESCAN FLOW
+# 28. TRIGGER 2 RE-ENRICH CONTRACT
 
 Document:
 
-`MarketEventScout.refine_event()`
-
-including:
-
-* input event
-* feedback/refinement guidance
-* query reconstruction
-* retrieval
-* parsing
-* returned status
-* frontend update
-
-Explain how Apply & Rescan uses this.
-
----
-
-# 8. TRIGGER 2 — CURRENT FLOW
-
-Document the now-confirmed active Trigger-2 path.
-
-The latest implementation determined that the Step-1 server uses:
-
-`server.py`
-
-and:
-
-`narrative_enricher.enrich_narrative()`
-
-Confirm this again against current uploaded source.
-
-Document the exact flow:
-
-* frontend submission
 * endpoint
-* original narrative
-* `R2D2_PROMPT`
-* search/retrieval
-* parsing
-* eight sections
-* enhancement metadata
-* frontend rendering
+* HTTP method
+* original narrative field
+* separate refinement guidance field
+* response
+* state update
 
-Explicitly document that:
-
-`RPRService.enrich_narrative()`
-
-belongs to another/full RPR server path and is NOT the API-connected Step-1 HTML's active Trigger-2 path, if this remains true.
+Make clear that the original narrative and refinement guidance are separate.
 
 ---
 
-# 9. TRIGGER 2 RESCAN FLOW
+# 29. API ROUTE MANIFEST
 
-Document the new re-enrichment workflow.
+Create:
 
-Explain:
+| Route | Method | Trigger | JS caller | Request | Response |
+| ----- | ------ | ------- | --------- | ------- | -------- |
 
-* original narrative preservation
-* `T2_ORIGINAL_NARRATIVE` if that is still the actual implementation
-* separate `refinement_guidance`
-* `/re-enrich` endpoint
-* how guidance is injected
-* why the original narrative is no longer truncated/overwritten
-* how updated eight sections return to the UI
+Include every route referenced from the HTML.
 
-Include exact field names.
+Use exact strings.
 
 ---
 
-# 10. THE EIGHT STEP-1 SECTIONS
+# 30. API BASE URL
 
-Document the canonical section order exactly.
+Document:
 
-Include:
-
-1. Event Overview
-2. Event History
-3. Direct Impact Geographies
-4. Contagious/Contagion Impact Geographies
-5. Equity Market Impact
-6. Credit Market Impact
-7. Commodity Market Impact
-8. Assumptions
-
-Use the exact naming found in the current code.
-
-Explain where these names are defined and how both triggers map into them.
-
----
-
-# 11. AI / MODEL ARCHITECTURE
-
-Create a dedicated section explaining ALL AI systems used by Step 1.
-
-For each AI/model/service provide:
-
-| Purpose | Model/service | File | Function | Authentication | Used by |
-| ------- | ------------- | ---- | -------- | -------------- | ------- |
-
-Include where applicable:
-
-* ADK web-search agent
-* Gemini model used by `web_search_agent.py`
-* Claude / Helix / R2D2 gateway
-* actual Claude model/configuration
-* mock gateway if present
-* model/environment variables
-
-Use the exact configured model names from the current source where available.
-
-Do NOT guess.
-
-If the exact model is determined by environment configuration, state that.
-
----
-
-# 12. AUTHENTICATION / ENVIRONMENT
-
-Document all environment variables required to run Step 1.
-
-Examples only:
-
-* `LLM_PROVIDER`
-* R2D2/H2M auth mode
-* certificate path
-* search/model configuration
-
-Use actual names found in source/start scripts.
-
-IMPORTANT:
-
-Do NOT place real passwords, tokens, private keys, certificate contents, bearer tokens, or sensitive credentials into the KT.
-
-Record only:
-
-* environment variable name
-* what it controls
-* expected type/example placeholder
-* whether required
-
-Redact secrets as:
-
-`<REDACTED>`
-
----
-
-# 13. HOW TO START THE BACKEND
-
-Document the exact current working startup procedure.
-
-Include:
-
-* working directory
-* PowerShell commands
-* required environment variables
-* auth initialization if required
-* `uvicorn` command
-* host
+* exact base URL constant if present
+* localhost host
 * port
-* reload setting
+* how routes are concatenated
+* whether CORS assumptions exist
 
-Use the actual current startup command.
-
-Also document the existing:
-
-`start_backend.ps1`
-
-if it can be used.
-
-Clearly distinguish:
-
-### Recommended startup
-
-from
-
-### Alternative manual startup
+Explain what must change if backend runs on another host.
 
 ---
 
-# 14. HOW TO VERIFY BACKEND STARTUP
+# 31. LOADING STATES
 
-Document exact checks:
+Document every loading/spinner/status behaviour.
 
-* `/health`
-* `/docs`
-* expected port
-* what success looks like
-* common startup failures
+For each operation explain:
 
-Include exact URLs using localhost/127.0.0.1.
+* what gets disabled
+* what text changes
+* spinner
+* when restored
 
----
-
-# 15. HOW TO OPEN THE FRONTEND
-
-Document which HTML is used for current testing.
-
-Explain clearly:
-
-### HTML v31
-
-Static design baseline — DO NOT USE AS LIVE ENHANCEMENT TEST FILE.
-
-### API-connected Step-1 HTML
-
-Actual current test frontend.
-
-Give exact filename.
-
-Explain whether it can be opened directly with `file://` or requires a local web server.
-
-Document API base URL.
+Cover initial scans, diagnosis and rescan.
 
 ---
 
-# 16. CURRENT API ROUTES
-
-Create an exact route inventory.
-
-| Route | Method | File | Function | Trigger | Purpose |
-| ----- | ------ | ---- | -------- | ------- | ------- |
-
-Include every Step-1 route currently used, including:
-
-* Trigger-1 initial scan
-* Trigger-1 refine/rescan
-* Trigger-2 initial enrichment
-* Trigger-2 re-enrichment
-* enhancement diagnosis
-* feedback consolidation
-* health if applicable
-
-Use exact route strings.
-
----
-
-# 17. ENHANCEMENT FEATURE — BUSINESS PURPOSE
-
-Explain why this feature exists.
-
-It is NOT an automatic prompt rewriting system.
-
-Workflow:
-
-`Initial Step-1 output`
-→ `inspect output + retrieval quality`
-→ `diagnosis`
-→ `NOT_RECOMMENDED or RECOMMENDED`
-
-If RECOMMENDED:
-
-→ show guided suggestion
-→ user may Edit / Dismiss / Apply & Rescan
-→ feedback consolidation
-→ runtime guidance
-→ rescan/re-enrichment
-
-Explain:
-
-* user remains in control
-* no silent rescan
-* no permanent prompt modification
-* no invented new research direction
-* existing feedback remains available
-
----
-
-# 18. ENHANCEMENT DIAGNOSIS FLOW
-
-Document exact current implementation.
-
-Include:
-
-* frontend function
-* endpoint
-* backend route function
-* prompt file
-* LLM gateway function
-* input payload
-* expected response
-* RECOMMENDED
-* NOT_RECOMMENDED
-* UI behaviour
-
----
-
-# 19. FEEDBACK CONSOLIDATION FLOW
+# 32. ERROR HANDLING
 
 Document:
 
-* user acceptance/edit
-* endpoint
-* prompt
-* input fields
-* output
-* how result becomes runtime refinement guidance
+* API connection failure
+* HTTP non-2xx
+* invalid JSON
+* backend offline
+* empty response
+* enhancement endpoint failure
+* rescan failure
 
-Explain that it preserves the user's intent.
-
----
-
-# 20. EVIDENCE MODEL
-
-Document current:
-
-`EvidenceTier`
-
-enum.
-
-Include exact values.
-
-Explain the current derivation algorithm.
-
-Document any constants/thresholds such as minimum character counts or metric detection patterns.
-
-Explain this important invariant:
-
-**Technical retrieval failure must never become EvidenceTier.NONE.**
+Record exact visible user messages where important.
 
 ---
 
-# 21. RETRIEVAL STATUS MODEL
+# 33. STATIC / MOCK DATA
 
-Document current:
+Identify every remaining static/mock data block in the API-connected HTML.
 
-`RetrievalStatus`
+For each state:
 
-enum.
+* used in live mode?
+* fallback only?
+* demo-only?
+* safe to remove?
+* required for v31 visual parity?
 
-Include exact values.
-
-Explain when each is assigned.
-
-Describe:
-
-* SUCCESS
-* PARTIAL technical failure if present
-* TECHNICAL_FAILURE
-* NOT_ASSESSED if present
-
-Use actual values from source.
+Do not confuse v31's static dataset with the current live API version.
 
 ---
 
-# 22. EXECUTED QUERY CAPTURE
+# 34. HARDCODED BUSINESS CONSTANTS
 
-Explain how Trigger 1 now retains:
+List exact frontend constants such as:
 
-`executed_query`
+* section names
+* event labels
+* Trigger names
+* placeholder text
+* maximum input length
+* endpoint paths
+* status strings
+* recommendation button labels
 
-and where it appears in returned JSON.
-
-Explain whether Trigger 2 stores the full executed query or a truncated/logging representation.
-
-Clearly distinguish current limitations from bugs.
+These must be preserved in reconstruction.
 
 ---
 
-# 23. PROMPT INVENTORY
+# 35. HIDDEN COUPLING
 
-Create a complete Step-1 prompt table.
+Identify anything easy to miss that would break the page if recreated incorrectly.
 
-| Prompt | Exact file | Runtime? | Loaded by | Used for |
-| ------ | ---------- | -------: | --------- | -------- |
+Examples:
+
+* JavaScript expects a particular DOM ID
+* CSS selector relies on HTML hierarchy
+* dynamically created element needs exact class
+* backend field name is hardcoded
+* event ID is used as integer
+* specific section key mapping
+* functions are called from inline `onclick`
+
+Be exhaustive.
+
+---
+
+# 36. INITIALIZATION
+
+Document what happens when the page first loads.
 
 Include:
 
-* existing `R2D2_PROMPT`
-* Trigger-1 ADK/search system prompt
-* Trigger-1 `_build_query()` instructions
-* `trigger1_market_scanner.txt`
-* `enhancement_diagnosis.txt`
-* `feedback_consolidation.txt`
-* original Step-1 specification document
-
-Clearly explain which are:
-
-* production runtime prompts
-* runtime enhancement prompts
-* reference/business specification only
+* DOMContentLoaded
+* default tab
+* initial data
+* event listeners
+* initial hidden elements
+* state initialization
 
 ---
 
-# 24. IMPORTANT — TRIGGER1 PROMPT IMPLEMENTATION
+# 37. VISUAL RECONSTRUCTION BLUEPRINT
 
-Document exactly how the current implementation uses:
+Create a dedicated section specifically for recreating the page visually.
 
-`trigger1_market_scanner.txt`
+Describe top-to-bottom:
 
-versus the instructions currently embedded in:
+1. Page background
+2. Header
+3. Step indicator/navigation
+4. Trigger tabs
+5. Input card
+6. Results area
+7. Event cards/list
+8. Eight-section detail area
+9. Feedback section
+10. Enhancement recommendation
 
-`market_event_scout._build_query()`.
-
-If the `.txt` is currently reference-only while `_build_query()` contains the operational implementation, state this explicitly.
-
-This distinction must not be lost in the next conversation.
-
----
-
-# 25. PROMPT DIRECTORY
-
-Document exact location:
-
-`backend/prompts/`
-
-and list every file required there.
-
-Explain how `rpr_enhancement_routes.py` resolves this directory.
-
-Also explain that the existing `PromptLoader` used by other RPR steps is a different mechanism if that remains true.
+For each provide enough exact CSS information to reproduce it faithfully.
 
 ---
 
-# 26. FULL FILE INVENTORY
+# 38. DO NOT REDESIGN
 
-Create a table of ALL Step-1-relevant files.
+State explicitly:
 
-| File | Current role | Status | Modified? | Required to run Step 1? |
-| ---- | ------------ | ------ | --------: | ----------------------: |
+A reconstructed file must **NOT**:
 
-At minimum include:
+* modernize the layout
+* change colors
+* change typography
+* change spacing arbitrarily
+* replace cards/tabs
+* move feedback
+* create modals
+* change button names
+* redesign accordions
+* change v31 visual identity
 
-* `server.py`
-* `market_event_scout.py`
-* `narrative_enricher.py`
-* `rpr_enhancement_routes.py`
-* `web_search_agent.py`
-* `llm_gateway.py`
-* `r2d2_prompt.py`
-* `prompt_loader.py`
-* `rpr_service.py`
-* `evidence_service.py`
-* `main.py`
-* current API-connected HTML
-* v31 baseline HTML
-* three enhancement prompts
-* start scripts
+Functional additions must fit within the existing v31-derived design.
 
 ---
 
-# 27. FILES MODIFIED IN THE LATEST ITERATION
+# 39. SAFE INTERNAL DIFFERENCES
 
-Document the latest generated/replacement versions precisely.
+Explain what a recreated HTML MAY implement differently without changing behaviour.
 
-At minimum verify:
+Examples might include:
 
-* `market_event_scout.py`
-* `narrative_enricher.py`
-* `rpr_enhancement_routes.py`
-* `server.py`
-* API-connected Step-1 HTML
+* helper function organization
+* comments
+* whitespace
+* variable scoping
 
-For each provide:
-
-* what changed
-* why
-* main new functions/fields
-* dependencies
-* potential regression risk
+But only list differences that are truly safe.
 
 ---
 
-# 28. FILES ADDED
+# 40. MUST MATCH EXACTLY
 
-Document the new files:
+List everything a recreated HTML must reproduce exactly or compatibly:
 
-* three prompt `.txt` files
-* enhancement router if it was originally new
-* implementation summary if useful
-
-Distinguish executable/runtime files from documentation.
-
----
-
-# 29. FILES INTENTIONALLY UNCHANGED
-
-Document specifically why these were kept unchanged:
-
-* `llm_gateway.py`
-* `r2d2_prompt.py`
-* `web_search_agent.py`
-* `prompt_loader.py`
-* `rpr_service.py`
-* `main.py`
-* `evidence_service.py`
-
-Do not simply say "unchanged"; explain why they were not needed for the active Step-1 path.
+* IDs
+* backend endpoint names
+* JSON fields
+* Trigger names
+* section order
+* user-visible workflow
+* original narrative preservation
+* recommendation lifecycle
+* manual feedback capability
+* v31 visual structure
 
 ---
 
-# 30. FILENAME / DEPLOYMENT WARNING
+# 41. CURRENT KNOWN HTML ISSUES
 
-Document an important practical issue:
+List any known issues still present in the current HTML.
 
-Downloaded generated files may receive Windows suffixes such as:
+Separate:
 
-`market_event_scout (11).py`
+* confirmed bugs
+* limitations
+* untested behaviour
+* harmless technical debt
 
-or:
-
-`narrative_enricher (2).py`
-
-Before running, they must be renamed to their canonical import names:
-
-`market_event_scout.py`
-
-`narrative_enricher.py`
-
-Explain why leaving suffixes would cause Python to import the wrong/older file.
+Do not invent issues.
 
 ---
 
-# 31. CURRENT DIRECTORY STRUCTURE
+# 42. PREVIOUS HTML ISSUES FIXED
 
-Reconstruct the relevant current directory tree.
+Document historical issues already corrected, especially:
+
+* Trigger-2 refinement text appended into narrative
+* 1000-character truncation
+* enhancement route mismatch if applicable
+* static vs API-connected confusion
+* any other frontend bug corrected in latest version
+
+Explain current solution.
+
+---
+
+# 43. RECONSTRUCTION ALGORITHM
+
+At the end provide a strict build sequence for another model:
+
+### Phase 1 — Skeleton
+
+exact DOM sections to create
+
+### Phase 2 — Styling
+
+CSS blocks in correct order
+
+### Phase 3 — Base State
+
+global JS variables/constants
+
+### Phase 4 — Existing Step-1 Functions
+
+Trigger 1 / Trigger 2
+
+### Phase 5 — Rendering
+
+event/sections/editing
+
+### Phase 6 — Feedback
+
+manual feedback
+
+### Phase 7 — Enhancement
+
+diagnosis/card/consolidation/rescan
+
+### Phase 8 — Initialization
+
+This should make it possible to recreate the file systematically.
+
+---
+
+# 44. FUNCTION DEPENDENCY GRAPH
+
+Produce a concise dependency graph showing which JavaScript functions depend on others.
 
 For example:
 
 ```text
-backend/
-    server.py
-    market_event_scout.py
-    narrative_enricher.py
-    rpr_enhancement_routes.py
-    web_search_agent.py
-    llm_gateway.py
-    r2d2_prompt.py
-    prompts/
-        trigger1_market_scanner.txt
-        enhancement_diagnosis.txt
-        feedback_consolidation.txt
+runTrigger1()
+ ├─ apiFetch(...)
+ ├─ renderEvents(...)
+ │   └─ selectEvent(...)
+ │       └─ renderSections(...)
+ └─ runEnhancementDiagnosis(...)
 ```
 
-Include frontend location if known.
-
-Mark uncertain paths explicitly.
+Use the actual functions.
 
 ---
 
-# 32. PREVIOUS ISSUES AND THEIR FIXES
+# 45. API SEQUENCE DIAGRAMS
 
-Create a detailed issue history.
+Provide concise sequence diagrams for:
 
-For each issue:
+### Trigger 1 initial run
 
-| Issue | Previous behaviour | Fix | Current status |
-| ----- | ------------------ | --- | -------------- |
+### Trigger 1 Apply & Rescan
 
-Include all previously identified issues such as:
+### Trigger 2 initial run
 
-* enhancement router not registered
-* Trigger-2 active path uncertainty
-* Trigger-2 1000-character truncation
-* guidance mixed into original narrative
-* integer IDs versus UUID assumptions
-* nonexistent `theme_id`
-* nonexistent `narrative_segment_id`
-* placeholder metadata inconsistencies
-* retrieval failure vs no evidence
-* executed query missing
-* prompt path confusion
-* Trigger-1 prompt not initially integrated
-* duplicate recommendation handling
-* any `"None"` web-content issue and why it was irrelevant/not changed for the active Step-1 server if applicable
+### Trigger 2 Apply & Rescan
+
+Use actual function and route names.
 
 ---
 
-# 33. CURRENT KNOWN ISSUES / LIMITATIONS
+# 46. RECONSTRUCTION TEST CHECKLIST
 
-Be rigorous.
-
-Do NOT say "no blockers" and then hide untested areas.
-
-Separate:
-
-### Known bugs
-
-### Known design limitations
-
-### Known performance limitations
-
-### Untested areas
-
-Examples to verify:
-
-* sequential Trigger-1 processing
-* 240-second retrieval timeout
-* Claude timeout behaviour
-* heuristic evidence-tier derivation
-* Trigger-1 prompt code/file duplication
-* static browser preview unable to call backend
-* real enterprise environment dependencies
-
----
-
-# 34. TEST STATUS
-
-Create a test matrix.
-
-Use ONLY:
-
-* LIVE PASSED
-* STATICALLY VERIFIED
-* NOT TESTED
-* FAILED
-* BLOCKED
+Provide tests the new model can run after recreating the HTML.
 
 Include:
 
-* Python syntax
-* imports
-* server startup
-* route registration
-* `/health`
-* `/docs`
-* Trigger-1 live scan
-* Trigger-2 live enrichment
-* eight-section rendering
-* diagnosis NOT_RECOMMENDED
-* diagnosis RECOMMENDED
-* Dismiss
-* Edit
-* Apply & Rescan Trigger 1
-* Apply & Rescan Trigger 2
-* original narrative preservation
-* manual section editing
-* Confirm
-* prompt loading
-
-Do not claim LIVE PASSED unless it actually ran successfully.
-
----
-
-# 35. PREVIOUS WORKING BASELINE / ROLLBACK
-
-Document how to return to the last known working API-connected Step-1 version if the enhanced version fails.
-
-Identify:
-
-* files that were replaced
-* which original files should be restored
-* new files that can be removed/disabled
-* router line to remove if necessary
-* frontend file to revert to
-
-Do NOT fabricate backup filenames if unavailable.
-
-Instead explain conceptually which canonical files must be restored from source control/backup.
-
----
-
-# 36. DEBUGGING ORDER
-
-Give the next Stylus session a strict debugging sequence.
-
-If Step 1 fails after deployment, investigate in this order:
-
-1. filenames/canonical imports
-2. Python syntax/import errors
-3. server startup
-4. route registration
-5. `/health`
-6. `/docs`
-7. Trigger-1 base route
-8. Trigger-2 base route
-9. prompt directory
-10. diagnosis endpoint
-11. consolidation endpoint
-12. rescan endpoint
-13. frontend API contract
-14. AI/authentication/retrieval
-
-Explain what evidence to inspect at each step.
-
----
-
-# 37. EXPECTED LOGGING
-
-Document useful existing logs and what they mean.
-
-Include:
-
-* ADK availability
-* search failures
-* timeout messages
-* enhancement diagnosis failures
-* router startup
-* Trigger-1 scan warnings
-* Trigger-2 enrichment errors
-
-Use actual logging strings where reasonably available.
-
----
-
-# 38. DATA CONTRACTS
-
-Capture exact current request/response shapes for:
-
-* Trigger-1 scan
-* Trigger-1 refine
-* Trigger-2 enrich
-* Trigger-2 re-enrich
-* enhancement diagnosis
-* feedback consolidation
-
-Use actual JSON field names and types.
-
-This is essential for future reconstruction.
-
----
-
-# 39. FRONTEND STATE
-
-Document current important JavaScript state such as:
-
-* event list
-* selected event
-* enhancement state
-* dismissed/applied state
-* original Trigger-2 narrative
-* current section edits
-
-Use exact global/object names from source where possible.
-
----
-
-# 40. V31 DESIGN GUARDRAIL
-
-State prominently:
-
-**HTML v31 is the tech-lead baseline and must remain untouched.**
-
-The API-connected HTML may evolve functionally but should preserve v31's design.
-
-Do not allow a future coding model to redesign the Step-1 UI unless explicitly requested.
-
----
-
-# 41. CURRENT BUSINESS RULES
-
-Capture the non-negotiable behaviour:
-
-* user remains in control
-* no automatic rescan
-* no automatic permanent prompt rewrite
-* no fabricated evidence
-* technical retrieval failure ≠ no evidence
-* manual feedback remains available
-* eight-section format preserved
-* Trigger-1 integer event IDs preserved
-* no invented UUID/theme/narrative IDs
-* enhancement recommendation only when justified
-* NOT_RECOMMENDED is expected normal behaviour
-* accepted user feedback must preserve original intent
-
----
-
-# 42. WHAT THE NEXT CHAT SHOULD NOT DO
-
-Create explicit warnings:
-
-Do NOT:
-
-* restart architecture discovery from zero
-* redesign v31
-* switch Trigger-2 to `RPRService` without evidence
-* rewrite `R2D2_PROMPT`
-* change `llm_gateway.py` unnecessarily
-* invent IDs
-* create another parallel enhancement system
-* introduce a database
-* modify Steps 2–4
-* assume static preview API errors mean backend failure
-* overwrite working code before understanding the latest state
-
----
-
-# 43. WHAT THE NEXT CHAT SHOULD DO FIRST
-
-Give this sequence:
-
-1. Read this KT completely.
-2. Inspect the current deployed versions of the five modified files.
-3. Confirm canonical filenames.
-4. Confirm three `.txt` prompts exist in `backend/prompts/`.
-5. Start backend.
-6. Check `/health`.
-7. Check `/docs`.
-8. Run Trigger 1.
-9. Run Trigger 2.
-10. Test diagnosis.
-11. Test Apply & Rescan.
-12. Fix only real runtime failures.
-
-Do not generate another architecture redesign before these tests.
-
----
-
-# 44. CURRENT SUCCESS CRITERIA
-
-Define what "Step 1 working" means:
-
-### Trigger 1
-
-* live market scan succeeds
-* events render
-* eight sections populated
-* executed query available
-* evidence metadata available
-* diagnosis works
-* recommendation works
-* Apply & Rescan works
-
-### Trigger 2
-
-* narrative enrichment succeeds
+* HTML loads without syntax error
+* console has no immediate JS errors
+* v31 appearance retained
+* Trigger tabs switch
+* Trigger 1 request shape correct
+* Trigger 2 request shape correct
 * eight sections render
+* event selection works
+* editing works
+* manual feedback remains
+* diagnosis request works
+* NOT_RECOMMENDED hides card
+* RECOMMENDED shows card
+* Edit works
+* Dismiss works
+* Apply & Rescan T1 works
+* Apply & Rescan T2 works
 * original narrative preserved
-* diagnosis works
-* recommendation works
-* re-enrichment uses separate guidance
-
-### UI
-
-* v31 design preserved
-* manual editing works
-* Confirm works
-* feedback works
 
 ---
 
-# 45. SOURCE-OF-TRUTH HIERARCHY
+# 47. SOURCE EXCERPTS
 
-For the next conversation:
+Include small exact source excerpts only where they significantly reduce ambiguity.
 
-1. CURRENT DEPLOYED SOURCE FILES
-2. HTML v31 for visual design only
-3. approved prompt files for enhancement business logic
-4. original Step-1 specification
-5. this KT
-6. older generated files / older analysis
+Useful examples:
 
-If this KT conflicts with the current source, inspect source before changing anything.
+* API base URL
+* section-name mapping
+* important global state declarations
+* recommendation HTML template
+* important fetch calls
+* DOM initialization
 
----
+Do NOT copy the complete HTML.
 
-# 46. FINAL HANDOFF MANIFEST
-
-At the end produce a concise upload manifest for the next Stylus chat:
-
-## Essential
-
-List exact files required to continue runtime debugging.
-
-## Helpful
-
-Files useful for understanding architecture.
-
-## Do not need to upload yet
-
-Steps 2–4 and unrelated files.
+The goal is reconstruction knowledge, not source duplication.
 
 ---
 
-# 47. HANDOFF CONFIDENCE MATRIX
+# 48. CONFIDENCE MATRIX
 
-End with:
+Finish with:
 
-| Area                   | Confidence | Live verified? | Remaining uncertainty |
-| ---------------------- | ---------- | -------------: | --------------------- |
-| Trigger 1 architecture |            |                |                       |
-| Trigger 2 architecture |            |                |                       |
-| Backend routes         |            |                |                       |
-| Prompt architecture    |            |                |                       |
-| AI models              |            |                |                       |
-| Enhancement workflow   |            |                |                       |
-| Frontend contract      |            |                |                       |
-| Rescan T1              |            |                |                       |
-| Rescan T2              |            |                |                       |
-| Deployment             |            |                |                       |
-| Test readiness         |            |                |                       |
+| Area                  | Reconstruction confidence | Critical information preserved? | Remaining ambiguity |
+| --------------------- | ------------------------: | ------------------------------: | ------------------- |
+| DOM                   |                           |                                 |                     |
+| CSS                   |                           |                                 |                     |
+| v31 design parity     |                           |                                 |                     |
+| Trigger 1             |                           |                                 |                     |
+| Trigger 2             |                           |                                 |                     |
+| Eight sections        |                           |                                 |                     |
+| Editing               |                           |                                 |                     |
+| Manual feedback       |                           |                                 |                     |
+| Enhancement diagnosis |                           |                                 |                     |
+| Consolidation         |                           |                                 |                     |
+| T1 rescan             |                           |                                 |                     |
+| T2 rescan             |                           |                                 |                     |
+| API contracts         |                           |                                 |                     |
+| State                 |                           |                                 |                     |
+| Error handling        |                           |                                 |                     |
 
 ---
 
-# FINAL REQUIREMENTS
+# FINAL QUALITY REQUIREMENT
+
+Before generating the `.md`:
+
+1. Read the ENTIRE current API-connected HTML.
+2. If v31 is available, inspect it too.
+3. Do not infer structure from screenshots.
+4. Extract exact function names, IDs, classes, API routes and field names directly from source.
+5. Verify all references against the HTML.
+6. Clearly distinguish current code from historical/previous behaviour.
+7. Do not expose credentials or sensitive secrets.
 
 Generate:
 
-`RPR_STEP1_MASTER_KNOWLEDGE_TRANSFER.md`
+`RPR_STEP1_HTML_RECONSTRUCTION_KT.md`
 
-Make it downloadable.
+and make it downloadable.
 
-Before completing:
+The ultimate test is:
 
-* read the entire current conversation
-* read all currently uploaded relevant files
-* reconcile older analysis against the latest generated files
-* use the latest implementation as current state
-* clearly preserve the previous working state for rollback/debugging
-* do not hide uncertainty
-* do not claim runtime tests that were not executed
-* do not expose secrets
-* do not modify implementation files
+**Could another coding model recreate a visually equivalent and API-compatible RPR Step-1 HTML without seeing the original source?**
 
-This KT should be detailed enough that a completely new Stylus conversation can continue the project immediately without repeating the discovery work.
+If the answer is not confidently yes, add the missing reconstruction details before completing the document.
