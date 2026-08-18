@@ -15,3 +15,9 @@ $env:RPR_FEEDBACK_MODEL="claude-sonnet-4-6"
 $env:VERTEX_LOCATION="us"
 if ($env:VERTEX_PROJECT_ID -and -not $env:VERTEX_PROJECT) { $env:VERTEX_PROJECT=$env:VERTEX_PROJECT_ID }
 if ($env:BASE_VERTEX_URL -and -not $env:VERTEX_ENDPOINT) { $env:VERTEX_ENDPOINT=$env:BASE_VERTEX_URL.TrimEnd('/') }
+
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -m pip install python-multipart
+
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
