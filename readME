@@ -16,6 +16,13 @@ foreach ($name in $names) {
 
 
 
+foreach ($name in $names) {
+    $value = [Environment]::GetEnvironmentVariable($name, "Process")
+    if ($value) {
+        "$name stillEndsWithV1=$($value -match '/v1/?$')"
+    }
+}
+
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 Unblock-File .\RUNTIME_ENV.ps1
 . .\RUNTIME_ENV.ps1
