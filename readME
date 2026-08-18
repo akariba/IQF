@@ -21,3 +21,702 @@ if ($env:BASE_VERTEX_URL -and -not $env:VERTEX_ENDPOINT) { $env:VERTEX_ENDPOINT=
 
 
 & "..\portfolio-agent\.venv\Scripts\python.exe" -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+
+
+You are acting as a senior Python/FastAPI, Citi ADK Adapter, Gemini/Vertex, asynchronous agent-lifecycle, and frontend integration engineer.
+
+I need you to diagnose my current Rapid Portfolio Review application using the actual files in my workspace. Do not guess and do not immediately generate another patch. First inspect the current files and runtime evidence, identify the exact root cause, and then recommend the smallest consolidated fix only if a code change is genuinely required.
+
+# PROJECT
+
+Project: ICM PM — AI-assisted Rapid Portfolio Review (RPR), Citi internal proof of concept.
+
+Current release: RPR v8.1 consolidated.
+
+v8.1 supersedes v7.1, v7.2 and v8.0. Do not tell me to chain or reinstall the older packages.
+
+# IMMUTABLE UI CONTRACT
+
+The following design constraints are mandatory:
+
+1. `icm-pm-rapid-portfolio-review-v31.html` is the immutable visual source of truth for Step 2 onward.
+2. `rpr-step1-test-v6.html` / v6.1 are frozen Step-1 visual references.
+3. The current integrated test UI is `frontend/rpr-v8-consolidated-test.html`.
+4. Do not redesign the interface.
+5. Do not change colours, typography, spacing, layout, panel structure, workflow structure or button styling.
+6. Any required fix must be functional JavaScript/backend/API logic only and must preserve the v31 visual language exactly.
+
+# TARGET STEP-1 ARCHITECTURE
+
+## Trigger 1: Market Scanner
+
+Expected flow:
+
+Theme
+→ Gemini 3.5 Flash through the Citi ADK Adapter and `enterprise_web_search` for event discovery
+→ per-event Gemini 3.5 Flash enterprise evidence retrieval
+→ Claude Opus 4.6 through R2D2 for the final eight-section credit-risk refinement
+→ analyst review, edit and confirmation.
+
+## Trigger 2: User Narrative
+
+Expected flow:
+
+Original user narrative
+→ Gemini 3.5 Flash exact-event enterprise search
+→ evidence dossier
+→ Claude Opus 4.6 final refinement
+→ final eight sections.
+
+The eight fixed Step-1 sections are:
+
+1. Event Overview
+2. Event History
+3. Direct Impact Geographies
+4. Contagious Impact Geographies
+5. Equity Market Impact
+6. Credit Market Impact
+7. Commodity Market Impact
+8. Assumptions
+
+# MODEL ROUTING
+
+Gemini 3.5 Flash must be used for:
+
+* market-theme/event discovery;
+* enterprise web evidence retrieval;
+* Trigger-2 exact-event evidence retrieval.
+
+Claude Opus 4.6 must be used for:
+
+* Trigger-1 final eight-section refinement;
+* Trigger-2 final eight-section refinement;
+* Step 2.1 scenario generation;
+* Step 2.3 event-driven risk-factor generation;
+* deep feedback reasoning when material.
+
+Claude Sonnet 4.6 may be used for:
+
+* theme-quality assessment;
+* lighter context assessment;
+* normal feedback interpretation;
+* company evidence interpretation where appropriate.
+
+Deterministic Python must own:
+
+* technical retrieval status;
+* exact weights and arithmetic;
+* scoring;
+* evidence technical status;
+* portfolio aggregation;
+* portfolio selection/filtering.
+
+# IMPORTANT HISTORICAL PROBLEM
+
+Before v8.1, the Market Scanner returned zero events almost immediately.
+
+The frontend could claim that Gemini and Opus had run even though PowerShell showed no real Gemini `[LLM] START` entry.
+
+The old implementation swallowed discovery exceptions and converted a technical Gemini failure into a misleading successful HTTP 200 response with zero events.
+
+A known earlier Citi ADK/connector failure was:
+
+```text
+AssertionError: self._connector is not None
+```
+
+Another problem was reusing/caching an `LlmAgent` across separate worker event loops.
+
+The Citi reference implementation established the following required pattern:
+
+```python
+from citi_adk_adapter.models import Vertex
+
+Vertex(model="gemini-3.5-flash")
+```
+
+Additional requirements:
+
+* `VERTEX_LOCATION=us`;
+* use `enterprise_web_search`;
+* fresh `Vertex` per search call;
+* fresh `LlmAgent` per search call;
+* fresh `InMemorySessionService` per call;
+* fresh `Runner` per call;
+* no module-level cached Gemini/ADK agent;
+* no Gemini 2.5 fallback;
+* no legacy `web_search_agent.py` fallback;
+* refresh/rebuild the adapter client for each isolated invocation as required by the Citi adapter lifecycle.
+
+# WORK COMPLETED BEFORE v8.1
+
+Earlier optimization work included:
+
+* splitting the Trigger-1 discovery, evidence retrieval and final refinement responsibilities;
+* changing the shared search layer from a conflicting full-report generator into a neutral retrieval layer;
+* using Gemini for discovery and evidence retrieval;
+* using Claude Opus 4.6 only after evidence retrieval for the final eight-section synthesis;
+* maintaining bounded parallel event processing;
+* adding provider/model/role/duration/status logs;
+* adding separate feedback logic and state for each workflow page;
+* preserving deterministic scoring and aggregation;
+* retaining `step1_quality.py`;
+* preventing silent mock fallback and automatic rescans.
+
+The wider v8 consolidated release included work in or around:
+
+**REPLACE EXISTING**
+
+* `backend/server.py`
+* `backend/market_event_scout.py`
+* `backend/narrative_enricher.py`
+* `backend/theme_assistant.py`
+* `backend/rpr_enhancement_routes.py`
+* `backend/step2_service.py`
+* `backend/step2_routes.py`
+
+**NEW — ADD**
+
+* `backend/rpr_search_agent.py`
+* `backend/rpr_model_trace.py`
+* `backend/rpr_feedback_service.py`
+* `backend/rpr_feedback_routes.py`
+
+It also included governed prompt files under `backend/prompts/`.
+
+The current diagnostic priority, however, is only the v8.1 Gemini 3.5 live discovery path.
+
+# EXACT v8.1 FILES JUST INSTALLED
+
+The latest v8.1 overlay replaced these files:
+
+**REPLACE EXISTING**
+
+1. `backend/rpr_search_agent.py`
+2. `backend/market_event_scout.py`
+3. `backend/server.py`
+4. `frontend/rpr-v8-consolidated-test.html`
+
+The updated runtime environment file was also loaded:
+
+5. `RUNTIME_ENV.ps1`
+
+No other backend files were intentionally replaced during this latest v8.1 live fix.
+
+# v8.1 CHANGES BY FILE
+
+## `backend/rpr_search_agent.py`
+
+This file should now:
+
+* import `Vertex` from `citi_adk_adapter.models`;
+* construct the model using `Vertex(model=model_name)`;
+* avoid the unsupported/problematic `model_location=` constructor argument;
+* set or bridge `VERTEX_LOCATION=us`;
+* bridge `VERTEX_PROJECT` from the existing `VERTEX_PROJECT_ID` when required;
+* bridge `VERTEX_ENDPOINT` from the existing `BASE_VERTEX_URL` when required;
+* use `gemini-3.5-flash`;
+* create a fresh `Vertex`, `LlmAgent`, `InMemorySessionService` and `Runner` for every search invocation;
+* use `enterprise_web_search`;
+* expose real START/END logging;
+* avoid any legacy Gemini 2.5 or `web_search_agent.py` fallback;
+* expose runtime/preflight information for `/health`.
+
+The intended constructor is:
+
+```python
+return Vertex(model=model_name)
+```
+
+The runtime metadata should indicate:
+
+```text
+agent_lifecycle = fresh_per_call
+legacy_search_fallback = false
+adapter_constructor = Vertex(model=...)
+```
+
+## `backend/market_event_scout.py`
+
+This file should now:
+
+* use Gemini 3.5 Flash discovery;
+* use Gemini 3.5 Flash evidence retrieval;
+* use Opus 4.6 only after evidence retrieval;
+* process theme discovery in parallel where configured;
+* process event evidence/refinement with bounded concurrency;
+* record only models actually triggered;
+* not return a planned Gemini→Opus model list if discovery failed before those stages;
+* collect discovery exceptions;
+* raise a real technical error when every Gemini discovery call fails;
+* never reinterpret a technical failure as a valid zero-event result.
+
+The important intended behaviour is equivalent to:
+
+```python
+if discovery_errors and len(discovery_errors) == len(theme_specs):
+    raise RuntimeError(
+        f"All Gemini discovery calls failed. {' | '.join(discovery_errors)}"
+    )
+```
+
+## `backend/server.py`
+
+This file should now:
+
+* report application version `1.6.1`;
+* expose `/health`;
+* expose `POST /api/v1/rpr/themes/assist`;
+* expose `POST /api/v1/rpr/market-events/fetch`;
+* convert a complete Market Scanner technical failure into HTTP 502;
+* not return a misleading successful zero-event response when Gemini failed;
+* preserve the existing Step-1, Step-2, feedback and enhancement routes.
+
+The market scan endpoint is expected to be:
+
+```text
+POST /api/v1/rpr/market-events/fetch
+```
+
+## `frontend/rpr-v8-consolidated-test.html`
+
+The relevant JavaScript functions include:
+
+* `assistThemes(fromScan=false)`
+* `scanOriginalTheme(id)`
+* `dismissThemeAssist(id)`
+* `unresolvedAssistCards()`
+* `maybeResumePendingScan()`
+* `runScan(skipThemeGate=false)`
+
+The frontend is expected to:
+
+1. quality-assess themes before scanning;
+2. display an analyst-review card for ambiguous/off-domain themes;
+3. allow the analyst to select a suggested refinement or choose **Scan Original Anyway**;
+4. call `runScan(true)` after all unresolved review cards have been resolved;
+5. call:
+
+```text
+POST /api/v1/rpr/market-events/fetch
+```
+
+6. display actual technical errors rather than pretending zero events were successfully found;
+7. log only models actually triggered.
+
+The intended call from `runScan()` is:
+
+```javascript
+const data = await apiPost('/api/v1/rpr/market-events/fetch', {
+  themes: themes.map(t => t.name || t.narr),
+  theme_inputs: themes.map(t => ({
+    theme: t.name || t.narr,
+    description: t.narr || ''
+  })),
+  max_events_per_theme: 3
+}, TOUT.SCAN);
+```
+
+## `RUNTIME_ENV.ps1`
+
+The environment file includes:
+
+```powershell
+$env:RPR_GEMINI_MODEL="gemini-3.5-flash"
+$env:RPR_GEMINI_DISCOVERY_MODEL="gemini-3.5-flash"
+$env:RPR_GEMINI_EVIDENCE_MODEL="gemini-3.5-flash"
+$env:RPR_GEMINI_THEME_MODEL="gemini-3.5-flash"
+$env:RPR_GEMINI_LOCATION="us"
+
+$env:RPR_STEP1_REFINEMENT_MODEL="claude-opus-4-6"
+$env:STEP2_SONNET_MODEL="claude-sonnet-4-6"
+$env:STEP2_OPUS_MODEL="claude-opus-4-6"
+$env:RPR_FEEDBACK_MODEL="claude-sonnet-4-6"
+
+$env:VERTEX_LOCATION="us"
+
+if ($env:VERTEX_PROJECT_ID -and -not $env:VERTEX_PROJECT) {
+    $env:VERTEX_PROJECT=$env:VERTEX_PROJECT_ID
+}
+
+if ($env:BASE_VERTEX_URL -and -not $env:VERTEX_ENDPOINT) {
+    $env:VERTEX_ENDPOINT=$env:BASE_VERTEX_URL.TrimEnd('/')
+}
+```
+
+Credentials, certificates and tokens must remain in the existing approved Citi environment and must never be logged.
+
+# PYTHON ENVIRONMENT ISSUE ALREADY RESOLVED
+
+The first attempt started Uvicorn using the global Citi Python 3.14 installation.
+
+That failed with:
+
+```text
+RuntimeError: Form data requires "python-multipart" to be installed.
+```
+
+The application was then started with the existing project virtual environment:
+
+```powershell
+& "..\portfolio-agent\.venv\Scripts\python.exe" -m pip install python-multipart
+```
+
+Then:
+
+```powershell
+& "..\portfolio-agent\.venv\Scripts\python.exe" -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+```
+
+This dependency/startup problem is now resolved.
+
+The current server starts successfully and remains running.
+
+Do not diagnose the current problem as another `python-multipart` failure.
+
+# CURRENT RUNTIME EVIDENCE
+
+The latest screenshot shows:
+
+* Uvicorn is running on `http://127.0.0.1:8000`;
+* application startup completed;
+* frontend status says `Backend Live`;
+* `/health` returns HTTP 200;
+* three calls to `POST /api/v1/rpr/themes/assist` return HTTP 200;
+* Claude Sonnet 4.6 runs with role `theme_quality_gate`;
+* all three theme-quality calls complete successfully.
+
+The PowerShell logs look approximately like:
+
+```text
+GET /health HTTP/1.1 200 OK
+
+POST /api/v1/rpr/themes/assist HTTP/1.1 200 OK
+[LLM] START provider=r2d2 model=claude-sonnet-4-6 role=theme_quality_gate scope=theme
+[LLM] END provider=r2d2 model=claude-sonnet-4-6 role=theme_quality_gate status=SUCCESS
+```
+
+However, the logs do **not** show:
+
+```text
+POST /api/v1/rpr/market-events/fetch
+```
+
+They also do not show:
+
+```text
+[LLM] START provider=citi-adk-vertex model=gemini-3.5-flash role=enterprise_web_discovery
+```
+
+Therefore, the evidence currently suggests that the Gemini discovery path has not yet been invoked.
+
+# CURRENT FRONTEND STATE
+
+Three themes are visible:
+
+1. `US Trade Policy & Tariffs`
+2. `Global Monetary Policy`
+3. `HOLIDAY`
+
+The quality gate classifies `HOLIDAY` as `AMBIGUOUS`.
+
+The UI shows:
+
+```text
+Clarify Theme for Stronger Assessment — AMBIGUOUS
+```
+
+It says that `HOLIDAY` may refer to seasonal retail credit trends, thin market liquidity periods or a non-financial context.
+
+The UI also says:
+
+```text
+Live market-theme suggestions could not be retrieved.
+You can edit the theme or explicitly scan the original.
+```
+
+There is a button:
+
+```text
+Scan Original Anyway
+```
+
+The System Log says:
+
+```text
+Theme Quality Gate — 1 theme(s) need analyst review before scan
+```
+
+No events have been scanned yet.
+
+# IMPORTANT DIAGNOSTIC DISTINCTION
+
+You must distinguish between these three separate conditions:
+
+## Condition A — expected theme-quality blocking
+
+The frontend may be behaving correctly by stopping the scan until `HOLIDAY` is edited, removed, refined or explicitly approved through **Scan Original Anyway**.
+
+If this is the case, there is not yet a Gemini failure because `/market-events/fetch` has not been called.
+
+## Condition B — frontend state/resume bug
+
+After the analyst clicks **Scan Original Anyway**, the frontend should:
+
+* set `assistOverride=true` for that theme;
+* dismiss its unresolved review card;
+* confirm that `unresolvedAssistCards() === 0`;
+* call `runScan(true)`;
+* send `POST /api/v1/rpr/market-events/fetch`.
+
+There may be a bug if clicking the button dismisses the card but never starts or resumes the scan.
+
+Inspect the exact interaction among:
+
+```javascript
+assistThemes()
+scanOriginalTheme()
+dismissThemeAssist()
+unresolvedAssistCards()
+maybeResumePendingScan()
+runScan()
+pendingScanAfterAssist
+assistOverride
+assistAccepted
+```
+
+## Condition C — actual Gemini/ADK failure
+
+Only after the frontend sends:
+
+```text
+POST /api/v1/rpr/market-events/fetch
+```
+
+can we assess whether Gemini 3.5 actually starts or fails.
+
+If that endpoint is called, inspect whether PowerShell shows:
+
+```text
+[LLM] START provider=citi-adk-vertex model=gemini-3.5-flash role=enterprise_web_discovery
+```
+
+If it starts and then fails, diagnose the exact adapter/model error.
+
+If it never starts after `/market-events/fetch`, inspect the backend call path from:
+
+```text
+server.fetch_market_events()
+→ MarketEventScout.fetch_events()
+→ discovery worker
+→ rpr_search_agent.run_web_search()
+```
+
+# FILES YOU MUST INSPECT
+
+Inspect the actual current workspace copies of:
+
+**PRIMARY CURRENT DIAGNOSTIC FILES**
+
+* `backend/rpr_search_agent.py`
+* `backend/market_event_scout.py`
+* `backend/server.py`
+* `backend/theme_assistant.py`
+* `frontend/rpr-v8-consolidated-test.html`
+* `RUNTIME_ENV.ps1`
+
+**SUPPORTING FILES IF REQUIRED**
+
+* `backend/rpr_model_trace.py`
+* `backend/narrative_enricher.py`
+* `backend/llm_gateway.py`
+* `backend/r2d2_prompt.py`
+* relevant files under `backend/prompts/`
+
+Check imports, actual active route registration, duplicate function definitions, stale code, wrong module imports, old cached agents, dead code, JavaScript state transitions, route-name mismatches and whether the correct file is actually being served/opened.
+
+Also confirm that the browser is opening the newly replaced:
+
+```text
+frontend/rpr-v8-consolidated-test.html
+```
+
+and not an older duplicate HTML file elsewhere.
+
+# EXPECTED `/health` RESULT
+
+Inspect the actual JSON response from:
+
+```text
+http://127.0.0.1:8000/health
+```
+
+Expected fields include:
+
+```text
+status: ok
+version: 1.6.1
+step1.search_runtime.discovery_model: gemini-3.5-flash
+step1.search_runtime.vertex_location: us
+step1.search_runtime.adapter_vertex_location: us
+step1.search_runtime.adapter_constructor: Vertex(model=...)
+step1.search_runtime.adapter_constructor_ok: true
+step1.search_runtime.agent_lifecycle: fresh_per_call
+step1.search_runtime.legacy_search_fallback: false
+```
+
+Do not treat HTTP 200 alone as sufficient. Check the full JSON values.
+
+# EXPECTED FIRST LIVE TEST
+
+The cleanest first test should use only one clearly valid theme:
+
+```text
+US Trade Policy & Tariffs
+```
+
+Temporarily remove `HOLIDAY` from the test or explicitly resolve its analyst-review card.
+
+After pressing **Scan Events**, the terminal should show:
+
+```text
+POST /api/v1/rpr/market-events/fetch
+
+[LLM] START provider=citi-adk-vertex model=gemini-3.5-flash role=enterprise_web_discovery
+[RPR-SEARCH] config model=gemini-3.5-flash location=us adapter_location=us lifecycle=fresh_per_call tool=enterprise_web_search
+[LLM] END provider=citi-adk-vertex model=gemini-3.5-flash role=enterprise_web_discovery ...
+```
+
+If candidates are returned, the next expected stages are:
+
+```text
+Gemini 3.5 Flash enterprise evidence retrieval
+→ Claude Opus 4.6 trigger1 final refinement
+```
+
+# REQUIRED RESPONSE FROM YOU
+
+Provide your answer in the following order.
+
+## 1. Evidence-based diagnosis
+
+State whether the current screenshot shows:
+
+* an actual Gemini failure;
+* expected theme-quality blocking;
+* a frontend resume-state bug;
+* a stale-file/version problem;
+* or another specific problem.
+
+Cite the exact functions, routes and relevant lines from the inspected current files.
+
+Do not infer a Gemini failure merely because no Gemini log appears when `/market-events/fetch` was never called.
+
+## 2. Immediate manual test
+
+Give the exact shortest action sequence to start one valid Gemini live test.
+
+For example, determine whether I should:
+
+* remove `HOLIDAY`;
+* click **Scan Original Anyway**;
+* use only `US Trade Policy & Tariffs`;
+* click **Scan Events**;
+* inspect `/health`;
+* or perform another exact action.
+
+## 3. Network/runtime verification
+
+Tell me exactly what must appear in:
+
+* browser Network;
+* `/health`;
+* PowerShell logs.
+
+Clearly distinguish the quality-gate request from the Market Scanner request.
+
+## 4. Root cause if the scan still does not start
+
+If the frontend fails to call `/api/v1/rpr/market-events/fetch` after all review cards are resolved, identify the exact JavaScript state bug and propose the smallest safe correction.
+
+Do not disable the theme-quality gate globally.
+
+Do not remove analyst control.
+
+Do not automatically scan ambiguous themes without analyst approval.
+
+## 5. Root cause if Gemini starts and fails
+
+If `/market-events/fetch` is called and Gemini fails, identify the exact adapter/model/environment/agent-lifecycle failure from the real exception.
+
+Check:
+
+* `Vertex(model=...)`;
+* `VERTEX_LOCATION=us`;
+* project and endpoint bridging;
+* adapter constructor compatibility;
+* fresh-per-call lifecycle;
+* `enterprise_web_search`;
+* event-loop reuse;
+* token/client refresh;
+* model catalogue availability;
+* actual installed Citi ADK Adapter signatures.
+
+Do not introduce a Gemini 2.5 fallback.
+
+Do not fall back to `web_search_agent.py`.
+
+Do not convert the failure into zero events.
+
+## 6. Fix format, only if a fix is required
+
+First state whether a file change is necessary.
+
+If no code change is necessary, say so clearly and give only the correct user action.
+
+If a code change is required, provide one consolidated solution using these exact headings:
+
+```text
+NEW — ADD
+REPLACE EXISTING
+DO NOT TOUCH
+```
+
+Provide complete corrected files, not disconnected snippets, only for files proven to require changes.
+
+Do not create another multi-package or patch chain.
+
+# DO NOT TOUCH
+
+Unless a concrete inspected defect directly proves otherwise, do not modify:
+
+* `icm-pm-rapid-portfolio-review-v31.html`
+* `rpr-step1-test-v6.html`
+* Step-1 v6.1 HTML
+* `backend/step1_quality.py`
+* `backend/step2_uploads.py`
+* `backend/web_search_agent.py`
+* `backend/llm_gateway.py`
+* `backend/r2d2_prompt.py`
+* `backend/scoring_service.py`
+* `backend/credit_anchoring.py`
+* unrelated Step-2 or Step-3 code.
+
+# GOVERNANCE REQUIREMENTS
+
+Preserve:
+
+* no silent fallback;
+* no mock data presented as live data;
+* no automatic rescans;
+* analyst approval before applying feedback;
+* separate feedback state and UI for each workflow step;
+* technical retrieval status owned by Python;
+* fact/inference/assumption distinction;
+* evidence provenance;
+* real provider/model/role/start/end/status/duration logs;
+* no logging of credentials, tokens, certificates, full confidential prompts or raw CAM content.
+
+The immediate goal is not to redesign or expand the application.
+
+The immediate goal is to determine why the first v8.1 Gemini 3.5 live discovery call has not yet appeared and to give the smallest correct action or fix supported by the actual current files and runtime evidence.
