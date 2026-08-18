@@ -1,3 +1,9 @@
+. "..\RUNTIME_ENV.ps1"
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -c "import rpr_search_agent; print(rpr_search_agent.runtime_info())"
+
+
+
 # Non-secret RPR v8 runtime switches.
 # Keep credentials/cert/token handling in your existing approved environment.
 $env:RPR_GEMINI_MODEL="gemini-3.5-flash"
