@@ -1,4 +1,10 @@
-. "..\RUNTIME_ENV.ps1"
+cd "C:\Users\ak54743\Downloads\OneDrive_2026-07-16\Rapid Portfolio Review - Copy"
+
+. .\RUNTIME_ENV.ps1
+
+cd .\backend
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -c "import rpr_search_agent; print(rpr_search_agent.runtime_info())"
 
 & "..\portfolio-agent\.venv\Scripts\python.exe" -c "import rpr_search_agent; print(rpr_search_agent.runtime_info())"
 
