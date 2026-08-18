@@ -10,6 +10,9 @@ $env:STEP2_SONNET_MODEL="claude-sonnet-4-6"
 $env:STEP2_OPUS_MODEL="claude-opus-4-6"
 $env:RPR_FEEDBACK_MODEL="claude-sonnet-4-6"
 
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -c "import rpr_search_agent; print('RPR_SEARCH_AGENT_IMPORT_OK')"
+
 # Canonical Citi ADK Adapter environment names.
 # These bridge the existing RPR names without changing credentials/tokens.
 $env:VERTEX_LOCATION="us"
