@@ -1,14 +1,581 @@
-Ask Stylus to review the newly reconstructed rpr-step1-test-v3.html against the current working Step-1 HTML, the v31 static baseline, and RPR_STEP1_HTML_RECONSTRUCTION_KT.md.
+You are performing a READ-ONLY visual/structural reverse-engineering audit.
 
-Do not modify anything yet.
+FILES PROVIDED
+1. ORIGINAL V31 full-workflow HTML
+2. CURRENT rpr-step1-test-v6 or rpr-step1-test-v6-1 HTML
 
-Identify only major functional, API-contract, state-management, or visual-parity differences that could break Step-1 testing. Ignore cosmetic or low-risk differences.
+IMPORTANT:
+DO NOT MODIFY EITHER FILE.
+DO NOT GENERATE A NEW DESIGN.
+DO NOT REFACTOR.
+DO NOT SIMPLIFY.
+DO NOT "IMPROVE" THE UI.
 
-For each issue, give:
+The goal is very specific:
 
-severity: BLOCKER / MAJOR / MINOR
-exact function/DOM/API affected
-what differs
-whether it must be fixed before testing
+STEP 1 in the current v6 HTML is already APPROVED and must remain unchanged.
 
-End with a clear verdict: READY TO TEST / READY WITH MINOR FIXES / NOT READY.
+I need another engineer to extend the CURRENT v6 HTML from STEP 2 ONWARD so that:
+
+- Step 1 remains exactly as it is in v6
+- Step 2.1 through Step 2.5 look EXACTLY like original v31
+- Step 3 looks EXACTLY like original v31
+- same layout
+- same colors
+- same typography
+- same spacing
+- same widths
+- same cards
+- same tabs
+- same sidebar
+- same buttons
+- same Workflow Status structure
+- same visual hierarchy
+
+Your job is to explain EXACTLY how to reproduce the v31 Step 2 and Step 3 UI inside the current v6 HTML.
+
+=====================================================================
+A. IDENTIFY THE TWO FILES
+=====================================================================
+
+For each provided HTML file report:
+
+- exact filename
+- title
+- major top-level DOM structure
+- whether it contains Step 1 / Step 2 / Step 3
+- major CSS blocks
+- major JavaScript blocks
+
+Then explicitly state:
+
+SOURCE FRONTEND BASE:
+current v6 HTML
+
+VISUAL REFERENCE FOR STEP 2+:
+original v31 HTML
+
+Do not suggest replacing the current v6 Step 1 with v31 Step 1.
+
+=====================================================================
+B. FREEZE CURRENT V6 STEP 1
+=====================================================================
+
+Identify the exact DOM region and JavaScript functions belonging to Step 1 in the current
+v6 HTML.
+
+Report:
+
+- exact beginning marker
+- exact ending marker
+- top-level Step 1 container IDs/classes
+- Step 1 JS functions
+- Step 1 state objects
+- Step 1 CSS additions
+
+Create a section:
+
+DO NOT TOUCH — V6 STEP 1
+
+List everything that must remain byte-for-byte or behaviorally unchanged.
+
+The final engineer must preserve:
+- Theme Quality Gate
+- Trigger 1 Market Scanner
+- Trigger 2 User Narrative
+- Step-1 enhancement workflow
+- confirmed Step-1 payload
+- current API calls
+- current v6 Step-1 behavior
+
+=====================================================================
+C. EXTRACT THE ORIGINAL V31 GLOBAL SHELL
+=====================================================================
+
+From v31, document the EXACT structure for:
+
+1. Citi/top application header
+2. application title
+3. BETA badge/user avatar
+4. Assessment Journey strip
+5. Step 1 / Step 2 / Step 3 journey arrows
+6. main workspace
+7. Workflow Status right sidebar
+8. System Log
+9. overall widths/grid/flex structure
+
+For each give:
+
+- HTML hierarchy
+- IDs
+- classes
+- CSS selectors
+- exact CSS properties
+- dimensions
+- colors
+- margins/padding
+- font sizes
+- border radius
+- background
+- shadows
+- active/inactive state classes
+
+DO NOT approximate.
+
+If v31 uses inline CSS, extract the exact selectors/rules.
+
+=====================================================================
+D. STEP 2 TOP-LEVEL STRUCTURE
+=====================================================================
+
+Extract the exact v31 Step 2 layout.
+
+Report the complete DOM hierarchy for:
+
+Name Level Assessment
+
+and tabs:
+
+Step 2.1 Scenario & Assumption
+Step 2.2 Portfolio Selection
+Step 2.3 Event-driven Risk Factors
+Step 2.4 Sector-inherent Risk Factors
+Step 2.5 Assessment
+
+For every tab report:
+
+- button/container HTML
+- exact class
+- active class
+- inactive class
+- click handler
+- JS function
+- content panel ID
+- show/hide logic
+
+Explain exactly how v31 switches between Step-2 tabs.
+
+=====================================================================
+E. STEP 2.1 — EXACT V31 REPLICATION SPEC
+=====================================================================
+
+This is the highest priority.
+
+Extract the EXACT v31 Step 2.1 UI structure.
+
+LEFT PANEL:
+
+“Define Horizon & Run Scenario”
+
+Report exact HTML/CSS/IDs for:
+
+- panel/card
+- title/icon
+- ASSESSMENT HORIZON label
+- horizon input
+- helper text
+- ADDITIONAL CONTEXT label
+- textarea
+- upload/drop area
+- accepted file type text
+- Generate Scenario & Assumption button
+
+RIGHT PANEL:
+
+“Scenario Output”
+
+Report exact HTML/CSS/IDs for:
+
+- panel/card
+- title/header
+- “Click any field to edit” helper
+- Scenario Narrative box/editor
+- Scenario Assumptions container
+- assumption cards A1, A2, A3...
+- assumption icon/badge
+- delete X
+- edit behavior
+- + Add control
+- bottom guidance
+- Confirm & Proceed button
+
+VERY IMPORTANT:
+
+Give the precise CSS selector and values for each of these elements.
+
+Also give a clean DOM tree such as:
+
+STEP2_CONTAINER
+ ├── LEFT_PANEL
+ │   ├── ...
+ └── RIGHT_PANEL
+     ├── ...
+
+=====================================================================
+F. STEP 2.1 FEEDBACK AREA
+=====================================================================
+
+Search the v31 HTML for any:
+
+- feedback
+- assistant
+- AI feedback
+- suggestion
+- enhancement
+- review
+- comment
+- revision
+- chat
+- textarea
+
+associated with Step 2.1.
+
+If it already exists:
+report exact DOM/JS/CSS and where it appears.
+
+If it does NOT exist:
+identify the safest EXISTING v31 location where a feedback component could be inserted
+WITHOUT changing the panel widths/layout.
+
+Do NOT design a new visual language.
+
+Recommend only a component that reuses EXISTING v31 classes/styles.
+
+For example, identify an existing:
+- panel style
+- textarea style
+- blue action button style
+- warning/suggestion card style
+
+that can be reused.
+
+=====================================================================
+G. STEP 2.2 — EXACT V31 STRUCTURE
+=====================================================================
+
+Extract the exact Portfolio Selection UI.
+
+Report:
+
+- all filters/dropdowns
+- sector dropdown
+- geography/country/legal entity controls
+- portfolio table
+- company rows
+- exposure columns
+- buttons
+- confirmation controls
+- state/display behavior
+
+Provide exact:
+- HTML
+- IDs/classes
+- CSS
+- JS handlers
+
+=====================================================================
+H. STEP 2.3 — EXACT V31 STRUCTURE
+=====================================================================
+
+Extract Event-driven Risk Factors UI.
+
+Report the exact v31 structure for:
+
+- factor overview
+- factor cards/sections
+- importance
+- weights
+- vulnerability metrics
+- critical threshold
+- buffer metrics
+- scoring logic
+- industry sensitivity
+- edit controls
+- confirmation
+
+If the old v31 output differs from the newer business methodology, DO NOT redesign it.
+
+Instead identify:
+1. the exact visual container/components available in v31;
+2. how newer backend JSON can be rendered using those SAME components.
+
+=====================================================================
+I. STEP 2.4 — EXACT V31 STRUCTURE
+=====================================================================
+
+Extract Sector-inherent Risk Factors.
+
+Report:
+
+- full DOM hierarchy
+- factor cards/tables
+- controls
+- buttons
+- classes
+- CSS
+- JS state/navigation
+
+=====================================================================
+J. STEP 2.5 — EXACT V31 STRUCTURE
+=====================================================================
+
+Extract Name Level Assessment.
+
+Report exact UI for:
+
+- company/client selector
+- SEC/Public assessment
+- CAM/Internal assessment
+- scores
+- event-driven composite
+- sector-inherent composite
+- final result
+- rationale
+- tables/cards
+- edit/confirm controls
+
+Give exact DOM/CSS/JS.
+
+=====================================================================
+K. STEP 3 — EXACT V31 STRUCTURE
+=====================================================================
+
+Extract Portfolio Level Assessment.
+
+Report:
+
+- top-level structure
+- cards
+- metrics
+- portfolio score
+- distributions
+- largest contributors
+- concentrations
+- drivers
+- mitigants
+- narrative
+- recommendations
+- charts/tables
+- export/report buttons
+
+For every visual component give:
+- class
+- selector
+- CSS
+- DOM hierarchy
+- JS function/state if present
+
+=====================================================================
+L. WORKFLOW STATUS SIDEBAR
+=====================================================================
+
+Very important.
+
+Explain exactly how v31 updates the Workflow Status panel when moving:
+
+Risk Narrative Intake
+→ Scenario & Assumptions
+→ Portfolio Selection
+→ Event-driven Risk Factors
+→ Sector-inherent Risk Factors
+→ Name Level Assessment
+→ Portfolio Assessment
+
+Report:
+
+- state variable
+- DOM IDs
+- active class
+- completed class
+- pending class
+- render/update function
+- system log interaction
+
+We need the current v6 Step 1 to transition into the exact v31 Step 2 status behavior.
+
+=====================================================================
+M. V31 CSS EXTRACTION
+=====================================================================
+
+Create a section:
+
+V31 STEP 2+ CSS CONTRACT
+
+List ALL CSS selectors used from Step 2 onwards.
+
+For each selector provide the actual rule exactly as present in v31.
+
+Group by:
+
+- global shell
+- assessment journey
+- Step 2 header
+- Step 2 tabs
+- cards
+- inputs
+- textareas
+- upload zone
+- buttons
+- scenario output
+- assumptions
+- risk factor tables/cards
+- portfolio tables
+- assessment result components
+- Workflow Status
+- system log
+- Step 3
+
+Do not normalize or rewrite CSS.
+
+If possible, provide the exact source CSS block that can be copied into the current v6 file.
+
+=====================================================================
+N. JAVASCRIPT / NAVIGATION EXTRACTION
+=====================================================================
+
+Document the exact v31 functions controlling:
+
+- switch to Step 2
+- Step 2 tabs
+- Step 2.1 generation
+- assumption edit/add/delete
+- confirmation
+- Step 2.2 selection
+- Step 2.3 render
+- Step 2.4 render
+- Step 2.5 render
+- Step 3
+- Workflow Status
+- system log
+
+For each function:
+
+FUNCTION NAME
+INPUTS
+STATE READ
+STATE WRITTEN
+DOM UPDATED
+API CALL IF ANY
+
+Do not propose replacements yet.
+
+=====================================================================
+O. CURRENT V6 → V31 MERGE MAP
+=====================================================================
+
+This is the most important final section.
+
+Create a precise merge plan.
+
+The target is:
+
+CURRENT V6:
+keep Step 1 exactly
+
+THEN:
+
+append/adopt original v31:
+Step 2 shell
+Step 2.1
+Step 2.2
+Step 2.3
+Step 2.4
+Step 2.5
+Step 3
+Workflow Status behavior
+
+Produce a table:
+
+CURRENT V6 COMPONENT
+KEEP / EXTEND / REPLACE
+V31 SOURCE COMPONENT
+EXACT INSERTION LOCATION
+NOTES
+
+Do not say "replace current HTML".
+
+The existing v6 file remains the base.
+
+=====================================================================
+P. EXACT INSERTION BOUNDARIES
+=====================================================================
+
+Tell the engineer exactly where in v6 Step 2+ should be inserted.
+
+Give:
+
+- unique preceding HTML marker
+- unique following HTML marker
+- existing container to reuse
+- JS insertion location
+- CSS insertion location
+
+Use literal snippets from the files so there is no ambiguity.
+
+=====================================================================
+Q. COPYABLE V31 FRAGMENTS
+=====================================================================
+
+Where safe, provide copyable fragments from the original v31 for:
+
+1. Step 2 top-level shell
+2. Step 2 tab bar
+3. Step 2.1 left panel
+4. Step 2.1 right panel
+5. Workflow Status items
+6. Step 2.2 structure
+7. Step 2.3 structure
+8. Step 2.4 structure
+9. Step 2.5 structure
+10. Step 3 structure
+
+Do NOT invent missing markup.
+
+Copy from the supplied v31 source.
+
+=====================================================================
+R. FINAL IMMUTABLE VISUAL CONTRACT
+=====================================================================
+
+End with a strict contract:
+
+1. Current v6 Step 1 remains unchanged.
+2. v31 is the visual source of truth for Step 2 and Step 3.
+3. No new colors.
+4. No new page layout.
+5. No new typography.
+6. No new card language.
+7. No new button language.
+8. No resizing of Workflow Status.
+9. Backend/API enhancements must reuse the existing v31 visual containers.
+10. Future functional changes should normally modify backend/prompts/JS handlers,
+    not visual CSS/layout.
+
+=====================================================================
+OUTPUT REQUIREMENTS
+=====================================================================
+
+Be extremely concrete.
+
+Do not give a high-level summary only.
+
+I need:
+
+- exact filenames
+- DOM IDs
+- classes
+- CSS selectors
+- CSS values
+- JS function names
+- state variables
+- line numbers if available
+- literal source snippets
+- insertion boundaries
+- merge map
+
+The next engineer will use your output to modify the current v6 HTML while preserving
+Step 1 and replicating original v31 Step 2+ exactly.
+
+DO NOT MODIFY FILES.
+DO NOT GENERATE A REDESIGNED HTML.
+THIS IS A READ-ONLY REPLICATION SPECIFICATION.
