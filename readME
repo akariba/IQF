@@ -1,27 +1,9 @@
-$names = @(
-  "RPR_VERTEX_BASE_URL",
-  "R2D2_BASE_URL",
-  "VERTEX_ENDPOINT",
-  "BASE_VERTEX_URL",
-  "R2D2_UAT_URL"
-)
+$gatewayUrl = & "..\portfolio-agent\.venv\Scripts\python.exe" -c "from llm_gateway import R2D2LLMGateway; print(R2D2LLMGateway._UAT_URL)"
 
-foreach ($name in $names) {
-    $value = [Environment]::GetEnvironmentVariable($name, "Process")
-    if ($value) {
-        $clean = $value.TrimEnd("/") -replace "/v1(?:alpha\d*|beta\d*)?$", ""
-        [Environment]::SetEnvironmentVariable($name, $clean.TrimEnd("/"), "Process")
-    }
-}
+$env:RPR_VERTEX_BASE_URL = $gatewayUrl.Trim().TrimEnd("/") -replace "/v1(?:alpha\d*|beta\d*)?$", ""
+$env:VERTEX_ENDPOINT = $env:RPR_VERTEX_BASE_URL
 
-
-
-foreach ($name in $names) {
-    $value = [Environment]::GetEnvironmentVariable($name, "Process")
-    if ($value) {
-        "$name stillEndsWithV1=$($value -match '/v1/?$')"
-    }
-}
+"endpointSet=$([bool]$env:RPR_VERTEX_BASE_URL) stillEndsWithV1=$($env:RPR_VERTEX_BASE_URL -match '/v1/?$')"
 
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 Unblock-File .\RUNTIME_ENV.ps1
