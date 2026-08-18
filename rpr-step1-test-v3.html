@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ICM PM — Risk Narrative Intake • Step 1</title>
+<style>
+:root{
+  --primary:#255BE3;
+  --primary-bg:#F0F4FF;
+  --ink:#0F1632;
+  --danger:#A7200D;
+  --forest:#2A683C;
+  --amber:#AFB728;
+
+  --bg:#F8F9F7;
+  --l1:#FFFFFF;
+  --l2:#F7FAFB;
+  --br:#E6EBED;
+  --br2:#DFE6E9;
+
+  --tx:#0F1632;
+  --tx2:#5E6768;
+  --td:#AAACAF;
+
+  --g100:#E6EBED;
+  --g200:#D3DADD;
+  --g300:#BCC5C9;
+  --g700:#4D5457;
+
+  --sans:"CitI Sans Text Regular","Citi Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --disp:"Citi Sans Display","Citi Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --shadow:0 1px 3px rgba(15,22,50,.08),0 3px 12px rgba(15,22,50,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans);font-size:14px;color:var(--tx);background:var(--bg);overflow:hidden}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.fadein{animation:fadein .16s ease-out}
+@keyframes fadein{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Header */
+.ghdr{height:52px;background:#0F1632;color:#fff;display:flex;align-items:center;padding:0 24px;gap:14px;flex:none}
+.citi-logo{display:flex;align-items:center;gap:7px;font-weight:700;font-size:15px}
+.citi-mark{width:29px;height:16px;position:relative;display:inline-flex;align-items:center;justify-content:center;font-size:13px;letter-spacing:.2px}
+.citi-mark:before{content:"";position:absolute;top:-1px;left:2px;right:2px;height:6px;border-top:2px solid #E94747;border-radius:50% 50% 0 0}
+.hdv{width:1px;height:22px;background:rgba(255,255,255,.25)}
+.h-title{font-family:var(--disp);font-size:14px;font-weight:700}
+.hsp{flex:1}
+.hbdg{font-size:10px;font-weight:700;padding:5px 9px;border-radius:999px;border:1px solid rgba(87,137,255,.45);color:#AFC6FF;background:rgba(37,91,227,.15)}
+.conn-chip{display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:5px 9px;font-size:10px}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:#B86B5C}
+.conn-chip.live .conn-dot{background:#5BB273;box-shadow:0 0 0 3px rgba(91,178,115,.15)}
+.conn-chip.offline{color:#FFB2A6;border-color:rgba(255,130,105,.25);background:rgba(167,32,13,.12)}
+.conn-chip.live{color:#B6EFC6;border-color:rgba(91,178,115,.28);background:rgba(42,104,60,.13)}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:#2B4C9E;display:grid;place-items:center;font-weight:700;font-size:11px}
+
+/* Shell */
+.shell{height:calc(100% - 52px);display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:10px;padding:10px;overflow:hidden}
+.left{display:flex;flex-direction:column;gap:10px;min-width:0;overflow:hidden}
+.panel{background:var(--l1);border:1px solid var(--br);border-radius:8px;box-shadow:var(--shadow);min-height:0;overflow:hidden}
+.main-panel{display:flex;flex-direction:column;flex:1}
+.phdr{height:46px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--br);background:#fff;flex:none}
+.ptitl{font-family:var(--disp);font-size:15px;font-weight:700;display:flex;align-items:center;gap:9px}
+.scan-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 2.2s infinite}
+.scan-lbl{font-size:11px;color:var(--g700);margin-left:6px}
+.tbar{height:48px;padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--br);background:#fff}
+.tbtn{border:1px solid transparent;background:transparent;border-radius:999px;padding:8px 14px;font-size:12px;color:var(--tx2);transition:.15s}
+.tbtn.active{background:#F0F4FF;color:var(--primary);border-color:var(--primary);font-weight:700}
+.pmb{flex:1;min-height:0;overflow:hidden}
+#trig-0,#trig-1{height:100%}
+.ca{height:100%;overflow-y:auto;padding:12px}
+
+/* Buttons */
+.btn{border:1px solid var(--br2);background:#fff;border-radius:7px;padding:8px 11px;font-size:12px;font-weight:700}
+.btn:hover{background:#F8FAFB}
+.btn-p{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-p:hover{background:#1D4EC5}
+.btn-g{background:transparent}
+.btn-sm{padding:6px 9px;font-size:11px}
+.btn-danger{border-color:#E7C5C0;color:var(--danger);background:#FFF8F7}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* Theme card */
+.theme-card{border:1px solid var(--br2);border-radius:8px;overflow:hidden;background:#fff}
+.tc-hdr{height:42px;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--br);gap:8px}
+.tc-title{font-size:12px;font-weight:700}
+.scanned-bdg{font-size:9px;background:#EAF7EE;color:var(--forest);border-radius:999px;padding:3px 6px;font-weight:700;display:none}
+.tc-actions{margin-left:auto;display:flex;gap:7px}
+.theme-tbl{width:100%;border-collapse:collapse}
+.theme-tbl th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);text-align:left;padding:9px 10px;background:#F9FBFC;border-bottom:1px solid var(--br)}
+.theme-tbl td{padding:7px 8px;border-bottom:1px solid var(--br)}
+.theme-tbl tr:last-child td{border-bottom:none}
+.theme-tbl input,.theme-tbl textarea{width:100%;border:1px solid var(--br2);background:#fff;border-radius:5px;padding:7px 8px;font-size:11px;resize:vertical;min-height:32px}
+.theme-del{border:none;background:transparent;color:#A4AAAD;font-size:16px;padding:4px}
+.hintbar{padding:8px 10px;background:#F1F6FF;border-top:1px solid #D9E5FF;color:#476071;font-size:11px}
+.hintbar b{color:#32518B}
+.hintbar .red{color:#A7200D;font-weight:700}
+
+/* Error */
+.err-area{display:none;margin-top:10px}
+.errbanner{border:1px solid #E5B8B1;background:#FFF3F1;color:#8F2718;border-radius:7px;padding:10px 12px;font-size:11px}
+.errbanner b{display:block;margin-bottom:2px}
+
+/* Summary */
+.ev-sbar{display:none;margin-top:10px;min-height:40px;border:1px solid var(--br);border-radius:7px;align-items:center;padding:0 10px;background:#FBFCFD;gap:8px;font-size:11px}
+.ev-sum{font-weight:700}
+.ev-dq-summary{color:#59707C}
+.ev-conf-txt{margin-left:auto;color:#6B7478}
+.proceed-btn{margin-left:4px}
+
+/* Pre-scan */
+.prescan{min-height:420px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;color:var(--tx2)}
+.prescan-icon{width:52px;height:52px;border-radius:50%;background:#EEF1F2;display:grid;place-items:center;margin-bottom:12px;font-size:22px;color:#A6AFB4}
+.prescan h3{font-size:14px;color:#222C33;margin-bottom:6px}
+.prescan p{font-size:11px;line-height:1.5;max-width:380px;margin-bottom:12px}
+
+/* Event shell */
+.ev-shell{display:none;grid-template-columns:220px minmax(0,1fr);gap:10px;margin-top:10px;min-height:420px}
+.evsb{border:1px solid var(--br);border-radius:7px;background:#FAFBFC;overflow:auto}
+.evsb-hdr{height:38px;padding:0 10px;display:flex;align-items:center;border-bottom:1px solid var(--br);gap:8px;font-size:11px;font-weight:700}
+.ev-total-badge{margin-left:auto;background:#EDF2F4;border-radius:999px;padding:2px 6px;font-size:9px}
+.ev-theme-summary{padding:7px 9px;border-bottom:1px solid var(--br);font-size:9px;color:#607078}
+.theme-group{border-bottom:1px solid var(--br)}
+.theme-row{display:flex;align-items:center;gap:7px;padding:8px 9px;font-size:10px;font-weight:700;cursor:pointer}
+.theme-row:hover{background:#F3F7FA}
+.theme-expand{font-size:9px;transition:.15s}
+.theme-row.open .theme-expand{transform:rotate(90deg)}
+.theme-icon{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:9px;font-weight:700}
+.theme-icon.t1{background:#255BE3}.theme-icon.t2{background:#6F7DC7}.theme-icon.t3{background:#B46F35}.theme-icon.t4{background:#A2548F}
+.theme-status-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#E7AA41}
+.theme-status-dot.done{background:#5AB26E}
+.ev-children{padding:0 5px 7px}
+.evitem{border-radius:6px;padding:7px 8px;margin:4px 0;cursor:pointer;border:1px solid transparent;background:#fff;font-size:10px}
+.evitem:hover{border-color:#D6E0E5}
+.evitem.viewing{border-color:#255BE3;background:#F0F4FF}
+.evitem.confirmed{border-color:#A8D5B3;background:#F2FAF4}
+.evitem.failed{border-color:#E7B6AE;background:#FFF4F2}
+.evitem-top{display:flex;gap:6px;align-items:center}
+.evico{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#EAF0FF;color:#255BE3;font-size:9px;font-weight:700;flex:none}
+.evbdy{margin-top:3px;color:#4E5A60;line-height:1.35}
+.evbadge{font-size:8px;border-radius:999px;padding:2px 5px;background:#EEF2F4;color:#596A72;margin-left:auto}
+.ev-skeleton{padding:9px}.sk{height:8px;background:#EBEFF1;border-radius:999px;margin:6px 0}.sk.s{width:60%}
+
+/* Event detail */
+.evdet{border:1px solid var(--br);border-radius:7px;display:flex;flex-direction:column;min-width:0;min-height:420px;background:#fff;overflow:hidden}
+.evdet-hdr{padding:9px 11px;border-bottom:1px solid var(--br);display:flex;gap:8px;align-items:center}
+.evdet-title{font-weight:700;font-size:11px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evdet-horizon{font-size:9px;color:#65767D;margin-left:auto;background:#F3F6F7;border-radius:999px;padding:3px 7px}
+.evdet-actions{display:flex;gap:6px}
+.conf-banner{display:none;padding:6px 10px;background:#EEF9F1;border-bottom:1px solid #D0E8D5;color:#2D6C3E;font-size:10px}
+.dq-strip{display:flex;gap:5px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--br);overflow-x:auto;background:#FBFCFD}
+.dq-pill{font-size:8px;font-weight:700;border-radius:999px;padding:4px 6px;white-space:nowrap}
+.dq-sec-pill.empty{background:#FFEDEA;color:#A7200D}.dq-sec-pill.partial{background:#FFF6DB;color:#8B6A00}.dq-sec-pill.full{background:#EAF7EE;color:#2A683C}
+.nacc{flex:1;min-height:0;overflow:auto}
+.nsec{border-bottom:1px solid var(--br)}
+.nhdr{display:flex;align-items:center;gap:7px;padding:9px 10px;cursor:pointer;background:#fff;font-size:11px}
+.nhdr:hover{background:#FBFCFD}.nhdr.open{background:#F5F8FF;border-left:3px solid #255BE3;padding-left:7px}
+.nhdr.empty-sec{border-left:3px solid #A7200D;padding-left:7px}
+.nnum{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:#F1F3F4;color:#5F686D;font-size:9px;font-weight:700}
+.nhdr.open .nnum{background:#255BE3;color:#fff}
+.nhdr-tit{font-weight:700}
+.nodata{font-size:8px;color:#A7200D;font-weight:700;margin-left:3px}
+.nchev{margin-left:auto;font-size:10px;transition:.15s}.nhdr.open .nchev{transform:rotate(90deg)}
+.nbdy{display:none;padding:0 10px 10px 36px;background:#fff}
+.nbdy.open{display:block}
+.nbdy.empty-body{border-left:3px solid #A7200D;padding-left:33px}
+.sec-ta{width:100%;min-height:84px;border:1px solid var(--br2);border-radius:6px;padding:8px;resize:vertical;background:#fff;line-height:1.45;font-size:11px}
+.sec-ta[readonly]{background:#F8FAFB;color:#49565C}
+.empty-ta{background:#FFF5F5;border-color:#E7B6AE}
+.empty-placeholder{font-size:9px;color:#A7200D;background:#FFF4F2;border:1px dashed #E7B6AE;padding:5px 7px;border-radius:5px;margin-bottom:5px}
+.ev-foot{display:flex;align-items:center;padding:8px 10px;border-top:1px solid var(--br);gap:8px;background:#FBFCFD}
+.ev-foot-hint{font-size:9px;color:#68767C;flex:1}
+
+/* Enhancement card */
+.enh-card{margin:8px 10px;border:1.5px solid #FFD340;border-radius:7px;background:#FFFBE8;overflow:hidden}
+.enh-card-hdr{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#FFF3C7;border-bottom:1px solid #F3DC8B}
+.enh-card-icon{width:22px;height:22px;border-radius:50%;background:#F2C94C;display:grid;place-items:center;font-weight:800;color:#805D00}
+.enh-card-title{font-weight:700;font-size:11px}
+.enh-card-badge{margin-left:auto;font-size:8px;border-radius:999px;background:#3C3420;color:#fff;padding:3px 6px}
+.enh-card-body{padding:9px 10px}
+.enh-why{font-size:10px;line-height:1.45;color:#5D5434;margin-bottom:6px}
+.enh-sections{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.enh-section-pill{font-size:8px;background:#FFF;border:1px solid #E8D17B;border-radius:999px;padding:3px 6px;color:#635A31}
+.enh-suggestion-lbl{font-size:9px;font-weight:700;color:#6A5D2B;margin:5px 0}
+.enh-textarea{width:100%;min-height:70px;border:1px solid #D8B541;border-radius:6px;background:#FFFDF4;padding:7px 8px;font-size:10px;line-height:1.4;resize:vertical}
+.enh-actions{display:flex;gap:7px;margin-top:7px}
+.enh-btn{border:1px solid #D8C05A;background:#fff;border-radius:6px;padding:6px 9px;font-size:9px;font-weight:700}
+.enh-btn-apply{background:#255BE3;border-color:#255BE3;color:#fff}
+.enh-btn-dismiss{background:transparent}
+.enh-consolidated{font-size:10px;line-height:1.45;background:#fff;border:1px solid #E5D990;padding:7px;border-radius:5px;margin-bottom:6px}
+.enh-copy-btn{background:#0F1632;color:#fff;border-color:#0F1632}
+
+/* Trigger 2 */
+.t2wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:10px;height:100%}
+.t2input{border:1px solid var(--br);border-radius:7px;background:#FAFBFC;padding:10px;display:flex;flex-direction:column;min-height:0}
+.t2input h4{font-size:11px;margin-bottom:7px}
+.t2input label{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#66757B;font-weight:700;margin-bottom:5px}
+#t2-narr{width:100%;min-height:190px;border:1px solid var(--br2);border-radius:6px;padding:9px;font-size:11px;line-height:1.45;resize:vertical;background:#fff}
+.t2-input-hint{font-size:9px;color:#66757B;line-height:1.45;margin-top:7px}
+.t2-main{border:1px solid var(--br);border-radius:7px;background:#fff;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.t2-hdr{height:42px;border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 10px;gap:8px}
+.t2-title{font-size:12px;font-weight:700}
+.t2-genbdg{font-size:8px;background:#EAF7EE;color:#2A683C;border-radius:999px;padding:3px 6px;margin-left:auto;display:none}
+.t2-dq-strip{display:none;padding:7px 10px;border-bottom:1px solid var(--br);gap:4px;overflow-x:auto;background:#FBFCFD}
+.t2-enh-area{display:none}
+.t2-acc{flex:1;overflow:auto}
+.t2-foot{border-top:1px solid var(--br);display:flex;padding:8px 10px;gap:8px;align-items:center}
+.t2-hint{font-size:9px;color:#66757B;flex:1}
+.t2-btns{display:flex;gap:6px}
+.t2-err{display:none;padding:8px 10px;color:#9B2A1B;background:#FFF3F1;border-bottom:1px solid #E7B6AE;font-size:10px}
+
+/* Right panel */
+.rpanel{min-width:0}
+.statpanel{height:100%;background:#11182B;color:#E4E9EC;border-radius:8px;padding:12px;display:flex;flex-direction:column;box-shadow:var(--shadow);overflow:hidden}
+.sphdr{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;margin-bottom:12px}
+.spdot{width:7px;height:7px;border-radius:50%;background:#5CB778}
+.stkr{font-size:9px;color:#8F9AA3;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:8px}
+.stlbl{font-size:9px;color:#7E8992;margin-bottom:6px}
+.stconn{padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.09);margin-bottom:10px}
+.wf-item{display:flex;gap:8px;align-items:flex-start;padding:7px 6px;border-radius:6px;color:#7E8992;font-size:10px}
+.wf-item.cur{background:#1B2A4C;color:#fff}
+.wf-icon{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#243247;color:#8492A0;font-size:9px;flex:none}
+.wf-item.cur .wf-icon{background:#255BE3;color:#fff}
+.wf-item-title{font-weight:700}
+.wf-item-sub{font-size:8px;color:#6E7C86;margin-top:2px}
+.wf-item.cur .wf-item-sub{color:#8FB1FF}
+.sys-log-wrap{margin-top:auto;min-height:0;display:flex;flex-direction:column}
+.loglbl{display:flex;align-items:center;font-size:9px;color:#95A0A8;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:6px}
+.logclr{margin-left:auto;border:none;background:transparent;color:#7B8791;font-size:8px}
+.sys-log{height:210px;overflow:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:6px}
+.logmsg{font-size:9px;line-height:1.45;margin:2px 0;color:#AEB8BF}
+.logts{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#60707B;margin-right:4px}
+.logmsg.info{color:#A7D8B6}.logmsg.warn{color:#E9C979}.logmsg.ok{color:#75D990}.logmsg.err{color:#F18E82}
+
+/* Loading overlay */
+.lo{position:fixed;inset:0;background:rgba(15,22,50,.22);z-index:9999;display:none;align-items:center;justify-content:center}
+.lo.open{display:flex}
+.lo-card{background:#fff;border-radius:9px;padding:18px 20px;box-shadow:0 14px 40px rgba(15,22,50,.28);min-width:270px;text-align:center}
+.lo-spin{width:28px;height:28px;border:3px solid #DDE6F3;border-top-color:#255BE3;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+.lo-msg{font-weight:700;font-size:12px}.lo-sub{font-size:9px;color:#6C777D;margin-top:3px}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,22,50,.52);z-index:9000;display:none;align-items:center;justify-content:center;padding:28px}
+.modal-overlay.open{display:flex}
+.modal{width:min(1100px,95vw);height:min(88vh,860px);background:#fff;border-radius:9px;box-shadow:0 20px 55px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}
+.modal-hdr{height:48px;border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 13px}
+.modal-tit{font-size:13px;font-weight:700}.modal-close{margin-left:auto;border:none;background:transparent;font-size:18px;color:#657078}
+.modal-body{display:grid;grid-template-columns:220px 1fr;gap:10px;padding:10px;min-height:0;flex:1}
+.modal-sb{border:1px solid var(--br);border-radius:7px;overflow:auto;background:#FAFBFC}
+.modal-content{display:flex;flex-direction:column;min-width:0;border:1px solid var(--br);border-radius:7px;overflow:hidden}
+.modal-evhdr{padding:9px 10px;border-bottom:1px solid var(--br);font-size:11px;font-weight:700}
+.modal-nacc{flex:1;overflow:auto}
+.modal-foot{border-top:1px solid var(--br);padding:8px 10px;display:flex;justify-content:flex-end;gap:7px}
+.modal-sec-ta{min-height:120px}
+
+@media(max-width:1024px){
+  .shell{grid-template-columns:minmax(0,1fr) 240px}
+}
+</style>
+</head>
+<body>
+
+<div id="lo" class="lo">
+  <div class="lo-card">
+    <div class="lo-spin"></div>
+    <div id="lo-msg" class="lo-msg">Working…</div>
+    <div id="lo-sub" class="lo-sub">Please wait</div>
+  </div>
+</div>
+
+<div id="modal" class="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div id="modal-tit" class="modal-tit">Event Detail</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="modal-sb" class="modal-sb"></div>
+      <div class="modal-content">
+        <div id="modal-evhdr" class="modal-evhdr"></div>
+        <div id="modal-nacc" class="modal-nacc"></div>
+        <div id="modal-foot" class="modal-foot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="ghdr">
+  <div class="citi-logo"><span class="citi-mark">citi</span></div>
+  <div class="hdv"></div>
+  <div class="h-title">ICM PM — AI-assisted Rapid Portfolio Review</div>
+  <div class="hsp"></div>
+  <div class="hbdg">BETA · V44 · Step 1</div>
+  <div id="conn-chip" class="conn-chip offline">
+    <span class="conn-dot"></span>
+    <span id="conn-lbl">Backend Offline</span>
+  </div>
+  <div class="nav-avatar">JD</div>
+</header>
+
+<div class="shell">
+  <div class="left">
+    <div class="panel main-panel">
+      <div class="phdr">
+        <div class="ptitl">▱ Risk Narrative Intake — Step 1</div>
+        <div style="margin-left:auto;display:flex;align-items:center">
+          <span class="scan-dot"></span><span id="scan-lbl" class="scan-lbl">Market Scanner Active</span>
+        </div>
+      </div>
+
+      <div class="tbar">
+        <button id="t-btn-0" class="tbtn active" onclick="switchTrig(0)">↗ Trigger 1: Market Scanner (ADK)</button>
+        <button id="t-btn-1" class="tbtn" onclick="switchTrig(1)">↗ Trigger 2: User Narrative (R2D2)</button>
+      </div>
+
+      <div class="pmb">
+        <!-- Trigger 1 -->
+        <div id="trig-0">
+          <div class="ca">
+            <div class="theme-card">
+              <div class="tc-hdr">
+                <div class="tc-title">▣ Market Scanner Themes</div>
+                <span id="scanned-bdg" class="scanned-bdg">✓ Scanned</span>
+                <div class="tc-actions">
+                  <button class="btn btn-g btn-sm" onclick="addTheme()">+ Theme</button>
+                  <button id="scan-btn" class="btn btn-p btn-sm" onclick="runScan()">↗ Scan Events</button>
+                </div>
+              </div>
+              <table class="theme-tbl">
+                <thead>
+                  <tr><th style="width:31%">Broad Theme</th><th>Description</th><th style="width:34px"></th></tr>
+                </thead>
+                <tbody id="theme-tbody"></tbody>
+              </table>
+              <div class="hintbar">
+                ⓘ Enter broad themes — e.g. <b>“US Trade Policy”</b>; <b>“Global Monetary Policy”</b>.
+                Each theme generates up to 3 events with 8 structured sections. <span class="red">Red sections = missing data.</span>
+              </div>
+            </div>
+
+            <div id="err-area" class="err-area"></div>
+
+            <div id="ev-sbar" class="ev-sbar">
+              <span id="ev-sum" class="ev-sum">0 events detected</span>
+              <span id="ev-dq-summary" class="ev-dq-summary"></span>
+              <span id="ev-conf-txt" class="ev-conf-txt">Confirm all to proceed</span>
+              <button id="proceed-btn" class="btn btn-p btn-sm proceed-btn" onclick="proceedWithConfirmed()" disabled>✓ Proceed with Confirmed</button>
+            </div>
+
+            <div id="prescan" class="prescan">
+              <div class="prescan-icon">⌁</div>
+              <h3>No events scanned yet</h3>
+              <p>Enter broad themes above, then click Scan Events. Each theme generates up to 3 events with 8 structured sections.</p>
+              <button class="btn btn-p btn-sm" onclick="runScan()">Start Scan</button>
+            </div>
+
+            <div id="evshell" class="ev-shell">
+              <div class="evsb">
+                <div class="evsb-hdr">DETECTED EVENTS <span id="ev-total-badge" class="ev-total-badge">0</span></div>
+                <div id="ev-theme-summary" class="ev-theme-summary">Click theme to expand · Red dot = missing data</div>
+                <div id="ev-tree"></div>
+              </div>
+              <div id="ev-det" class="evdet">
+                <div style="display:grid;place-items:center;height:100%;color:#899399;font-size:11px">Select an event to review</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trigger 2 -->
+        <div id="trig-1" style="display:none">
+          <div class="ca">
+            <div class="t2wrap">
+              <div class="t2input">
+                <h4>↗ Your Input</h4>
+                <label>Market Event Narrative</label>
+                <textarea id="t2-narr" placeholder="Enter a broad narrative about a recent market event…&#10;&#10;Example: “US reciprocal tariffs driving IG spread widening +25–45bps and sovereign credit stress in export-dependent EM economies.”"></textarea>
+                <button id="enrich-btn" class="btn btn-p" style="margin-top:8px" onclick="runEnrich()">↗ Run AI Enrichment (R2D2)</button>
+                <div class="t2-input-hint">
+                  AI enriches your narrative into a structured 8-section credit risk report using live search and R2D2. Review and edit each section directly, then confirm to proceed.
+                </div>
+              </div>
+
+              <div class="t2-main">
+                <div class="t2-hdr">
+                  <div id="t2-title" class="t2-title">AI-Enriched Narrative</div>
+                  <span id="t2-genbdg" class="t2-genbdg">✓ Generated</span>
+                </div>
+                <div id="t2-err" class="t2-err"></div>
+                <div id="t2-dq-strip" class="t2-dq-strip"></div>
+                <div id="t2-enh-area" class="t2-enh-area"></div>
+                <div id="t2-acc" class="t2-acc">
+                  <div style="display:grid;place-items:center;height:100%;color:#909A9F;font-size:11px">Enter a narrative and run AI enrichment.</div>
+                </div>
+                <div id="t2-foot" class="t2-foot">
+                  <div id="t2-hint" class="t2-hint">Enter a narrative and run enrichment.</div>
+                  <div id="t2-btns" class="t2-btns"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rpanel">
+    <div class="statpanel">
+      <div class="sphdr"><span class="spdot"></span>Workflow Status</div>
+      <div class="stkr">Progress</div>
+      <div class="wf-item cur" id="wf-0">
+        <div class="wf-icon">1</div>
+        <div><div class="wf-item-title">Risk Narrative Intake</div><div class="wf-item-sub">In Progress</div></div>
+      </div>
+      <div class="wf-item" id="wf-1"><div class="wf-icon">2</div><div><div class="wf-item-title">Scenario & Assumptions</div><div class="wf-item-sub">Pending</div></div></div>
+      <div class="wf-item" id="wf-2"><div class="wf-icon">3</div><div><div class="wf-item-title">Portfolio Selection</div><div class="wf-item-sub">Pending</div></div></div>
+      <div class="wf-item" id="wf-3"><div class="wf-icon">4</div><div><div class="wf-item-title">Event-driven Risk Factor</div><div class="wf-item-sub">Pending</div></div></div>
+      <div class="wf-item" id="wf-4"><div class="wf-icon">5</div><div><div class="wf-item-title">Sector-inherent Factors</div><div class="wf-item-sub">Pending</div></div></div>
+      <div class="wf-item" id="wf-5"><div class="wf-icon">6</div><div><div class="wf-item-title">Name Level Assessment</div><div class="wf-item-sub">Pending</div></div></div>
+      <div class="wf-item" id="wf-6"><div class="wf-icon">7</div><div><div class="wf-item-title">Portfolio Assessment</div><div class="wf-item-sub">Pending</div></div></div>
+
+      <div class="sys-log-wrap">
+        <div class="loglbl">System Log <button class="logclr" onclick="clearLog()">Clear</button></div>
+        <div id="sys-log" class="sys-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const API = 'http://127.0.0.1:8000';
+const TOUT = {
+  SCAN:300000,
+  ENRICH:300000,
+  HEALTH:5000,
+  DIAGNOSE:60000,
+  CONSOLIDATE:30000,
+  REFINE:300000,
+  REENRICH:300000
+};
+
+const SECS = [
+  'Event Overview',
+  'Event History',
+  'Direct Impact Geographies',
+  'Contagious Impact Geographies',
+  'Equity Market Impact',
+  'Credit Market Impact',
+  'Commodity Market Impact',
+  'Assumptions'
+];
+
+const THEME_ICON_CLS = ['t1','t2','t3','t4'];
+const CHEVSVG = '›';
+const MIN_CONTENT_CHARS = 40;
+
+let THEMES = [
+  {id:1,name:'US Trade Policy & Tariffs',narr:'US reciprocal tariffs on China, EU and emerging markets driving supply chain disruption, credit spread widening and sovereign credit stress.'},
+  {id:2,name:'Global Monetary Policy',narr:'Central bank rate divergence between Fed, ECB, and EM central banks creating FX volatility, capital outflows and sovereign debt refinancing stress.'}
+];
+let themeCtr = 2;
+let THEMES_DATA = {};
+let activeEvKey = null;
+let confirmedEvKey = null;
+let hasScan = false;
+let isScanning = false;
+let t2State = 'idle';
+let ENH_STATE = {};
+let t2EnhState = {};
+let T2_ORIGINAL_NARRATIVE = '';
+
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s ?? '')
+    .replaceAll('&','&amp;').replaceAll('<','&lt;')
+    .replaceAll('>','&gt;').replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+function stripMd(s){
+  return String(s ?? '')
+    .replace(/```[\s\S]*?```/g,'')
+    .replace(/\*\*(.*?)\*\*/g,'$1')
+    .replace(/__(.*?)__/g,'$1')
+    .replace(/`([^`]+)`/g,'$1')
+    .replace(/^#{1,6}\s*/gm,'')
+    .trim();
+}
+function ts(){
+  const d=new Date();
+  return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+function addLog(type,msg){
+  const el=document.createElement('div');
+  el.className='logmsg '+(type||'info');
+  el.innerHTML='<span class="logts">'+ts()+'</span>'+esc(msg);
+  $('sys-log').appendChild(el);
+  $('sys-log').scrollTop=$('sys-log').scrollHeight;
+}
+function clearLog(){ $('sys-log').innerHTML=''; }
+function showLoad(msg,sub=''){
+  $('lo-msg').textContent=msg||'Working…';
+  $('lo-sub').textContent=sub||'';
+  $('lo').classList.add('open');
+}
+function hideLoad(){ $('lo').classList.remove('open'); }
+
+async function apiPost(path,body,timeout=30000){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),timeout);
+  try{
+    const r=await fetch(API+path,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body),
+      signal:ctrl.signal
+    });
+    const text=await r.text();
+    let data={};
+    try{ data=text?JSON.parse(text):{}; }catch(_){ data={message:text}; }
+    if(!r.ok){
+      const e=new Error(data.detail || data.message || ('HTTP '+r.status));
+      e.status=r.status; e.data=data; throw e;
+    }
+    return data;
+  }finally{ clearTimeout(timer); }
+}
+
+function classifyErr(e){
+  const msg=String(e?.message||e||'Unknown error');
+  if(e?.name==='AbortError') return {title:'Timed Out',msg:'The operation exceeded the allowed time.',hint:'Try again or use a broader/simpler request.'};
+  if(/401|token|expired/i.test(msg)) return {title:'Token Expired',msg:msg,hint:'Run: helix auth access-token set'};
+  if(/Failed to fetch|NetworkError|fetch/i.test(msg)) return {title:'Backend Offline',msg:msg,hint:'Check that server.py is running on port 8000.'};
+  return {title:'API Error',msg:msg,hint:'Check backend logs for details.'};
+}
+function showErr(areaId,title,msg,hint=''){
+  const a=$(areaId);
+  if(!a) return;
+  a.style.display='block';
+  a.innerHTML='<div class="errbanner"><b>'+esc(title)+'</b>'+esc(msg)+(hint?'<div style="margin-top:3px;color:#8E514A">'+esc(hint)+'</div>':'')+'</div>';
+}
+function hideErr(areaId){ const a=$(areaId); if(a){a.style.display='none';a.innerHTML='';} }
+
+async function pingHealth(){
+  const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),TOUT.HEALTH);
+  try{
+    const r=await fetch(API+'/health',{signal:ctrl.signal});
+    if(!r.ok) throw new Error();
+    setConn(true);
+    return true;
+  }catch(_){ setConn(false); return false; }
+  finally{ clearTimeout(timer); }
+}
+function setConn(online){
+  const c=$('conn-chip');
+  c.classList.toggle('live',!!online);
+  c.classList.toggle('offline',!online);
+  $('conn-lbl').textContent=online?'Backend Live':'Backend Offline';
+}
+
+function switchTrig(idx){
+  $('t-btn-0').classList.toggle('active',idx===0);
+  $('t-btn-1').classList.toggle('active',idx===1);
+  $('trig-0').style.display=idx===0?'block':'none';
+  $('trig-1').style.display=idx===1?'block':'none';
+  $('scan-lbl').textContent=idx===0?'Market Scanner Active':'User Narrative Active';
+}
+
+function renderThemes(){
+  $('theme-tbody').innerHTML=THEMES.map(t=>`
+    <tr id="trow-${t.id}">
+      <td><input value="${esc(t.name)}" oninput="updateTheme(${t.id},'name',this.value)" /></td>
+      <td><textarea rows="1" oninput="updateTheme(${t.id},'narr',this.value)">${esc(t.narr)}</textarea></td>
+      <td><button class="theme-del" onclick="deleteTheme(${t.id})">×</button></td>
+    </tr>`).join('');
+}
+function updateTheme(id,f,v){ const t=THEMES.find(x=>x.id===id); if(t) t[f]=v; }
+function addTheme(){ themeCtr++; THEMES.push({id:themeCtr,name:'',narr:''}); renderThemes(); }
+function deleteTheme(id){ THEMES=THEMES.filter(t=>t.id!==id); delete THEMES_DATA[id]; renderThemes(); renderEvTree(); }
+
+function sectionQuality(txt){
+  const t=String(txt||'').trim();
+  if(!t) return 'empty';
+  if(t.length<MIN_CONTENT_CHARS) return 'partial';
+  return 'full';
+}
+function eventQuality(sections){
+  const arr=(sections||[]).map(s=>sectionQuality(s.txt));
+  const empty=arr.filter(x=>x==='empty').length;
+  const partial=arr.filter(x=>x==='partial').length;
+  const full=arr.filter(x=>x==='full').length;
+  return {empty,partial,full,score:Math.round((full+partial*.5)/8*100)};
+}
+function normalizeSections(sections){
+  const src=Array.isArray(sections)?sections:[];
+  const out=[];
+  for(let i=0;i<8;i++){
+    const s=src[i]||{};
+    out.push({
+      num:Number(s.num||i+1),
+      title:String(s.title||SECS[i]),
+      txt:String(s.txt??s.text??'')
+    });
+  }
+  return out;
+}
+function applyShellState(){
+  $('prescan').style.display=hasScan?'none':'flex';
+  $('evshell').style.display=hasScan?'grid':'none';
+  $('ev-sbar').style.display=hasScan?'flex':'none';
+}
+function scopeKey(tId,idx){ return `t1:${tId}:${idx}`; }
+function evKey(tId,idx){ return `${tId}-${idx}`; }
+function parseEvKey(key){ const [tId,idx]=String(key).split('-').map(Number); return {tId,idx}; }
+
+async function runScan(){
+  if(isScanning) return;
+  const themes=THEMES.map(t=>({id:t.id,name:t.name.trim(),narr:t.narr.trim()})).filter(t=>t.name||t.narr);
+  if(!themes.length){ showErr('err-area','No Themes','Add at least one broad theme before scanning.'); return; }
+
+  isScanning=true; hideErr('err-area');
+  $('scan-btn').disabled=true; $('scan-btn').textContent='Scanning…';
+  showLoad('Scanning market events…','ADK enterprise web search');
+  addLog('info',`Market Scanner — ${themes.length} theme(s)`);
+  THEMES_DATA={};
+  themes.forEach(t=>THEMES_DATA[t.id]={events:[],scanning:true,done:false,expanded:true,name:t.name,narr:t.narr});
+  hasScan=true; applyShellState(); renderEvTree();
+
+  try{
+    const data=await apiPost('/api/v1/rpr/market-events/fetch',{
+      themes:themes.map(t=>t.name || t.narr),
+      max_events_per_theme:3
+    },TOUT.SCAN);
+
+    const events=Array.isArray(data.events)?data.events:[];
+    for(const raw of events){
+      let themeId=null;
+      const idx=Number(raw.theme_index);
+      if(Number.isInteger(idx) && themes[idx]) themeId=themes[idx].id;
+      if(themeId===null){
+        const match=themes.find(t=>
+          String(raw.theme||raw.theme_name||'').toLowerCase().includes(t.name.toLowerCase()) ||
+          t.name.toLowerCase().includes(String(raw.theme||raw.theme_name||'').toLowerCase())
+        );
+        themeId=match?match.id:themes[0].id;
+      }
+      const ev={
+        id:Number(raw.id??raw.event_id??0),
+        label:String(raw.label||`Event ${raw.id??''}`),
+        subtitle:String(raw.subtitle||raw.headline||''),
+        source:String(raw.source_names||raw.source||''),
+        horizon:String(raw.horizon||'12 months'),
+        sections:normalizeSections(raw.sections),
+        failed:Boolean(raw.search_failed),
+        failReason:String(raw.fail_reason||''),
+        themeName:String(raw.theme_name||raw.theme||THEMES_DATA[themeId]?.name||''),
+        enhancementMeta:raw.enhancement_meta||null,
+        executedQuery:String(raw.executed_query||'')
+      };
+      THEMES_DATA[themeId].events.push(ev);
+    }
+    Object.values(THEMES_DATA).forEach(v=>{v.scanning=false;v.done=true;});
+    $('scanned-bdg').style.display='inline-block';
+    addLog('ok',`Market Scanner complete — ${events.length} events`);
+    if(!events.length) showErr('err-area','No Events Returned','The scanner completed but returned no events.','Try a broader theme.');
+  }catch(e){
+    const ce=classifyErr(e);
+    showErr('err-area',ce.title,ce.msg,ce.hint);
+    addLog('err',`Market Scanner failed: ${ce.msg}`);
+    Object.values(THEMES_DATA).forEach(v=>{v.scanning=false;v.done=true;});
+  }finally{
+    isScanning=false;
+    $('scan-btn').disabled=false; $('scan-btn').textContent='↗ Re-scan';
+    hideLoad();
+    renderEvTree(); updateEvBar();
+    const first=firstEventKey(); if(first) selectEv(...Object.values(parseEvKey(first)));
+    runDiagnosisForAllEvents();
+  }
+}
+function firstEventKey(){
+  for(const t of THEMES){
+    const d=THEMES_DATA[t.id];
+    if(d?.events?.length) return evKey(t.id,0);
+  }
+  return null;
+}
+function toggleThemeExpand(tId){
+  const d=THEMES_DATA[tId]; if(!d)return;
+  d.expanded=!d.expanded; renderEvTree();
+}
+function renderEvTree(){
+  let total=0;
+  const html=THEMES.map((t,ti)=>{
+    const d=THEMES_DATA[t.id]||{events:[],expanded:true,scanning:false,done:false};
+    total+=d.events.length;
+    const cls=THEME_ICON_CLS[ti%THEME_ICON_CLS.length];
+    const children=d.scanning
+      ? `<div class="ev-skeleton"><div class="sk"></div><div class="sk s"></div><div class="sk"></div></div>`
+      : d.events.map((ev,idx)=>{
+          const k=evKey(t.id,idx);
+          const q=eventQuality(ev.sections);
+          const st=ev.failed?'failed':(confirmedEvKey===k?'confirmed':(activeEvKey===k?'viewing':''));
+          const badge=ev.failed?'FAIL':(confirmedEvKey===k?'CONF':(q.empty?`${q.empty} missing`:'READY'));
+          return `<div class="evitem ${st}" onclick="selectEv(${t.id},${idx})">
+            <div class="evitem-top">
+              <div class="evico">${idx+1}</div>
+              <div style="font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(ev.label||`Event ${idx+1}`)}</div>
+              <span class="evbadge">${esc(badge)}</span>
+            </div>
+            <div class="evbdy">${esc(ev.subtitle||'No subtitle')}</div>
+          </div>`;
+        }).join('');
+    return `<div class="theme-group">
+      <div class="theme-row ${d.expanded?'open':''}" onclick="toggleThemeExpand(${t.id})">
+        <span class="theme-expand">▶</span>
+        <span class="theme-icon ${cls}">${ti+1}</span>
+        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.name||`Theme ${ti+1}`)}</span>
+        <span class="theme-status-dot ${d.done?'done':''}"></span>
+      </div>
+      <div class="ev-children" style="display:${d.expanded?'block':'none'}">${children||'<div style="padding:8px;color:#8D979C;font-size:9px">No events</div>'}</div>
+    </div>`;
+  }).join('');
+  $('ev-tree').innerHTML=html;
+  $('ev-total-badge').textContent=String(total);
+  $('ev-theme-summary').textContent=`${THEMES.length} theme(s) · ${total} event(s)`;
+  applyShellState();
+}
+function updateEvBar(){
+  let total=0,confirmed=0,empty=0;
+  for(const t of THEMES){
+    for(const ev of (THEMES_DATA[t.id]?.events||[])){
+      total++;
+      empty+=eventQuality(ev.sections).empty;
+    }
+  }
+  confirmed=confirmedEvKey?1:0;
+  $('ev-sum').textContent=`${total} events detected`;
+  $('ev-dq-summary').textContent=empty?`· ${empty} section(s) missing`:'· All sections populated';
+  $('ev-conf-txt').textContent=confirmed?`${confirmed} confirmed`:'Confirm 1 to proceed';
+  $('proceed-btn').disabled=!confirmed;
+}
+function saveCurrentSections(){
+  if(!activeEvKey) return;
+  const {tId,idx}=parseEvKey(activeEvKey);
+  const ev=THEMES_DATA[tId]?.events?.[idx]; if(!ev)return;
+  ev.sections.forEach((s,i)=>{
+    const ta=$(`sec-ta-${activeEvKey}-${i+1}`);
+    if(ta) s.txt=ta.value;
+  });
+}
+function selectEv(tId,idx){
+  saveCurrentSections();
+  activeEvKey=evKey(tId,idx);
+  renderEvTree(); renderEvDetail(tId,idx); updateEvBar();
+}
+function toggleSec(hdr){
+  const body=hdr.parentElement.querySelector('.nbdy');
+  const open=hdr.classList.toggle('open');
+  body.classList.toggle('open',open);
+}
+function buildDqStrip(sections){
+  return (sections||[]).map((s,i)=>{
+    const q=sectionQuality(s.txt);
+    const label=q==='empty'?'NO DATA':(q==='partial'?'PARTIAL':'OK');
+    return `<span class="dq-pill dq-sec-pill ${q}" onclick="document.getElementById('sec-ta-${activeEvKey}-${i+1}')?.scrollIntoView({behavior:'smooth',block:'center'})">${i+1} ${esc(label)}</span>`;
+  }).join('');
+}
+function buildAccordion(sections,keyPrefix,readonly=false,modal=false){
+  return (sections||[]).map((s,i)=>{
+    const q=sectionQuality(s.txt);
+    const open=i===0;
+    const taId=modal?`modal-sec-ta-${keyPrefix}-${i+1}`:`sec-ta-${keyPrefix}-${i+1}`;
+    return `<div class="nsec">
+      <div id="nhdr-${keyPrefix}-${i+1}" class="nhdr ${open?'open':''} ${q==='empty'?'empty-sec':''}" onclick="toggleSec(this)">
+        <span class="nnum">${i+1}</span>
+        <span class="nhdr-tit">${esc(s.title||SECS[i])}</span>
+        ${q==='empty'?'<span class="nodata">NO DATA</span>':''}
+        <span class="nchev">▶</span>
+      </div>
+      <div class="nbdy ${open?'open':''} ${q==='empty'?'empty-body':''}">
+        ${q==='empty'?'<div class="empty-placeholder">No data returned — enter your analysis below.</div>':''}
+        <textarea id="${taId}" class="sec-ta ${modal?'modal-sec-ta':''} ${q==='empty'?'empty-ta':''}" ${readonly?'readonly':''}>${esc(s.txt||'')}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderEvDetail(tId,idx){
+  const ev=THEMES_DATA[tId]?.events?.[idx]; if(!ev)return;
+  const key=evKey(tId,idx);
+  const readonly=confirmedEvKey===key;
+  const state=ENH_STATE[`t1:${tId}:${idx}`];
+  $('ev-det').innerHTML=`
+    <div class="evdet-hdr">
+      <div class="evdet-title">${esc(THEMES.find(t=>t.id===tId)?.name||'Theme')} · ${esc(ev.subtitle||ev.label)}</div>
+      <span class="evdet-horizon">${esc(ev.horizon||'12 months')}</span>
+      <div class="evdet-actions">
+        <button class="btn btn-sm" onclick="openModal(${tId},${idx})">Expand View</button>
+      </div>
+    </div>
+    <div class="conf-banner" style="display:${readonly?'block':'none'}">✓ Confirmed — sections are read-only. Use Re-edit to make changes.</div>
+    <div class="dq-strip">${buildDqStrip(ev.sections)}</div>
+    ${state && state.decision==='RECOMMENDED' && !state.dismissed && !readonly ? buildEnhCardHTML(key,state) : ''}
+    <div class="nacc">${buildAccordion(ev.sections,key,readonly,false)}</div>
+    <div class="ev-foot">
+      <div class="ev-foot-hint">${readonly?'Confirmed. Re-edit to change sections.':'Edit any section directly, then confirm.'}</div>
+      ${readonly
+        ? `<button class="btn btn-sm" onclick="reEditEv(${tId},${idx})">Re-edit</button><button class="btn btn-p btn-sm" onclick="proceedWithConfirmed()">Proceed</button>`
+        : `<button class="btn btn-p btn-sm" onclick="confirmEv(${tId},${idx})">✓ Confirm This Event</button>`
+      }
+    </div>`;
+}
+function confirmEv(tId,idx){
+  saveCurrentSections();
+  confirmedEvKey=evKey(tId,idx);
+  renderEvTree(); renderEvDetail(tId,idx); updateEvBar(); markWf(0,'confirmed');
+  addLog('ok',`Event confirmed — ${THEMES_DATA[tId]?.events?.[idx]?.subtitle||'event'}`);
+}
+function reEditEv(tId,idx){
+  confirmedEvKey=null;
+  renderEvTree(); renderEvDetail(tId,idx); updateEvBar();
+}
+function proceedWithConfirmed(){
+  if(!confirmedEvKey)return;
+  markWf(1,'cur');
+  addLog('info','Proceed requested — Step 2 remains a placeholder in this Step-1 build.');
+}
+function markWf(idx,status='cur'){
+  for(let i=0;i<=6;i++) $('wf-'+i)?.classList.toggle('cur',i===idx);
+}
+
+function openModal(tId,idx){
+  saveCurrentSections();
+  const ev=THEMES_DATA[tId]?.events?.[idx]; if(!ev)return;
+  $('modal-tit').textContent=ev.subtitle||ev.label||'Event Detail';
+  $('modal-sb').innerHTML=`<div style="padding:9px;font-size:10px;font-weight:700">Theme</div><div style="padding:9px;font-size:10px;color:#5E6768">${esc(THEMES.find(t=>t.id===tId)?.name||'')}</div>`;
+  $('modal-evhdr').textContent=ev.subtitle||ev.label||'';
+  $('modal-nacc').innerHTML=buildAccordion(ev.sections,evKey(tId,idx),confirmedEvKey===evKey(tId,idx),true);
+  $('modal-foot').innerHTML=`<button class="btn btn-sm" onclick="closeModal()">Close</button>${confirmedEvKey===evKey(tId,idx)?'':`<button class="btn btn-p btn-sm" onclick="syncModalSections(${tId},${idx});confirmEv(${tId},${idx});closeModal()">✓ Confirm This Event</button>`}`;
+  $('modal').classList.add('open');
+}
+function syncModalSections(tId,idx){
+  const ev=THEMES_DATA[tId]?.events?.[idx]; if(!ev)return;
+  ev.sections.forEach((s,i)=>{
+    const ta=$(`modal-sec-ta-${evKey(tId,idx)}-${i+1}`);
+    if(ta) s.txt=ta.value;
+  });
+}
+function closeModal(){
+  if(activeEvKey){
+    const {tId,idx}=parseEvKey(activeEvKey); syncModalSections(tId,idx); renderEvDetail(tId,idx);
+  }
+  $('modal').classList.remove('open');
+}
+function closeModalOutside(e){ if(e.target===$('modal')) closeModal(); }
+
+async function runDiagnosisForAllEvents(){
+  const jobs=[];
+  for(const t of THEMES){
+    const evs=THEMES_DATA[t.id]?.events||[];
+    evs.forEach((ev,idx)=>jobs.push(runDiagnosisForEvent(t.id,idx,ev,ev.enhancementMeta)));
+  }
+  await Promise.allSettled(jobs);
+}
+async function runDiagnosisForEvent(tId,idx,ev,meta){
+  if(!ev || ev.failed) return;
+  if(meta?.retrieval_failure===true || meta?.retrieval_status==='TECHNICAL_FAILURE') return;
+  const sk=`t1:${tId}:${idx}`;
+  if(ENH_STATE[sk]) return;
+  try{
+    const resp=await apiPost('/api/v1/rpr/enhance/diagnose',{
+      scope_type:'trigger1',
+      theme:THEMES.find(t=>t.id===tId)?.name||'',
+      event_id:Number(ev.id),
+      executed_query:ev.executedQuery||'',
+      section_meta:meta?.section_meta||[],
+      attempt_count:0
+    },TOUT.DIAGNOSE);
+    ENH_STATE[sk]={
+      decision:String(resp.decision||'NOT_RECOMMENDED'),
+      diagnosis:String(resp.diagnosis||''),
+      suggestion:String(resp.suggested_feedback||resp.suggestion||''),
+      affected_sections:Array.isArray(resp.affected_sections)?resp.affected_sections:[],
+      dismissed:false, consolidated:null, rescanDone:false,
+      eventId:Number(ev.id), theme:THEMES.find(t=>t.id===tId)?.name||''
+    };
+    if(ENH_STATE[sk].decision==='RECOMMENDED') addLog('info',`Enhancement available — ${ev.subtitle||ev.label}`);
+    if(activeEvKey===evKey(tId,idx)) renderEvDetail(tId,idx);
+  }catch(e){
+    console.debug('Diagnosis failed',e);
+  }
+}
+function buildEnhCardHTML(eKey,state){
+  if(!state || state.decision!=='RECOMMENDED' || state.dismissed) return '';
+  const safeKey=eKey.replaceAll(':','-');
+  if(state.consolidated){
+    return `<div id="enh-card-${safeKey}" class="enh-card fadein">
+      <div class="enh-card-hdr"><div class="enh-card-icon">!</div><div class="enh-card-title">Enhancement Ready — Apply & Rescan</div><div class="enh-card-badge">READY</div></div>
+      <div class="enh-card-body">
+        <div class="enh-consolidated">${esc(state.consolidated)}</div>
+        <div class="enh-actions"><button class="enh-btn enh-btn-apply" onclick="applyT1Rescan('${eKey}')">↻ Apply & Rescan</button></div>
+      </div>
+    </div>`;
+  }
+  return `<div id="enh-card-${safeKey}" class="enh-card fadein">
+    <div class="enh-card-hdr"><div class="enh-card-icon">!</div><div class="enh-card-title">Potential Improvement Detected</div><div class="enh-card-badge">Suggestion</div></div>
+    <div class="enh-card-body">
+      <div class="enh-why"><b>Reason:</b> ${esc(state.diagnosis||'The search can be made more targeted.')}</div>
+      ${state.affected_sections?.length?`<div class="enh-sections">${state.affected_sections.map(s=>`<span class="enh-section-pill">${esc(s)}</span>`).join('')}</div>`:''}
+      <div class="enh-suggestion-lbl">Suggested Refinement</div>
+      <textarea id="enh-ta-${safeKey}" class="enh-textarea">${esc(state.suggestion||'')}</textarea>
+      <div class="enh-actions">
+        <button id="enh-apply-${safeKey}" class="enh-btn enh-btn-apply" onclick="applyT1Enhancement('${eKey}')">✓ Apply & Prepare Rescan</button>
+        <button class="enh-btn enh-btn-dismiss" onclick="dismissT1Enhancement('${eKey}')">Dismiss</button>
+      </div>
+      <div style="font-size:8px;color:#7B7048;margin-top:5px">No rescan starts automatically.</div>
+    </div>
+  </div>`;
+}
+function dismissT1Enhancement(eKey){
+  const {tId,idx}=parseEvKey(eKey);
+  const sk=`t1:${tId}:${idx}`;
+  if(ENH_STATE[sk]) ENH_STATE[sk].dismissed=true;
+  addLog('info','Enhancement suggestion dismissed.');
+  $(`enh-card-${sk.replaceAll(':','-')}`)?.remove();
+}
+async function applyT1Enhancement(eKey){
+  const {tId,idx}=parseEvKey(eKey);
+  const sk=`t1:${tId}:${idx}`; const state=ENH_STATE[sk]; if(!state)return;
+  const ta=$(`enh-ta-${sk.replaceAll(':','-')}`);
+  const userText=ta?.value.trim()||state.suggestion;
+  const ev=THEMES_DATA[tId]?.events?.[idx]; if(!ev)return;
+  const btn=$(`enh-apply-${sk.replaceAll(':','-')}`); if(btn){btn.disabled=true;btn.textContent='Consolidating…';}
+  try{
+    const resp=await apiPost('/api/v1/rpr/enhance/consolidate',{
+      scope_type:'trigger1',
+      theme:state.theme,
+      event_id:Number(state.eventId),
+      user_approved_feedback:userText,
+      affected_sections:state.affected_sections,
+      original_diagnosis:state.diagnosis
+    },TOUT.CONSOLIDATE);
+    state.consolidated=String(resp.copyable_feedback||userText);
+    addLog('ok','Enhancement consolidated — rescan when ready.');
+    renderEvDetail(tId,idx);
+  }catch(e){ addLog('err','Consolidation failed: '+String(e.message||e)); if(btn){btn.disabled=false;btn.textContent='✓ Apply & Prepare Rescan';} }
+}
+async function applyT1Rescan(eKey){
+  const {tId,idx}=parseEvKey(eKey);
+  const sk=`t1:${tId}:${idx}`; const state=ENH_STATE[sk]; const ev=THEMES_DATA[tId]?.events?.[idx];
+  if(!state?.consolidated||!ev)return;
+  showLoad('Re-scanning with enhancement…','Applying approved runtime guidance');
+  try{
+    const resp=await apiPost('/api/v1/rpr/market-events/refine',{event:ev,feedback:state.consolidated},TOUT.REFINE);
+    const updated=resp.event||resp;
+    ev.subtitle=String(updated.subtitle||ev.subtitle);
+    ev.sections=normalizeSections(updated.sections||ev.sections);
+    ev.enhancementMeta=updated.enhancement_meta||null;
+    ev.executedQuery=String(updated.executed_query||ev.executedQuery||'');
+    delete ENH_STATE[sk];
+    addLog('ok','T1 rescan complete');
+    renderEvTree(); renderEvDetail(tId,idx);
+    await runDiagnosisForEvent(tId,idx,ev,ev.enhancementMeta);
+  }catch(e){ addLog('err','T1 rescan failed: '+String(e.message||e)); }
+  finally{ hideLoad(); }
+}
+
+/* Trigger 2 */
+function t2KeyFor(narr){ return String(narr||'').slice(0,40); }
+function t2Extract(data){
+  const r=(...keys)=>{ for(const k of keys){ if(data?.[k]!=null) return String(data[k]); } return ''; };
+  return [
+    r('event_overview','event_summary'),
+    r('event_history','history'),
+    r('direct_impact_geographies','direct_impact'),
+    r('contagion_impact_geographies','contagion_impact'),
+    r('equity_market_impact','equity_impact'),
+    r('credit_market_impact','credit_impact'),
+    r('commodity_market_impact','commodity_impact'),
+    r('assumptions')
+  ];
+}
+function buildT2Acc(texts){
+  const secs=SECS.map((title,i)=>({num:i+1,title,txt:String(texts?.[i]||'')}));
+  $('t2-acc').innerHTML=buildAccordion(secs,'t2',t2State==='confirmed',false).replaceAll('sec-ta-t2-','t2-sec-');
+  const dq=secs.map((s,i)=>`<span class="dq-pill dq-sec-pill ${sectionQuality(s.txt)}" onclick="document.getElementById('t2-sec-${i+1}')?.scrollIntoView({behavior:'smooth',block:'center'})">${i+1} ${sectionQuality(s.txt)==='empty'?'NO DATA':sectionQuality(s.txt).toUpperCase()}</span>`).join('');
+  $('t2-dq-strip').innerHTML=dq; $('t2-dq-strip').style.display='flex';
+}
+function readT2Texts(){ return SECS.map((_,i)=>$(`t2-sec-${i+1}`)?.value||''); }
+function renderT2Footer(){
+  if(t2State==='idle'){
+    $('t2-hint').textContent='Enter a narrative and run enrichment.'; $('t2-btns').innerHTML='';
+  }else if(t2State==='editing'){
+    $('t2-hint').textContent='Edit any section above, then confirm to proceed.';
+    $('t2-btns').innerHTML='<button class="btn btn-p btn-sm" onclick="confirmT2()">✓ Confirm</button>';
+  }else{
+    $('t2-hint').textContent='Confirmed. Re-edit to make changes.';
+    $('t2-btns').innerHTML='<button class="btn btn-sm" onclick="reEditT2()">Re-edit</button><button class="btn btn-p btn-sm" onclick="proceedT2()">Proceed RPR</button>';
+  }
+}
+function confirmT2(){
+  t2State='confirmed';
+  const texts=readT2Texts();
+  buildT2Acc(texts); renderT2Footer(); markWf(0,'confirmed'); addLog('ok','Trigger 2 narrative confirmed');
+}
+function reEditT2(){ t2State='editing'; buildT2Acc(readT2Texts()); renderT2Footer(); }
+function proceedT2(){ markWf(1,'cur'); addLog('info','Proceed requested — Step 2 remains a placeholder in this Step-1 build.'); }
+
+async function runEnrich(){
+  const narr=$('t2-narr').value.trim();
+  if(!narr){ $('t2-err').style.display='block'; $('t2-err').textContent='Enter a narrative before running enrichment.'; return; }
+  T2_ORIGINAL_NARRATIVE=narr;
+  $('enrich-btn').disabled=true; $('enrich-btn').textContent='Enriching…'; $('t2-err').style.display='none';
+  showLoad('Enriching narrative via R2D2…','ADK enterprise web search');
+  addLog('info','T2 Enrichment started');
+  t2State='idle'; t2EnhState={};
+  try{
+    const data=await apiPost('/api/v1/rpr/step1/enrich',{narrative:narr},TOUT.ENRICH);
+    const texts=t2Extract(data);
+    buildT2Acc(texts);
+    t2State='editing'; renderT2Footer();
+    $('t2-title').textContent='AI-Enriched Narrative';
+    $('t2-genbdg').style.display='inline-block';
+    if(data.enhancement_meta) runT2Diagnosis(narr,data.enhancement_meta);
+    addLog('ok','T2 enrichment complete — 8 sections');
+  }catch(e){
+    const ce=classifyErr(e); $('t2-err').style.display='block'; $('t2-err').textContent=ce.title+': '+ce.msg;
+    addLog('err','T2 enrichment failed: '+ce.msg);
+  }finally{
+    hideLoad(); $('enrich-btn').disabled=false; $('enrich-btn').textContent='↗ Re-run AI Enrichment (R2D2)';
+  }
+}
+async function runT2Diagnosis(narr,meta){
+  const key=t2KeyFor(narr);
+  if(t2EnhState[key]) return;
+  try{
+    const resp=await apiPost('/api/v1/rpr/enhance/diagnose',{
+      scope_type:'trigger2',
+      narrative_preview:String(narr).slice(0,120),
+      executed_query:meta?.executed_query || String(narr).slice(0,200),
+      section_meta:meta?.section_meta||[],
+      attempt_count:0
+    },TOUT.DIAGNOSE);
+    t2EnhState[key]={
+      decision:String(resp.decision||'NOT_RECOMMENDED'),
+      diagnosis:String(resp.diagnosis||''),
+      suggestion:String(resp.suggested_feedback||resp.suggestion||''),
+      affected_sections:Array.isArray(resp.affected_sections)?resp.affected_sections:[],
+      dismissed:false, consolidated:null, narrative:narr
+    };
+    renderT2EnhCard(key);
+    if(t2EnhState[key].decision==='RECOMMENDED') addLog('info','T2 enhancement recommendation available');
+  }catch(e){ console.debug('T2 diagnosis failed',e); }
+}
+function renderT2EnhCard(key){
+  const st=t2EnhState[key];
+  if(!st || st.decision!=='RECOMMENDED' || st.dismissed){ $('t2-enh-area').style.display='none'; $('t2-enh-area').innerHTML=''; return; }
+  $('t2-enh-area').style.display='block';
+  if(st.consolidated){
+    $('t2-enh-area').innerHTML=`<div class="enh-card fadein">
+      <div class="enh-card-hdr"><div class="enh-card-icon">!</div><div class="enh-card-title">Enhancement Ready — Apply & Rescan</div><div class="enh-card-badge">READY</div></div>
+      <div class="enh-card-body"><div class="enh-consolidated">${esc(st.consolidated)}</div><div class="enh-actions"><button class="enh-btn enh-btn-apply" onclick="applyT2Rescan('${esc(key)}')">↻ Re-enrich with Enhancement</button></div></div>
+    </div>`;
+  }else{
+    $('t2-enh-area').innerHTML=`<div class="enh-card fadein">
+      <div class="enh-card-hdr"><div class="enh-card-icon">!</div><div class="enh-card-title">Potential Improvement Detected</div><div class="enh-card-badge">Suggestion</div></div>
+      <div class="enh-card-body">
+        <div class="enh-why"><b>Reason:</b> ${esc(st.diagnosis)}</div>
+        ${st.affected_sections?.length?`<div class="enh-sections">${st.affected_sections.map(s=>`<span class="enh-section-pill">${esc(s)}</span>`).join('')}</div>`:''}
+        <div class="enh-suggestion-lbl">Suggested Refinement</div>
+        <textarea id="enh-t2-ta-${esc(key)}" class="enh-textarea">${esc(st.suggestion)}</textarea>
+        <div class="enh-actions">
+          <button class="enh-btn enh-btn-apply" onclick="applyT2Enhancement('${esc(key)}', T2_ORIGINAL_NARRATIVE)">✓ Apply & Prepare Re-enrichment</button>
+          <button class="enh-btn enh-btn-dismiss" onclick="dismissT2Enhancement('${esc(key)}')">Dismiss</button>
+        </div>
+      </div>
+    </div>`;
+  }
+}
+function dismissT2Enhancement(key){ if(t2EnhState[key]) t2EnhState[key].dismissed=true; $('t2-enh-area').style.display='none'; $('t2-enh-area').innerHTML=''; }
+async function applyT2Enhancement(key,narrativeSlice){
+  const st=t2EnhState[key]; if(!st)return;
+  const ta=$(`enh-t2-ta-${key}`);
+  const userText=ta?.value.trim()||st.suggestion;
+  try{
+    const resp=await apiPost('/api/v1/rpr/enhance/consolidate',{
+      scope_type:'trigger2',
+      narrative_preview:String(st.narrative||narrativeSlice||'').slice(0,120),
+      user_approved_feedback:userText,
+      affected_sections:st.affected_sections,
+      original_diagnosis:st.diagnosis
+    },TOUT.CONSOLIDATE);
+    st.consolidated=String(resp.copyable_feedback||userText);
+    renderT2EnhCard(key); addLog('ok','T2 enhancement consolidated');
+  }catch(e){ addLog('err','T2 consolidation failed: '+String(e.message||e)); }
+}
+async function applyT2Rescan(key){
+  const st=t2EnhState[key]; if(!st?.consolidated)return;
+  const originalNarr=st.narrative || T2_ORIGINAL_NARRATIVE;
+  showLoad('Re-enriching with enhancement…','Original narrative preserved; refinement guidance applied separately');
+  try{
+    const resp=await apiPost('/api/v1/rpr/step1/re-enrich',{
+      narrative:originalNarr,
+      refinement_guidance:st.consolidated
+    },TOUT.REENRICH);
+    const data=resp.data||resp;
+    buildT2Acc(t2Extract(data));
+    delete t2EnhState[key]; $('t2-enh-area').style.display='none'; $('t2-enh-area').innerHTML='';
+    t2State='editing'; renderT2Footer(); addLog('ok','T2 re-enrichment complete');
+    if(data.enhancement_meta) runT2Diagnosis(originalNarr,data.enhancement_meta);
+  }catch(e){ addLog('err','T2 re-enrich failed: '+String(e.message||e)); }
+  finally{ hideLoad(); }
+}
+
+/* Init */
+document.addEventListener('DOMContentLoaded',async()=>{
+  renderThemes();
+  applyShellState();
+  buildT2Acc(Array(8).fill(''));
+  t2State='idle'; renderT2Footer();
+  const online=await pingHealth();
+  addLog(online?'ok':'warn', online?`Backend connected: ${API}`:'Backend offline — run start_backend.ps1');
+  setInterval(pingHealth,60000);
+});
+</script>
+</body>
+</html>
