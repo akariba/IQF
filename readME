@@ -1,3 +1,13 @@
+$env:RPR_T1_DISCOVERY_TIMEOUT="75"
+$env:RPR_T1_ENRICH_TIMEOUT="180"
+$env:RPR_T1_OPUS_TIMEOUT="150"
+$env:RPR_T1_DISCOVERY_WORKERS="3"
+$env:RPR_T1_ENRICH_WORKERS="6"
+$env:RPR_T1_PARALLEL="1"
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+
+
 $gatewayUrl = & "..\portfolio-agent\.venv\Scripts\python.exe" -c "from llm_gateway import R2D2LLMGateway; print(R2D2LLMGateway._UAT_URL)"
 
 $env:RPR_VERTEX_BASE_URL = $gatewayUrl.Trim().TrimEnd("/") -replace "/v1(?:alpha\d*|beta\d*)?$", ""
