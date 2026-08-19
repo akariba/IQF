@@ -1,3 +1,28 @@
+$src = "C:\Users\ak54743\Downloads\RPR_v11_1_Trigger1_verified\RPR_v11_1_Trigger1"
+$dst = "C:\Users\ak54743\Downloads\OneDrive_2026-07-16\Rapid Portfolio Review - Copy"
+
+# Create backup
+$stamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$backup = Join-Path $dst "_rpr_backup_$stamp"
+
+New-Item -ItemType Directory -Path "$backup\backend" -Force | Out-Null
+New-Item -ItemType Directory -Path "$backup\frontend" -Force | Out-Null
+
+Copy-Item "$dst\backend\market_event_scout.py" "$backup\backend\market_event_scout.py"
+Copy-Item "$dst\backend\server.py" "$backup\backend\server.py"
+Copy-Item "$dst\frontend\rpr-v8-consolidated-test.html" "$backup\frontend\rpr-v8-consolidated-test.html"
+Copy-Item "$dst\RUNTIME_ENV.ps1" "$backup\RUNTIME_ENV.ps1"
+
+# Install the four new files
+Copy-Item "$src\backend\market_event_scout.py" "$dst\backend\market_event_scout.py" -Force
+Copy-Item "$src\backend\server.py" "$dst\backend\server.py" -Force
+Copy-Item "$src\frontend\rpr-v8-consolidated-test.html" "$dst\frontend\rpr-v8-consolidated-test.html" -Force
+Copy-Item "$src\RUNTIME_ENV.ps1" "$dst\RUNTIME_ENV.ps1" -Force
+
+Write-Host "Replacement completed."
+Write-Host "Backup saved in: $backup"
+
+
 
 Get-Content .\RUNTIME_ENV.ps1 -Raw | Invoke-Expression
 cd .\backend
