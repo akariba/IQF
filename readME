@@ -1,3 +1,89 @@
+Restore the previous AI Assist replacement-theme feature in the current RPR codebase.
+
+Current regression:
+`backend/theme_assistant_batch.py` handles obvious off-domain inputs such as `Holiday` deterministically and returns:
+
+* `classification: OFF_DOMAIN`
+* `suggestions: []`
+* `suggestion_status: NOT_REQUESTED`
+
+This prevents the approved AI model from generating the replacement market-risk themes that the previous AI Assist feature displayed.
+
+Required change:
+
+1. Modify only:
+
+   * `backend/theme_assistant_batch.py`
+   * `backend/prompts/trigger1_theme_gate_batch.txt`
+
+2. Preserve the deterministic fast path for `STRONG` themes.
+
+3. Every non-STRONG theme—including `OFF_DOMAIN`, `AMBIGUOUS`, `LOW_CREDIT_RELEVANCE`, short themes, and broad themes—must reach the existing approved Claude Sonnet batch adapter.
+
+4. For a defensibly interpretable input such as `Holiday`, Sonnet should return up to three replacement themes connected to legitimate market or credit-risk channels, such as:
+
+   * consumer and retail credit stress;
+   * travel or airline credit risk;
+   * seasonal liquidity, supply-chain or working-capital pressure.
+
+5. Do not claim that any suggested theme is a current event. Do not invent dates, sources or facts.
+
+6. Preserve the existing response contract:
+
+```json
+{
+  "classification": "OFF_DOMAIN",
+  "assessment": "OFF_DOMAIN",
+  "reason": "string",
+  "suggestions": [
+    {
+      "theme": "string",
+      "rationale": "string",
+      "relationship_to_original": "DIRECT|POSSIBLE|ALTERNATIVE",
+      "key_credit_channels": ["string"]
+    }
+  ],
+  "suggestion_status": "SUCCESS",
+  "gate_source": "sonnet_batch"
+}
+```
+
+7. If the approved adapter fails:
+
+   * preserve the original theme;
+   * return the correct deterministic classification;
+   * use `suggestion_status: TECHNICAL_FAILURE`;
+   * return no fabricated suggestions;
+   * do not fail the entire application.
+
+Strict non-regression rules:
+
+* Do not modify the frontend HTML.
+* Do not change the immutable v31 layout, styling, colours, spacing, buttons or panels.
+* Do not change Trigger 1’s Bible rule: up to three events per accepted theme.
+* Do not change Trigger 1 discovery, enrichment, refinement, caching, concurrency or timeout logic.
+* Do not change Trigger 2 Gemini retrieval or Claude Opus refinement.
+* Do not change Step 2.1 Sonnet/Opus routing.
+* Do not change confirmation gates or separate feedback contexts.
+* Do not add demo data, offline results, public-web clients or fallback-generated content.
+* Do not modify any additional file without stopping and asking for my approval first.
+
+Required verification:
+
+1. Python compile check.
+2. Test `Holiday` and confirm the approved Sonnet path is called exactly once.
+3. Confirm the response contains up to three suggestions and `suggestion_status: SUCCESS`.
+4. Confirm a STRONG theme still uses the deterministic path with no unnecessary model call.
+5. Simulate adapter failure and confirm safe `TECHNICAL_FAILURE` behavior.
+6. Confirm the frontend remains byte-identical.
+7. Show the exact diff for the two permitted files and provide their complete replacement versions.
+
+
+
+
+
+
+
 cd ..
 
 $env:PYTHONPATH = "$PWD\backend"
