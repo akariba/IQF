@@ -1,3 +1,21 @@
+cd "C:\Users\ak54743\Downloads\OneDrive_2026-07-16\Rapid Portfolio Review - Copy"
+
+$python = ".\portfolio-agent\.venv\Scripts\python.exe"
+
+$gateway = & $python -c "import sys; sys.path.insert(0, r'.\backend'); from llm_gateway import R2D2LLMGateway; print(R2D2LLMGateway._UAT_URL); print(R2D2LLMGateway._GCP_PROJECT)"
+
+$env:RPR_VERTEX_BASE_URL = ($gateway[0].Trim().TrimEnd('/') -replace '/v1(?:alpha\d*|beta\d*)?$', '')
+$env:VERTEX_ENDPOINT = $env:RPR_VERTEX_BASE_URL
+$env:VERTEX_PROJECT = $gateway[1].Trim()
+
+Get-Content .\RUNTIME_ENV.ps1 -Raw | Invoke-Expression
+
+cd .\backend
+
+& "..\portfolio-agent\.venv\Scripts\python.exe" -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+
+
+
 $src = "C:\Users\ak54743\Downloads\RPR_v11_1_Trigger1_verified\RPR_v11_1_Trigger1"
 $dst = "C:\Users\ak54743\Downloads\OneDrive_2026-07-16\Rapid Portfolio Review - Copy"
 
