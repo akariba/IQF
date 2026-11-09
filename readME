@@ -1,94 +1,354 @@
-## CONTINUE HDS–SCENARIO MANAGER INVESTIGATION — OFFLINE MAPPING FIRST
+# HDS ↔ SCENARIO MANAGER — LIVE DATA MAPPING VALIDATION
 
-You have completed the initial workbook assessment.
+## ROLE AND MISSION
 
-Your findings indicate:
-- 89 worksheets
-- 71 scenario data worksheets
-- 4,523 scenario inventory rows
-- 4,347 distinct risk factors
-- 62 hidden or very-hidden worksheets
-- 6,002 formula cells
-- 6 duplicated identifier groups
+Act as a Principal Market Risk Data Engineer, Quantitative Risk Analyst, and Citi HDS Data Integration Specialist.
 
-The HDS Python interface has returned `RATE_LIMIT_EXCEEDED_PER_DAY`.
+**This is a LIVE HDS investigation and validation task, not another offline assessment.**
 
-**Do not retry Python HDS queries until the quota is officially available. Do not attempt to circumvent the quota or switch identities.**
+You have already completed extensive Scenario Manager workbook profiling and created factor inventories, mapping classifications, and feasibility reports.
 
-### Priority 1 — Analyze existing workbook metadata
+Do not repeat that work.
 
-Investigate all hidden and visible supporting worksheets using read-only parsing.
+Your mission is to actively use your existing, authorized HDS access to execute small, efficient queries, discover the corresponding HDS market factors, validate the mappings against the Scenario Manager workbook, and return evidence-based findings and a practical implementation plan.
 
-Identify:
-- Risk-factor naming conventions
-- Identifier construction rules
-- Market benchmarks
-- Currency definitions
-- Tenor definitions
-- Commodity classifications
-- Interest-rate curve structures
-- Volatility surface structures
-- Existing lookup tables and identifier mappings
-- Formula relationships and referenced named ranges
+The goal is to determine how the market data in:
 
-Do not execute macros or overwrite the workbook.
+`gfolyrsk_cmrr_reporting.om_mr_hds_timeseries_mev`
 
-Determine whether any existing metadata directly connects Scenario Manager identifiers to HDS names or market-data tickers.
+can support historical shock calibration for the supplied Scenario Manager `.xlsm` workbook.
 
-### Priority 2 — Build the mapping taxonomy
+## 1. EXISTING FINDINGS — REUSE THEM
 
-Classify all 4,347 distinct risk factors into financial risk-factor families.
+Previous investigation established:
 
-Determine which classes could plausibly use direct HDS series and which require derived calculations.
+- 89 workbook worksheets.
+- 71 scenario-data worksheets.
+- 4,523 inventory rows.
+- 4,347 distinct risk-factor identifiers.
+- 62 hidden or very-hidden worksheets.
+- No confirmed direct HDS mappings.
+- `fxdl.JPY.USD` is a candidate for the FX pilot.
+- `cmdl.COAL.ARA.COAL` needs an ARA coal benchmark, not an unapproved Newcastle substitute.
+- Turkish 10-year swap mapping remains unconfirmed.
+- Bond futures basis factors may require derived calculations.
 
-Identify mappings supported by actual workbook evidence, not guessed string similarity.
+These findings are already documented in the investigation artifacts.
 
-### Priority 3 — Prepare optimized Olympus SQL
+Read and reuse them.
 
-Generate a small, prioritized collection of read-only SQL queries for execution through the authorized Data Workbench UI.
+Do not regenerate the full workbook inventory.
 
-Each query must:
-- Filter by a verified `as_of` partition.
-- Use selective market-factor identifiers or prefixes.
-- Return only necessary columns.
-- Avoid unnecessary full-table scans.
-- Avoid expensive unrestricted DISTINCT operations.
-- Include a purpose and expected evidence.
-- Explain possible failure or ambiguity.
-- Respect platform rate and access limits.
+## 2. HDS CONNECTION — ACTIVE EXECUTION REQUIRED
 
-Prioritize discovery of:
-1. FX JPY/USD
-2. Turkish 10-year swaps
+You have previously authenticated to Olympus/HDS.
+
+One Python gRPC access path returned:
+
+`RATE_LIMIT_EXCEEDED_PER_DAY`
+
+Other attempts returned `DATA_ACCESS_DENIED`.
+
+The Olympus Data Workbench has previously executed read-only SQL successfully using an authorized execution path.
+
+Your task is to:
+
+1. Inspect existing approved HDS connection methods.
+2. Identify which execution method is currently authorized and available.
+3. Determine whether a query can be executed within its documented quota.
+4. Execute a small read-only validation query using that existing method.
+5. Capture the result, execution time and actual status.
+
+**Do not assume all HDS connections are unavailable because one client was rate-limited.**
+
+However, a rate limit or access denial must be respected. You must not bypass quotas, switch identities, extract credentials, impersonate users, or use an unauthorized interface.
+
+If a separate officially supported execution method is available to this authenticated session, use it within its own documented permissions and quota. Do not use an alternate client solely to evade a restriction.
+
+If no authorized execution route remains, report the blocker precisely and stop remote querying.
+
+Do not claim that a query executed unless you have its actual returned result.
+
+## 3. STRICT HDS QUERY PERFORMANCE POLICY
+
+HDS performance is critical. Do not overload it.
+
+### Query budget
+
+- Maximum 8 HDS queries during this investigation.
+- Execute one query at a time.
+- Start with the smallest metadata lookup.
+- Target under 10 seconds per query.
+- Stop or cancel at 20 seconds where supported.
+- No more than 100 returned rows per query.
+- Do not retrieve full historical series.
+- Do not run queries concurrently.
+- Do not retry rate-limited requests.
+- Do not repeatedly query the same factor without a clear reason.
+
+### SQL optimization
+
+You MUST:
+
+- Use verified `as_of` partition predicates.
+- Filter by market-factor family where confirmed.
+- Prefer exact `market_factor_id` or narrow identifiers.
+- Select only necessary columns.
+- Use existing metadata tables or reference dictionaries where available.
+- Avoid expensive leading-wildcard searches when more selective alternatives exist.
+- Avoid table-wide `DISTINCT`, `GROUP BY`, `COUNT(*)`, and `ORDER BY`.
+- Avoid `SELECT *`.
+- Avoid joins across large historical tables during discovery.
+- Avoid unnecessary historical data retrieval.
+- Reuse cached results from previous successful queries.
+
+Remember that `LIMIT` reduces returned rows but does not guarantee a cheap scan.
+
+If the optimizer supports `EXPLAIN` without running the query, use it when it can help verify partition pruning and query cost without exceeding the investigation budget.
+
+If query performance becomes unacceptable, stop and return findings rather than increasing the workload.
+
+## 4. PRIORITY 1 — VALIDATE JPY/USD MAPPING
+
+This is the first and most important pilot.
+
+Scenario Manager candidate:
+
+`fxdl.JPY.USD`
+
+Victor's business requirement:
+
+"Using daily data, determine the historical percentile corresponding to a +10% appreciation of JPY versus USD over 10 business days, using observations from 2007 to the present."
+
+### Investigation
+
+1. Read the existing workbook evidence for `fxdl.JPY.USD`.
+2. Confirm its asset class, quotation convention, unit and shift type.
+3. Discover candidate HDS FX spot series.
+4. Execute small, selective HDS metadata queries.
+5. Retrieve actual identifiers and source metadata.
+6. Validate currency pair and market-data type.
+7. If a candidate is identified, request only a few observations to verify the level convention and daily frequency.
+
+Do not assume `JPY/USD` and `USD/JPY` have identical numerical changes.
+
+### Required evidence
+
+- Exact HDS market-factor ID.
+- Exact HDS market-factor name.
+- Source ticker.
+- Source system.
+- Frequency.
+- Quotation direction.
+- Mapping confidence.
+- Missing validation requirements.
+
+Only classify the mapping as Confirmed if reliable evidence validates the instrument and quotation convention.
+
+## 5. PRIORITY 2 — VALIDATE TURKISH 10-YEAR SWAP
+
+Victor's second question concerns the historical rolling 10-business-day movement of the Turkish 10-year swap rate.
+
+Investigate whether HDS contains:
+
+- TRY interest-rate swap curves.
+- A direct Turkish 10-year swap market factor.
+- Swap-tenor points.
+- Related curve identifiers or reference mappings.
+
+Determine whether the required value exists as a direct series or must be constructed from another approved representation.
+
+Execute only narrow metadata queries.
+
+Do not confuse sovereign bond yields, policy rates, or other interest-rate instruments with an actual swap rate.
+
+Return the most credible HDS candidate with supporting evidence.
+
+## 6. PRIORITY 3 — ARA COAL MAPPING
+
+Scenario Manager factor:
+
+`cmdl.COAL.ARA.COAL`
+
+Previously identified HDS factors include:
+
+- `CMFP.COAL_ICE_NEWC.001M`
+- `CMFP.COAL_ICE_NEWC.012M`
+
+These Newcastle coal factors are not confirmed ARA coal equivalents.
+
+Investigate:
+
+- ARA coal
+- API2 coal
+- Relevant commodity benchmark identifiers
+- Commodity market-data reference dictionaries
+
+Use one narrowly scoped metadata query only if prior cached evidence is insufficient.
+
+Do not search the entire HDS table repeatedly.
+
+Distinguish direct matches, derived relationships and unapproved proxies.
+
+## 7. PRIORITY 4 — REPRESENTATIVE BOND FUTURES BASIS
+
+Choose one representative bond futures basis factor from the workbook.
+
+Determine whether HDS contains:
+
+- The basis directly.
+- Bond futures prices and cash-bond inputs necessary to derive it.
+- Another documented reference mapping.
+
+Do not treat a government bond yield as equivalent to a bond futures basis factor.
+
+Only execute an HDS query if sufficient query budget remains.
+
+## 8. MAPPING VALIDATION REGISTRY
+
+For each investigated factor, record:
+
+| Field | Description |
+|---|---|
+| Excel factor | Scenario Manager identifier |
+| HDS factor ID | Actual HDS numeric identifier |
+| HDS factor name | Exact name from HDS |
+| HDS source ticker | Source market identifier |
+| HDS source system | Source system |
+| Frequency | Verified frequency |
+| Market definition | Underlying instrument |
+| Unit | Price, percentage, bps, etc. |
+| Quote convention | Direction and interpretation |
+| Mapping type | Direct, derived or proxy |
+| Evidence | Actual query results and reference evidence |
+| Status | Confirmed, candidate, proxy or unmapped |
+| Blockers | Missing metadata or validation |
+| Next action | Exact requirement for confirmation |
+
+Never populate identifiers from assumptions.
+
+Maintain a clear distinction between:
+
+- Observed HDS facts
+- Inferred candidate relationships
+- Validated mappings
+- Unresolved issues
+
+## 9. LIMITED HISTORICAL VERIFICATION
+
+If you identify a strong candidate and have remaining authorized query budget, perform one small historical verification.
+
+Retrieve at most 10 observations using:
+
+- Exact market-factor ID.
+- Confirmed partition.
+- Relevant frequency.
+- Narrow historical date window.
+- Selected required columns.
+
+Check whether:
+
+- Observations are genuinely historical.
+- Date and level columns are populated.
+- Units and price conventions are plausible.
+- Multiple runs or snapshots create duplicates.
+- Daily observations are available.
+
+Do not calculate shock percentiles from a 10-row sample.
+
+Do not retrieve the full history until the mapping and data-extraction approach are approved.
+
+## 10. INVESTIGATE THE QUOTA ISSUE
+
+Review the actual HDS connection diagnostics.
+
+Determine:
+
+1. Which authenticated connection succeeded.
+2. Which specific datasource was rate-limited.
+3. Whether the restriction is per user, datasource, endpoint or another documented scope.
+4. Whether there is an authorized metadata-only API.
+5. Whether a previously approved and independently supported Data Workbench connection is available.
+6. Which access route should be used for historical extraction.
+
+Do not use unsupported assumptions about rate-limit resets.
+
+Do not bypass any quota.
+
+If access remains blocked, distinguish the platform issue from the market-factor mapping feasibility.
+
+## 11. REQUIRED OUTPUT
+
+Produce a live validation report containing:
+
+### A. HDS access status
+
+Which access methods were tried, which succeeded, and actual query outcomes.
+
+### B. Query execution log
+
+For each query:
+
+- Purpose
+- SQL or query identifier
+- Execution method
+- Partition and filters
+- Execution time
+- Returned rows
+- Actual findings
+- Errors or limitations
+
+### C. Validated mapping findings
+
+Show the results for:
+
+1. JPY/USD
+2. Turkish 10-year swap
 3. ARA coal
-4. Representative bond futures basis factors
+4. Bond futures basis, if investigated
 
-First check whether approved factor-reference tables or metadata views provide mappings more efficiently than the historical time-series table.
+Do not claim mappings are confirmed without evidence.
 
-### Priority 4 — Separate evidence from speculation
+### D. Data-readiness assessment
 
-For every proposed mapping, classify it as:
+Determine whether each candidate supports daily historical shock calibration and what historical coverage still requires verification.
 
-- Confirmed
-- Candidate requiring validation
-- Derived relationship
-- Proxy requiring approval
-- Unmapped
+### E. Recommended extraction architecture
 
-Do not report numerical mapping coverage until the necessary HDS evidence exists.
+Explain how to extract validated HDS history efficiently and cache it for fast local querying without repeatedly scanning HDS.
 
-### Priority 5 — Produce an actionable findings report
+### F. Implementation plan
 
-Return:
+Provide a prioritized plan for:
 
-1. What we conclusively learned from the workbook.
-2. Whether the hidden worksheets contain useful market-data mapping information.
-3. How the 4,347 risk factors are distributed by asset class.
-4. What HDS access remains blocked.
-5. The exact prioritized SQL discovery queries ready for Data Workbench.
-6. The smallest representative dataset required for a working calibration prototype.
-7. The proposed scalable mapping and historical-extraction design.
+1. Market-factor mapping.
+2. Historical data extraction.
+3. DuckDB/Parquet storage.
+4. Deterministic rolling-shock calculations.
+5. Enterprise LLM tool integration.
+6. Scenario Manager Excel comparison.
+7. Analyst validation and governance.
 
-Do not build a chatbot, download large datasets, edit the source workbook, or execute any more remote Python HDS queries.
+## 12. EXECUTION INSTRUCTIONS
 
-Continue the analysis using existing authorized local data and documentation. Return the actual findings, evidence and prioritized next actions—not merely a plan to investigate.
+**You are explicitly authorized to conduct the investigation through existing approved, read-only HDS access within your actual permissions.**
+
+Begin with a small live HDS lookup for JPY/USD.
+
+Do not ask me to run the SQL manually if your existing authorized connection can execute it.
+
+Do not return another offline taxonomy report.
+
+Do not rebuild the workbook inventory.
+
+Do not implement the chatbot.
+
+Execute the smallest useful HDS queries, inspect the actual results, and proceed to the next candidate only when justified.
+
+If the platform returns a rate-limit or authorization error, respect it immediately and report the blocker.
+
+At the end, provide actual mapping evidence, a query log, unresolved issues and the next implementation steps.
+
+**Success means identifying at least one credible HDS-to-Scenario Manager mapping using real HDS evidence, without creating unnecessary load on the source system.**
+
+Begin live HDS validation now.
