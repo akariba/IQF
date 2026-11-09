@@ -1,17 +1,13 @@
-Review and substantially improve the generated Shock Calibration Methodology LaTeX/PDF.
+Investigate why the Olympus extraction returns 100, 296 and 500 rows but blocks requests for 1,000.
 
-Do not treat matching Python and NumPy results as proof that the financial methodology is correct.
+Identify the exact source of the restriction: application configuration, extraction code, query-level limits, or an actual Olympus/HIVE response. Show the complete error and the relevant code.
 
-Priority 1: Investigate the annualized volatility formula. Determine whether the current implementation applies sqrt(252) to daily returns or rolling 10-observation movements. Correct any horizon mismatch and independently verify the revised result.
+Do not impose an arbitrary 500-row limit on historical dataset coverage.
 
-Priority 2: Distinguish business-day horizons from consecutive valid observations. Validate the FX quotation convention, sign, return definition, percentile interpolation, overlapping windows, and missing-date treatment.
+If 500 is the maximum permitted per request, implement supported pagination or bounded historical date batches, with checkpointing, deduplication and complete date-range validation, while respecting aggregate query quotas and service restrictions.
 
-Priority 3: Integrate Claude Opus as an independent quantitative methodology reviewer. Opus must evaluate the financial assumptions, identify potential errors, invoke a separate numerical verifier, and report Python-versus-independent results and actual deviations.
+Our objective is to retrieve the full accessible historical period for each factor, not just the first 500 observations.
 
-Priority 4: Expand the mathematical framework beyond JPY/USD. Document and implement factor-appropriate methods for FX, interest rates, credit spreads, equities, commodities, and volatility, based on actual available data and workbook specifications.
+Verify the actual oldest and newest dates, total observations, source frequency and missing periods after extraction.
 
-Priority 5: Improve the LaTeX document professionally. Fix overflowing tables, format numerical results consistently, include data provenance, worked examples, charts, methodological assumptions, and references to exact Python functions.
-
-Produce both a comprehensive quantitative methodology PDF and a factor-specific calculation report. Ensure they accurately reflect the implemented code.
-
-Run the affected tests and verify every reported result. Continue the existing implementation plan rather than restarting the project.
+Do not bypass enforced limits. Fix any unnecessary application-side restriction and confirm whether historical coverage can be completed through the authorized extraction mechanism.
