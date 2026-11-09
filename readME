@@ -1,30 +1,147 @@
-Continue the HDS-to-Scenario Manager mapping investigation using the successful authorized personal Olympus connection.
+# HDS Q3 — ROOT CAUSE INVESTIGATION AND OPTIMIZED LIVE QUERY
 
-We have successfully identified:
+You are acting as a Senior HDS Data Engineer and Quantitative Risk Analyst.
 
-- Scenario Manager candidate: fxdl.JPY.USD
-- HDS factor: FXSP.JPY.USD
-- Market factor ID: 2107899
-- Source ticker: JPY=
-- Frequency: daily
-- Snapshot: 20261102
-- As-of: 20261030
+## Objective
 
-Your immediate task is to validate the mapping using actual historical market levels.
+Our previous HDS metadata query successfully identified:
 
-1. Execute one small, read-only HDS query using the exact market_factor_id = 2107899.
-2. Filter by the verified snapshot and as-of partition.
-3. Retrieve only a few dates and market_factor_level values.
-4. Do not issue broad searches, full-history queries or concurrent requests.
-5. Verify whether the numeric level represents JPY per USD or USD per JPY, using authoritative source definitions where available.
-6. Check for duplicate dates, multiple runs and missing observations.
-7. Distinguish the source ticker's valid-from date from the actual historical coverage of the series.
-8. If the mapping is confirmed, update the existing mapping registry with the evidence.
-9. Define the exact methodology for calculating a +10% JPY appreciation over a rolling 10-business-day window.
-10. Stop after the query and return the findings before proceeding to full historical extraction.
+- HDS market factor ID: `2107899`
+- Factor name: `FXSP.JPY.USD`
+- Factor type: `FXSP`
+- Source ticker: `JPY=`
+- Source system: `RTS1`
+- Frequency: `D`
+- Snapshot: `20261102`
+- As-of partition: `20261030`
 
-If the query returns no rows, report that result and recommend the next most selective validation rather than repeatedly scanning HDS.
+However, the historical observation query returned `OLYMPUS_QUERY_FAILED` after approximately 9.179 seconds.
 
-Do not repeat workbook analysis. Do not change identities, bypass quotas or print credentials.
+Your mission is to identify why it failed, retrieve a minimal historical sample if authorized, and validate the factor against Scenario Manager's `fxdl.JPY.USD`.
 
-Report actual observations, query duration, quotation interpretation and remaining mapping uncertainties.
+Do not repeat the workbook inventory or broad HDS metadata discovery.
+
+## Step 1 — Diagnose the previous failure
+
+Before executing any new query, inspect the existing notebook execution logs and exception details.
+
+Check whether the failure involved:
+
+- SQL syntax or column types
+- Query execution or resource limits
+- Snapshot and partition mismatch
+- Invalid historical-date predicates
+- Data entitlements
+- Olympus result decoding
+- Network or client errors
+
+Identify the actual cause where possible. Do not guess.
+
+## Step 2 — Execute this optimized SQL
+
+If the diagnostics do not reveal an authorization or quota restriction, execute the following read-only query using the previously successful authorized Olympus connection.
+
+```sql
+SELECT
+    timeseries_date,
+    market_factor_level,
+    run_id
+FROM gfolyrsk_cmrr_reporting.om_mr_hds_timeseries_mev
+WHERE snapshot_date = 20261102
+  AND as_of = 20261030
+  AND market_factor_id = 2107899
+  AND frequency = 'D'
+  AND timeseries_date >= DATE '2026-10-01'
+  AND timeseries_date <= DATE '2026-10-30'
+LIMIT 3;
+```
+
+### Query optimization requirements
+
+This query deliberately:
+
+1. Uses the previously verified `snapshot_date`.
+2. Uses the `as_of` partition for pruning.
+3. Filters by the exact numerical market-factor ID.
+4. Restricts observations to daily frequency.
+5. Restricts historical dates to one calendar month.
+6. Selects only three required columns.
+7. Limits the result to three rows.
+8. Avoids DISTINCT, GROUP BY, ORDER BY, wildcard searches and joins.
+
+The row limit alone does not guarantee a cheap scan. Review any available query-cost diagnostics before execution.
+
+Run only one query at a time. Do not automatically retry failures.
+
+Target execution below 15 seconds, with a 30-second maximum where cancellation is supported.
+
+## Step 3 — Interpret the results
+
+If the query succeeds, return the actual observations in a table:
+
+| Date | Market factor level | Run ID |
+|---|---|---|
+| Actual date | Actual value | Actual run |
+
+Next:
+
+1. Determine whether the market levels represent JPY per USD or USD per JPY.
+2. Verify this against the source ticker definition and an authoritative market-data reference.
+3. Compare the numeric scale with the expected FX quotation.
+4. Identify whether multiple runs could produce duplicate observations.
+5. Validate whether the series can support Victor's rolling 10-business-day FX shock calculation.
+6. Update the mapping registry only with verified evidence.
+
+Do not infer quotation direction solely from the factor name.
+
+If the query returns zero observations, do not conclude the series is unavailable. Report that the requested date window has no returned rows and identify the next most selective coverage check.
+
+## Step 4 — Failure handling
+
+If the query fails again:
+
+- Capture the sanitized underlying Olympus error message.
+- Determine whether the error occurred during SQL execution or result retrieval.
+- Distinguish query failure from zero returned observations.
+- Do not perform repeated retries or broaden the query automatically.
+- Recommend the minimum corrective action.
+
+If the platform reports rate limiting or access denial, stop remote querying immediately.
+
+Do not switch identities or attempt authentication workarounds.
+
+Never print passwords, tokens, temporary credential contents or authentication secrets.
+
+## Step 5 — Calibration methodology
+
+If the FX data is validated, define the correct methodology for Victor's question:
+
+"What historical percentile corresponds to a +10% JPY appreciation against USD over rolling 10-business-day periods from 2007 to the latest available observation?"
+
+Specify:
+
+- Correct exchange-rate quotation direction
+- Whether inversion is necessary
+- Simple percentage-return formula
+- Rolling 10-business-day construction
+- Trading calendar and missing-data rules
+- Historical percentile-rank calculation
+- Duplicate snapshot/run handling
+- Data lineage and reproducibility checks
+
+Do not perform a full historical extraction yet.
+
+## Final deliverables
+
+Return:
+
+1. Root cause or remaining uncertainty for `OLYMPUS_QUERY_FAILED`.
+2. Exact SQL executed.
+3. Actual execution duration and status.
+4. Historical observations, if retrieved.
+5. FX quotation validation.
+6. HDS-to-Excel mapping status.
+7. Remaining technical blockers.
+8. The next optimized historical-extraction query, proposed but not executed.
+
+**Execution instruction:** Diagnose the previous failure first. Then run only the single bounded SQL query above if access, quota and query-cost checks permit it. Return the actual evidence and stop.
