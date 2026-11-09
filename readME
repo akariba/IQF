@@ -1,149 +1,502 @@
-Continue developing the existing Shock Calibration Studio.
+# SHOCK CALIBRATION STUDIO — CONSOLIDATED EXECUTION, LLM INTEGRATION & END-TO-END VALIDATION
 
-Your immediate objective is to deliver a working, interactive
-AI-powered quantitative analytics application.
+## Mission
 
-The historical data ingestion, validation, Parquet/DuckDB
-storage, quantitative engine, and backend APIs have already
-been implemented. Build on these components.
+Act as Principal Full-Stack Engineer, Quantitative Analytics Developer, and LLM Integration Engineer.
 
-WORKING APPROACH
+Your mission is to complete and improve the existing **Shock Calibration Studio**, reuse the internal enterprise LLM gateway from **CCR Correlation Rebuild**, and deliver a fully functioning conversational quantitative analytics application.
 
-Focus on execution and visible functional progress.
+**This is an implementation and execution task, not an architecture review.**
 
-This is a POC, so keep engineering practical.
-Avoid unnecessary production-grade infrastructure,
-excessive abstractions, and speculative requirements.
+Work autonomously, reuse existing capabilities, fix identified issues, run the application, and verify that its functionality works end to end.
 
-Make reasonable technical decisions independently.
-Implement, test, fix issues, and continue progressing.
-Do not repeatedly stop for assessments or approvals.
+This is a forward-looking POC. Apply sound engineering practices without introducing unnecessary production-grade infrastructure, excessive abstractions, speculative requirements, or repeated approval checkpoints.
 
-1. BUILD THE CONVERSATIONAL ANALYTICS WORKSPACE
+## 1. Project locations
 
-Create a modern financial analytics interface inspired
-by ChatGPT and professional quantitative research tools.
+**Target project — all implementation must happen here:**
 
-Left sidebar:
-- Conversation history
-- Searchable risk-factor catalogue
-- Available historical datasets
+`C:\Users\ak54743\Downloads\Shock Calibration`
+
+**Source project — reuse its enterprise LLM infrastructure:**
+
+`C:\Users\ak54743\Downloads\Param\CCR Correlation Rebuild`
+
+The target already contains:
+
+- React/TypeScript frontend
+- FastAPI backend
 - Historical data ingestion
+- Parquet storage
+- DuckDB analytical layer
+- Quantitative calculation engine
+- Market-factor metadata
+- Data mapping and validation components
+- Chat interface
+- Analytical visualization pages
 
-Center:
-- Full conversational chatbot
-- Natural-language financial questions
-- Contextual follow-up questions
-- Clear quantitative explanations
-- Suggested analytical questions
+Preserve and improve these existing implementations rather than replacing them.
 
-Right panel:
-- Interactive historical time-series charts
-- Rolling market movements
-- Historical shock distributions
-- Percentiles and statistical summaries
-- Comparison of multiple risk factors
-- Historical coverage and calculation methodology
+The source project contains an existing internal LLM integration that must be investigated and reused wherever compatible.
 
-Make the interface polished, intuitive, and responsive.
+Do not modify the source project.
 
-2. CONNECT THE CHATBOT TO THE QUANTITATIVE ENGINE
+## 2. Reuse the complete CCR enterprise LLM infrastructure
 
-Implement the complete workflow:
+Inspect the source project's backend, frontend, configuration, and supporting modules.
 
-Natural-language question
-→ Financial intent interpretation
-→ Market factor identification
-→ Historical data retrieval from DuckDB
-→ Python quantitative calculations
-→ Analytical response
-→ Interactive visualizations
+Locate the actual LLM request execution path.
 
-Support flexible financial questions rather than
-a fixed set of predefined queries.
+Investigate and reuse the existing implementations of:
 
-Reuse existing calculation tools and APIs.
+### A. Gateway connectivity
 
-Ensure financial movement conventions are appropriate
-to the selected instrument.
+- Enterprise LLM endpoint discovery
+- Gateway client and request transport
+- API request/response contracts
+- Model invocation
+- Model/provider routing
+- Streaming responses, where supported
+- Connection retries and timeouts
+- Error classification and handling
 
-3. ENABLE REAL LLM CAPABILITIES
+Determine which components are operational rather than merely present in source code.
 
-Integrate an available approved enterprise LLM
-using the existing environment and integrations.
+### B. Authentication and token refresh
 
-Enable tool calling, financial reasoning, factor
-discovery, and conversational context.
+Identify the source project's existing authentication mechanism and refresh-token lifecycle.
 
-Python should execute numerical calculations.
-The LLM should interpret questions, select tools,
-and explain the computed results.
+Reuse its established approach for:
 
-If a real LLM connection is unavailable, continue
-building the complete application using the existing
-calculation interface.
+- Initial token acquisition
+- Access-token refresh
+- Token expiration detection
+- Refresh-before-expiry behavior
+- Handling authentication failures
+- Retrying a request after authorized token renewal
+- Preventing unnecessary repeated authentication
+- Maintaining authentication across conversation turns
 
-Keep the integration ready for an approved model.
-Clearly distinguish local query handling from
-genuine LLM-powered interaction.
+Use the same supported identity, authentication configuration, and credential-loading mechanisms as the existing CCR project.
 
-4. CONTINUE HISTORICAL DATA INGESTION
+Do not invent a new login process or bypass authentication.
 
-Expand beyond the existing FX dataset.
+Do not copy static credentials into source code, logs, or frontend bundles.
 
-Support interest rates, FX, credit, equity,
-and commodity risk factors.
+### C. Token usage and context management
 
-Use Olympus HDS through authorized access.
+Investigate how the CCR gateway manages:
 
-Adapt extraction to Olympus limitations:
-- Query smaller historical periods where useful.
-- Persist successful extraction batches.
-- Resume from previously completed batches.
-- Respect enforced query quotas.
-- Continue application development independently
-  when Olympus is unavailable.
+- Input token counts
+- Output token counts
+- Total token consumption
+- Context window limits
+- Conversation history
+- Maximum output tokens
+- Request budgets
+- Model-specific token limits
+- Truncation or summarization
+- Tool-result context management
 
-Use existing CSV/Parquet imports whenever historical
-data is already available.
+Reuse existing token-usage accounting where available.
 
-Maintain appropriate data-quality checks and
-financial instrument identification.
+Display actual usage when returned by the gateway. If usage information is unavailable, identify it as unavailable rather than inventing estimates.
 
-Do not make complete historical coverage a
-prerequisite for application development.
+Optimize contextual tool responses to avoid sending large historical datasets directly to the LLM.
 
-5. IMPLEMENT AND RUN
+### D. Model inventory and settings
 
-Develop the frontend and backend together.
+Identify the models supported by the existing gateway.
 
-Connect the conversational interface to real
-historical calculations.
+Reuse the source project's model configuration and supported settings, including where applicable:
 
-Make charts and analytical panels respond dynamically
-to the user's questions.
+- Model identifiers
+- Provider/endpoint selection
+- Default model
+- Temperature
+- Maximum output tokens
+- Context window
+- Thinking/reasoning parameters
+- Tool calling
+- Streaming configuration
+- Timeouts
+- Retry settings
+- Model fallback behavior
 
-Run the application, resolve integration errors,
-and verify the complete user interaction.
+Preserve validated provider-specific requirements.
 
-Continue improving functionality as you work.
+Do not assume every model supports identical parameters.
 
-EXPECTED RESULT
+Create a usable **LLM Settings** panel in Shock Calibration Studio, where the available configuration permits:
 
-A running Shock Calibration Studio where I can:
+- Selecting an available model
+- Viewing the active model
+- Adjusting supported generation settings
+- Viewing connection status
+- Viewing token usage
+- Resetting conversation context
+- Testing gateway connectivity
 
-- Ask natural-language quantitative questions.
-- Explore available financial market factors.
-- Calculate historical shocks and percentiles.
-- Visualize historical market movements.
-- Compare financial instruments.
-- Import and analyze additional historical datasets.
-- Ask follow-up questions within the conversation.
+Do not expose credentials in the UI.
 
-Prioritize delivering a usable application now.
+Avoid duplicating configuration unnecessarily. Adapt the working CCR settings architecture.
 
-At completion, provide the application URL, a brief
-summary of implemented functionality, and any remaining
-external dependencies.
+## 3. Connect the LLM to the quantitative engine
 
-Proceed with implementation.
+Implement this complete execution flow:
+
+**User question → Enterprise LLM → Intent interpretation → Market-factor resolution → Tool selection → DuckDB retrieval → Python quantitative calculation → LLM explanation → Interactive results**
+
+The LLM is responsible for interpreting the question, managing conversation context, selecting analytical tools, and explaining the results.
+
+Python is responsible for numerical calculations.
+
+DuckDB and Parquet are responsible for historical data retrieval.
+
+Do not ask the LLM to calculate financial statistics from memory or fabricate historical observations.
+
+### Analytical capabilities
+
+Support open-ended questions involving:
+
+- Historical market-factor movements
+- Rolling business-day changes
+- Percentage and absolute changes
+- Basis-point and spread changes
+- Historical extremes
+- Empirical percentiles
+- Exceedance probabilities
+- Volatility calculations
+- Historical coverage
+- Comparisons between financial factors
+- Scenario shock calibration
+- Cross-factor relationships where suitable real observations exist
+- Historical stress periods
+- Follow-up analytical questions
+
+Use the correct financial conventions for FX, rates, spreads, equities, credit instruments, commodities, and other supported families.
+
+If the user's request is underspecified, the assistant should make reasonable analytical choices when appropriate, explain them, and ask only for genuinely necessary clarification.
+
+The application must be architecturally general across financial factors, rather than restricted to JPY/USD.
+
+## 4. Fix current application defects
+
+The existing screenshots reveal several issues that require investigation.
+
+### A. HTTP 500 errors
+
+The Chat interface displays a dataset catalogue request failure.
+
+The Import & Validate interface also reports HTTP 500.
+
+Investigate:
+
+- FastAPI route registration
+- React API client requests
+- Vite proxy configuration
+- Request and response schema consistency
+- Database initialization
+- DuckDB connection lifecycle
+- Data-file paths
+- JSON serialization
+- Unhandled backend exceptions
+
+Fix the actual underlying causes.
+
+Verify the affected endpoints through the running application.
+
+### B. Missing dataset catalogue
+
+The Chat interface currently reports no available local datasets despite the existing historical dataset.
+
+Ensure that registered datasets are discovered and displayed consistently in:
+
+- Chat
+- Market Data Explorer
+- Shock Calibration
+- Import & Validate
+- Data Pipeline
+
+All pages should use the same authoritative dataset catalogue.
+
+### C. Market-factor search
+
+The Market Data Explorer sometimes returns zero results.
+
+Inspect factor-search queries, identifier normalization, catalogue loading, and frontend filtering.
+
+Ensure users can search the Scenario Manager factor universe separately from locally available historical datasets.
+
+Display both the factor's metadata status and whether historical observations are available.
+
+### D. Undefined mappings
+
+The Data & Mapping Studio currently displays undefined entries.
+
+Investigate the mapping-registry records and frontend/backend field contracts.
+
+Repair parsing and rendering where the underlying data exists.
+
+Where an actual mapping is unresolved, display a meaningful status such as **Unmapped**, **Candidate**, or **Pending validation**, rather than a broken undefined value.
+
+Never create fabricated HDS mappings to populate the interface.
+
+### E. Quantitative unit and formatting inconsistencies
+
+The Overview and Shock Calibration screens display potentially inconsistent values, including a 538.40% figure and a 5.384 spread-change result.
+
+Trace the calculation and presentation logic.
+
+Verify whether the values represent:
+
+- Percentage changes
+- Decimal returns
+- Absolute changes
+- Basis points
+- Spread-level movements
+- Inverse FX quotations
+
+Keep numerical value, calculation method, unit, and display formatting explicitly separate.
+
+Do not automatically append a percentage symbol to an absolute movement.
+
+Apply the correct display convention to each financial factor.
+
+Cross-check the frontend results against the Python quantitative engine.
+
+### F. Scenario Manager mapping
+
+Repair any broken retrieval or display of workbook factor metadata.
+
+Use the existing Scenario Manager factor inventory and mapping records.
+
+Clearly differentiate workbook factor identifiers, HDS market-factor identifiers, proposed matches, and validated relationships.
+
+Do not require an authoritative mapping simply to explore an available HDS series. However, do not silently equate different instruments or promote an unverified relationship.
+
+## 5. Complete the conversational analytical frontend
+
+Use the existing visual design as the foundation.
+
+Improve the current three-column workspace.
+
+### Left panel
+
+- Conversation history
+- Market-factor search
+- Historical dataset catalogue
+- Factor-family filtering
+- Data availability
+- Import & Validate navigation
+
+### Center panel
+
+- Functional enterprise LLM chat
+- Multi-turn context
+- Natural-language analytical requests
+- Streaming where supported
+- Tool execution status
+- Structured quantitative explanations
+- Suggested follow-up questions
+- Clear error and loading states
+
+### Right panel
+
+Dynamically display analytical results returned by the actual calculation engine:
+
+- Historical time-series charts
+- Rolling-movement charts
+- Distribution charts
+- Historical percentiles
+- Extreme-movement dates
+- Factor metadata
+- Calculation assumptions
+- Dataset coverage
+
+The analytical view should respond to the active conversation rather than remain a static placeholder.
+
+Keep the interface professional, readable, and uncluttered.
+
+## 6. Complete historical data ingestion and discovery
+
+Reuse the existing Olympus HDS extraction and local import architecture.
+
+The objective is to expand historical coverage across the Scenario Manager risk-factor universe.
+
+Continue investigating additional market-factor families, including:
+
+- FX
+- Interest rates
+- Credit spreads
+- Equities
+- Commodities
+- Volatility
+- Basis and derived risk factors
+
+For Olympus extraction:
+
+- Use the established authorized connection and supported query route.
+- Prefer exact HDS factor identifiers.
+- Use appropriate snapshot/as-of filtering.
+- Limit query scope and select only required columns.
+- Extract historical observations in bounded date batches where useful and permitted.
+- Save completed batches immediately.
+- Support checkpoint-based continuation.
+- Avoid repeating previously completed downloads.
+- Respect Olympus query quotas and stop when an enforced limit is reached.
+
+Splitting historical data into batches is intended to reduce query size and preserve progress, not circumvent quota limits.
+
+For existing CSV/Parquet files:
+
+- Inspect and map schemas.
+- Validate financial identifiers and observation granularity.
+- Check duplicates, missing dates, frequency, units, and invalid values.
+- Preserve source metadata.
+- Store raw and normalized Parquet.
+- Register valid datasets in DuckDB.
+- Make imported data immediately discoverable by the chatbot and analytical tools.
+
+Do not make the availability of every financial factor a prerequisite for implementing generic analytical functionality.
+
+## 7. Implement genuine LLM tool calling
+
+Inspect the existing Shock Calibration analytical tools and the tool-calling design in CCR Correlation Rebuild.
+
+Reuse compatible function-calling patterns.
+
+Expose analytical capabilities through well-defined tools, such as:
+
+- List available datasets
+- Search financial factors
+- Retrieve factor definitions
+- Inspect historical coverage
+- Retrieve time-series observations
+- Calculate rolling movements
+- Calculate empirical percentiles
+- Find historical extremes
+- Compare historical factors
+- Run supported shock-calibration calculations
+- Retrieve dataset provenance
+
+Use the current project's actual function names and interfaces wherever practical.
+
+Allow the LLM to select and combine tools dynamically.
+
+Keep numerical processing deterministic and return structured results suitable for both the chatbot and charts.
+
+Tool errors should be returned in a form that allows the conversation to continue.
+
+## 8. Execute end-to-end integration tests
+
+Start the full application.
+
+Confirm that React, FastAPI, DuckDB, the quantitative engine, and the internal LLM gateway communicate correctly.
+
+Execute real model requests through the reused CCR gateway.
+
+Test the following workflows:
+
+**Test A — LLM connectivity**
+
+Send a real prompt through the gateway and confirm that the selected model returns a response.
+
+Record the active model and actual request status.
+
+**Test B — Token refresh**
+
+Verify the existing refresh mechanism using an appropriate test or controlled expiry simulation.
+
+Confirm that a valid refresh permits the workflow to continue without exposing credentials.
+
+**Test C — Quantitative tool calling**
+
+Ask a natural-language question requiring historical calculations.
+
+Confirm that the LLM invokes the relevant Python analytical tool.
+
+Verify the returned results against an independently calculated reference.
+
+**Test D — Multi-turn reasoning**
+
+Ask a question, then follow up by changing the historical period, percentile, or observation window.
+
+Verify that conversation context is preserved and the relevant calculation is rerun.
+
+**Test E — Visual analytical response**
+
+Verify that a successful analytical response updates the right-side charts and statistical panels.
+
+**Test F — Dataset discovery and import**
+
+Import a valid historical file and confirm that it becomes available through the dataset catalogue and calculation engine.
+
+**Test G — Multi-asset extensibility**
+
+Verify that the generic analytical workflow operates with different financial movement methods and dataset schemas, using real historical observations wherever available.
+
+Clearly identify any tests using synthetic fixtures.
+
+**Test H — Existing UI regressions**
+
+Verify that the HTTP 500 errors, undefined mappings, catalogue inconsistencies, and quantitative formatting defects have been resolved.
+
+Do not claim that an integration works merely because the application compiles or the API health endpoint responds.
+
+## 9. Performance and development approach
+
+Keep the implementation efficient.
+
+- Reuse working CCR gateway components.
+- Reuse Shock Calibration's existing Python calculation engine.
+- Query DuckDB locally for analytical operations.
+- Avoid submitting entire historical datasets to the LLM.
+- Return concise numerical results and chart-ready data from tools.
+- Preserve conversation context efficiently.
+- Track actual LLM token consumption when supported.
+- Avoid unnecessary model calls for deterministic operations.
+- Avoid repeated historical extraction.
+- Fix errors as they arise.
+
+Perform normal tests throughout development without pausing for repeated architectural reviews.
+
+Do not create unrelated frameworks, duplicate services, or speculative infrastructure.
+
+## 10. Completion criteria
+
+The task is complete when:
+
+1. Shock Calibration Studio starts successfully.
+2. The existing CCR enterprise LLM gateway has been reused and connected.
+3. Authentication and token refresh work through the supported mechanism.
+4. Model selection and compatible settings are available.
+5. Token usage is reported accurately when provided by the gateway.
+6. The chatbot performs real model inference.
+7. The LLM dynamically invokes quantitative Python tools.
+8. Financial calculations use actual locally stored historical data.
+9. Chat responses generate interactive analytical results.
+10. Dataset catalogue, mapping, and import pages function correctly.
+11. The previously identified HTTP 500 and formatting issues are resolved.
+12. Tests verify the complete user-to-model-to-calculation-to-frontend flow.
+
+If an external dependency is genuinely unavailable, finish all independent implementation work, report the exact blocker, and distinguish tested functionality from unverified functionality.
+
+Do not declare success when the UI merely renders, when a model responds without tool execution, or when a calculation succeeds without returning results to the user.
+
+## Final reporting
+
+Provide a concise completion report containing:
+
+- Working local application URL
+- Reused CCR LLM modules
+- Active model and available model options
+- Authentication and token-refresh status
+- Token-usage reporting status
+- Function-calling status
+- Quantitative engine integration
+- Data catalogue and ingestion status
+- Tests passed or failed
+- Remaining issues, if any
+
+**Begin execution immediately. Inspect the source LLM gateway, implement the integration, correct existing defects, run the application, and verify actual functionality.**
