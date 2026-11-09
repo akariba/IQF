@@ -1,832 +1,162 @@
-# MASTER INVESTIGATION — SCENARIO MANAGER × OLYMPUS HDS
-## Enterprise Risk-Factor Mapping, Historical Data Coverage and AI Shock Calibration Architecture
+# SHOCK CALIBRATION STUDIO — BUILD THE WORKING FOUNDATION
 
-### YOUR ROLE
+Act as Principal Quantitative Developer, Data Platform Engineer and Senior Full-Stack Architect.
 
-Act simultaneously as:
+The Scenario Manager and HDS mapping investigation is complete for the current evidence set. We have one real historical JPY/USD extraction, 4,347 workbook factors, and an evidence-based mapping registry.
 
-- Principal Quantitative Risk Engineer
-- Market Risk Scenario Calibration Specialist
-- Senior Olympus / HDS Data Platform Engineer
-- Financial Instrument and Market-Data Reference Architect
-- Enterprise Data Quality and Lineage Specialist
-- AI Risk Analytics Solution Architect
+**Stop generating additional feasibility reports. Begin implementing a working, testable application foundation.**
 
-You are investigating how to integrate the complete Scenario Manager Excel workbook with actual Olympus HDS market data to support a future AI-powered historical shock calibration platform.
+## Mission
 
-This is a comprehensive technical and quantitative investigation, supported by actual evidence and carefully controlled live HDS queries.
+Build a local, read-only historical shock calibration application that uses existing extracted HDS data and the Scenario Manager workbook.
 
-**Do not produce another generic feasibility report. Do not stop after describing an architecture. Perform the investigation, establish validated evidence wherever possible, and identify the exact remaining dependencies.**
+The architecture must support adding further validated market factors without redesigning the application.
 
----
+### Stage 1 — Audit existing artifacts
 
-# 1. CURRENT PROJECT STATE — DO NOT REPEAT COMPLETED WORK
+Locate and validate the existing:
 
-We have already analyzed the supplied Scenario Manager `.xlsm` workbook.
+- JPY/USD Parquet dataset.
+- Historical extraction manifest.
+- Calibration statistics.
+- Scenario factor master.
+- HDS mapping registry.
+- Data-quality findings.
+- Existing backend and frontend components, if any.
 
-Established findings:
+Reuse established working code.
 
-- 89 worksheets
-- 71 scenario-data worksheets
-- 32 visible scenario worksheets
-- 62 hidden or very-hidden worksheets
-- 4,523 scenario inventory rows
-- 4,347 distinct risk-factor identifiers
-- 6,002 formula cells
-- 6 duplicate identifier groups
+Do not rerun the completed HDS extraction.
 
-Existing investigation artifacts include:
+Do not modify unrelated projects, notebooks or the original macro-enabled workbook.
 
-- Excel inventory
-- Workbook metadata evidence
-- Refined factor taxonomy
-- Pilot factor evidence
-- Mapping status registry
-- HDS validation reports
-- JPY/USD historical calibration artifacts
+### Stage 2 — Implement data storage
 
-Discover and reuse the actual existing files. Do not recreate the same reports unnecessarily.
+Create a DuckDB analytical layer on approved local storage.
 
-## 1.1 Confirmed successful HDS work
+Implement versioned tables or views for:
 
-The authorized personal Olympus HIVE connection successfully retrieved market observations from:
+- Historical market-factor observations.
+- Factor metadata.
+- Scenario Manager factor inventory.
+- Mapping registry.
+- Calibration methodology.
+- Calculation runs and results.
+- Source and data-quality lineage.
 
-`gfolyrsk_cmrr_reporting.om_mr_hds_timeseries_mev`
+Ensure no data silently changes between snapshots.
 
-Successful JPY/USD extraction:
+### Stage 3 — Implement calibration functions
 
-- HDS market factor ID: 2107899
-- HDS market factor name: FXSP.JPY.USD
-- Source: RTS1
-- Feed: RTS05
-- Daily frequency
-- Run ID: 9518
-- Snapshot: 20261102
-- As-of: 20261030
-- Historical observations: 5,175
-- Coverage: 2007-01-01 through 2026-10-30
-- Extraction duration: approximately 26 seconds
-- Duplicate historical dates: 0
+Develop deterministic, unit-tested Python functions for:
 
-Provisional rolling 10-observation results:
+1. Retrieval of historical levels.
+2. Rolling business-day market movements.
+3. FX appreciation and depreciation.
+4. Absolute rate and basis-point changes.
+5. Empirical percentile ranks.
+6. Historical quantiles.
+7. Historical extrema.
+8. Missing-data and duplicate checks.
+9. Comparison with existing scenario shifts.
 
-- Valid windows: 5,165
-- Maximum appreciation: +9.9122%
-- 98th percentile: +4.1766%
-- 99th percentile: +4.8713%
-- 99.5th percentile: +5.5511%
-- Historical exceedances of +10%: 0
+Implement JPY/USD first, using the existing actual HDS extraction.
 
-These results are provisional pending authoritative quotation convention, calendar and methodology verification.
+Treat its quotation convention and official business-day calendar as provisional until validated.
 
-Reuse this dataset and its extraction manifest.
+Unimplemented or unvalidated factor families must return clear unsupported-status responses, not invented results.
 
-**Do not download the same JPY/USD history again.**
+### Stage 4 — Implement FastAPI
 
----
+Create read-only endpoints for:
 
-# 2. PRIMARY MISSION
+- Factor search.
+- Factor details and mapping evidence.
+- Historical observations.
+- Calibration calculations.
+- Historical percentile tables.
+- Historical extreme movements.
+- Scenario comparison.
+- Data-quality and freshness information.
 
-Establish a rigorous and scalable relationship between:
+Validate all inputs.
 
-A. The complete Scenario Manager Excel workbook
+Never expose unrestricted SQL execution to the chatbot.
 
-B. Olympus HDS historical market observations
+### Stage 5 — Build a working analytical interface
 
-C. Olympus market-factor metadata and approved reference-data dictionaries
+Build a modern React interface named **Shock Calibration Studio**.
 
-D. Historical shock calculation methodologies
+Include these sections:
 
-E. A future local analytical cache and enterprise AI chatbot
+**Chat:** Natural-language quantitative questions and sourced answers.
 
-The objective is not merely matching similar strings.
+**Market Data Explorer:** Factor search, history, coverage, available dates and source details.
 
-The objective is to establish the correct financial relationship between each Scenario Manager risk factor and the market observations required to calibrate its shock.
+**Shock Calibration:** Rolling-window settings, percentiles, histograms, historical extrema and methodology.
 
-A Scenario Manager risk factor may require:
-
-1. One directly corresponding HDS series.
-2. One HDS series with a verified unit or quotation transformation.
-3. Multiple underlying HDS series.
-4. Curve interpolation.
-5. A futures/basis calculation.
-6. A volatility surface or maturity point.
-7. An approved market-data proxy.
-8. A different authoritative source.
-9. No available mapping.
+**Scenario Manager:** Workbook risk factors, existing shifts, proposed historical evidence and mapping status.
 
-Your investigation must distinguish these situations.
+**Data & Mapping Studio:** HDS-to-Excel mapping registry, candidate evidence, derived dependencies and unresolved factors.
 
----
+**Data Pipeline:** Extraction manifests, dataset versions, validation status and freshness.
 
-# 3. PHASE A — DEEP STRUCTURAL CROSS-ANALYSIS OF THE WORKBOOK
+Use a clean analytical workspace with distinct pages. Avoid a densely packed newsletter-style interface.
 
-Do not merely count worksheets.
+### Stage 6 — Enterprise LLM integration
 
-Investigate the financial meaning of every relevant worksheet and its connection to other worksheets.
-
-## A1. Financial taxonomy
+Define controlled calculation tools for an approved enterprise LLM.
 
-Classify all 4,347 distinct risk factors into actual financial and market-risk families.
+The LLM must translate questions to validated parameters and call the quantitative API.
 
-Possible families include:
+The LLM must not calculate financial results itself, invent unsupported mappings or execute arbitrary SQL.
 
-- FX spot
-- FX forwards
-- FX volatility
-- Interest-rate swap curves
-- Government bond yields
-- Interest-rate volatility
-- Credit spreads
-- Credit indices
-- Equity prices
-- Equity indices
-- Equity volatility
-- Commodity spot and futures prices
-- Commodity volatility
-- Energy and emission products
-- Bond futures basis
-- Cash/CDOM-related products
-- Other derived risk factors
+If the approved LLM endpoint is unavailable, the deterministic UI and API must still function. Provide a clearly identified demonstration query parser for the existing JPY/USD use cases without presenting it as a live LLM.
 
-Derive the classification from the actual workbook, not this illustrative list.
+### Stage 7 — Testing
 
-For each family report:
+Implement tests for:
 
-- Number of workbook factors
-- Unique identifier structures
-- Available dimensions
-- Currency
-- Tenor and maturity
-- Underlying instrument or benchmark
-- Unit conventions
-- Shift types
-- Required historical input series
-- Whether the factor is directly observable or derived
-- Ambiguities requiring business clarification
+- JPY/USD calculation reproducibility.
+- Quote inversion and sign handling.
+- Percentile calculations.
+- Historical date gaps.
+- Mapping status.
+- Unsupported factors.
+- API validation.
+- Dataset lineage.
+- Excel comparison.
+- Frontend integration.
 
-## A2. Cross-sheet relationship analysis
+Use existing verified results as regression fixtures.
 
-Analyze connections across the 89 worksheets.
+### Stage 8 — Actual execution
 
-Inspect:
+This is an implementation task.
 
-- Hidden dictionaries
-- Named ranges
-- Formula references
-- Lookup tables
-- Cross-sheet dependencies
-- Factor-group classifications
-- Currency definitions
-- Volatility dimensions
-- Yield curve tenors
-- Benchmark identifiers
-- Shock-unit definitions
-- Shift formulas
+Create the required project structure, code and tests.
 
-Determine whether hidden reference sheets provide an internal grammar or dictionary for Scenario Manager factor identifiers.
+Run the backend and frontend where supported.
 
-Produce a relationship graph connecting:
+Test the existing JPY/USD analytical workflow end to end.
 
-Scenario workbook factor
-→ asset class
-→ underlying instrument
-→ financial dimensions
-→ data requirements
-→ candidate Olympus source
+Do not claim functionality works without executing relevant tests.
 
-## A3. Identifier semantics
+Do not query Olympus or transfer proprietary data outside the approved environment.
 
-For each identifier family, determine:
-
-- Prefix meaning
-- Currency or market code
-- Benchmark component
-- Geographic component
-- Maturity/tenor component
-- Volatility dimensions
-- Spot, forward or futures meaning
-- Transformation requirements
-
-Do not assume that two identifiers with similar strings represent the same instrument.
-
-## A4. Detailed shift interpretation
-
-For each worksheet determine precisely how the `shift` is used.
-
-Investigate:
-
-- Absolute versus relative changes
-- Basis points versus percentage points
-- Price versus rate changes
-- Relative price transformations
-- Volatility-point shocks
-- Sign conventions
-- Multiple risk factors participating in one scenario
-- Formula-derived shock values
-
-The proposed calibration engine must reproduce the business meaning of each existing shift, not simply calculate generic historical returns.
-
----
-
-# 4. PHASE B — DEEP OLYMPUS HDS DATA DISCOVERY
-
-Use the existing successful authorized HDS connection.
-
-Investigate the available Olympus market-data ecosystem, not only the historical time-series table.
-
-## B1. Authoritative HDS reference-data discovery
-
-Identify approved reference tables or documented interfaces containing:
-
-- Market-factor definitions
-- Market-factor IDs
-- Source tickers
-- Instrument and benchmark descriptions
-- Curve definitions
-- Currency pairs
-- Tenor and maturity data
-- Units and quote conventions
-- Source-system mappings
-- Data validity dates
-- Market-data hierarchies
-- Futures and volatility dimensions
-
-Previously discovered tables include:
-
-`om_mr_hds_timeseries_mev`
-
-`om_hds_mkf_fetc_bucket_map`
-
-Investigate the actual purpose of the second table.
-
-Do not assume that its name proves it maps Scenario Manager identifiers.
-
-Discover whether another authoritative risk-factor mapping exists between Scenario Manager and HDS, including mappings held outside the historical series table.
-
-## B2. Factor universe and coverage
-
-Determine the most efficient way to obtain the available HDS market-factor inventory without scanning full historical observations repeatedly.
-
-Prefer:
-
-1. Existing approved reference-data inventory
-2. Cached market-factor metadata
-3. Small factor-dimension tables
-4. Narrow partition-filtered metadata queries
-5. A single approved, bounded factor-inventory export if necessary
-
-Do not launch a broad full-table historical scan.
-
-Identify market-factor families and source systems relevant to the workbook.
-
-## B3. Snapshot and historical semantics
-
-Investigate the relationship between:
-
-- `timeseries_date`
-- `snapshot_date`
-- `as_of`
-- `run_id`
-- `mkf_refresh_date`
-- `ticker_valid_from`
-- `source_system`
-- `feed_code`
-
-Explain how a single snapshot may contain historical observations.
-
-Determine the correct rule for selecting authoritative history when multiple snapshots or runs exist.
-
-Investigate historical revisions and backfilled observations.
-
-Do not assume the largest snapshot number or latest run is always the correct business selection.
-
----
-
-# 5. LIVE HDS QUERY PERFORMANCE AND SAFETY
-
-The successful JPY/USD full extraction took approximately 26 seconds, while some much smaller queries took longer.
-
-Therefore, optimize by storage access pattern, partition pruning and metadata reuse—not merely returned row count.
-
-Mandatory rules:
-
-1. Use the already-authorized connection and permissions.
-2. Use one remote query at a time.
-3. Prefer metadata/reference views over time-series scans.
-4. Reuse existing successful extracts.
-5. Use validated `snapshot_date` and `as_of` predicates where appropriate.
-6. Use exact numeric market-factor IDs when known.
-7. Use correct Hive data types; never compare numeric IDs with quoted strings.
-8. Select only required columns.
-9. Avoid unnecessary `DISTINCT`, `ORDER BY`, `GROUP BY` and large joins.
-10. Do not issue one remote HDS query for each Excel factor.
-11. Avoid unbounded wildcard searches.
-12. Cache discovered metadata and results.
-13. Avoid full-history queries during factor discovery.
-14. Respect documented connection quotas and entitlements.
-15. Never use credentials or alternative identities to circumvent restrictions.
-
-Set an initial budget of 12 carefully justified remote queries for this investigation, excluding already completed queries.
-
-Use fewer if the required metadata can be discovered earlier.
-
-For slow queries, inspect the available execution plan, support for cancellation and alternative metadata sources before repeating them.
-
-After two unexpectedly expensive queries, reassess the retrieval strategy.
-
-Do not download thousands of historical series during this investigation.
-
-Do not print, store in reports, or otherwise expose credential contents, access tokens or temporary password-file paths.
-
-Use only approved storage and approved LLM services for proprietary datasets.
-
----
-
-# 6. PHASE C — AUTOMATED FACTOR CANDIDATE DISCOVERY
-
-Build a mapping investigation process using Excel and Olympus metadata.
-
-This is the most important phase.
-
-## C1. Construct a normalized factor model
-
-For each Excel factor, extract structured attributes such as:
-
-- Asset class
-- Risk-factor class
-- Underlying
-- Benchmark
-- Geography
-- Currency
-- Tenor
-- Maturity
-- Instrument type
-- Quote convention
-- Unit
-- Shift type
-- Volatility strike/delta, where relevant
-
-Do the equivalent for HDS market-factor metadata.
-
-Preserve original identifiers alongside normalized attributes.
-
-## C2. Candidate generation
-
-Generate candidate mappings using:
-
-1. Authoritative reference-data keys
-2. Exact identifier relationships
-3. Verified naming grammars
-4. Benchmark equivalence
-5. Currency and tenor compatibility
-6. Source-ticker metadata
-7. Known instrument relationships
-8. Financially meaningful semantic similarities
-
-An LLM may help suggest candidates or interpret naming patterns.
-
-However, an LLM-generated candidate is not a validated mapping.
-
-Apply deterministic financial compatibility checks before proposing a direct match.
-
-## C3. Mapping structure
-
-Support these types:
-
-- DIRECT
-- DIRECT_WITH_TRANSFORMATION
-- ONE_TO_MANY_DERIVED
-- MANY_TO_ONE
-- CURVE_INTERPOLATION
-- VOLATILITY_SURFACE
-- BASIS_CALCULATION
-- APPROVED_PROXY
-- UNMAPPED
-
-Each mapping must explicitly document its required source series and transformation formula.
-
-Do not flatten derived relationships into an arbitrary single HDS identifier.
-
-## C4. Financial validation rules
-
-Validate candidate matches using:
-
-- Exact benchmark definition
-- Instrument type
-- Currency
-- Quote direction
-- Delivery region
-- Price versus yield or spread
-- Unit
-- Tenor or maturity
-- Source data type
-- Frequency
-- Validity period
-- Required transformations
-
-Reject or flag financially inconsistent matches.
-
-### Example A — FX
-
-Scenario factor:
-
-`fxdl.JPY.USD`
-
-HDS candidate:
-
-`FXSP.JPY.USD`
-
-HDS ID:
-
-`2107899`
-
-The historical series has been retrieved successfully.
-
-Remaining validation:
-
-- Authoritative quotation direction
-- Scenario Manager shock sign convention
-- Approved business-day calendar
-
-Do not requery the historical series.
-
-### Example B — Commodity coal
-
-Scenario factor:
-
-`cmdl.COAL.ARA.COAL`
-
-Previously observed HDS factors:
-
-`CMFP.COAL_ICE_NEWC.001M`
-
-`CMFP.COAL_ICE_NEWC.012M`
-
-These are not confirmed matches for ARA coal.
-
-Investigate authoritative API2/ARA reference data and the exact benchmark contract.
-
-Do not promote Newcastle coal as a direct mapping.
-
-### Example C — Turkish swap
-
-Investigate the correct 10-year TRY swap underlying, currency, curve, quotation and tenor definition.
-
-Distinguish actual swap rates from sovereign bond yields and other rate instruments.
-
-### Example D — Bond futures basis
-
-Investigate the workbook's bond futures basis factors.
-
-Determine whether Olympus stores the basis directly or whether the calculation requires futures prices, underlying cash securities and a transformation rule.
-
-## C5. Evidence-based confidence
-
-Classify mapping candidates as:
-
-- Confirmed by authoritative source
-- Validated analytically, pending business approval
-- Strong candidate
-- Weak candidate
-- Derived relationship requiring implementation
-- Approved proxy
-- Unmapped
-
-Every mapped factor must include an evidence trail and unresolved assumptions.
-
-Confidence scores must not replace financial validation.
-
----
-
-# 7. PHASE D — CROSS-DATA VALIDATION
-
-For a representative collection of factors across major risk classes, verify actual HDS metadata and selected observations.
-
-Do not download complete history for every class yet.
-
-Evaluate:
-
-### Instrument matching
-
-Does the HDS series represent the same economic underlying?
-
-### Units
-
-Do HDS historical levels and Scenario Manager shock definitions use compatible units?
-
-### Data frequency
-
-Is the series daily, monthly, quarterly or another frequency?
-
-### Historical coverage
-
-Does the available series cover the required calibration period?
-
-### Data completeness
-
-Are observations missing, duplicated, stale or revised?
-
-### Derived inputs
-
-Does one workbook factor need several HDS series?
-
-### Scenario semantics
-
-Would the historical statistical movement generate the same type of shock defined in Excel?
-
-### Source lineage
-
-Can an analyst trace the result to the exact HDS factor, snapshot, run and observation dates?
-
-Use existing local extracts where available.
-
-Execute new remote queries only where they provide evidence that cannot be established from already available data.
-
----
-
-# 8. PHASE E — COMPLETE MAPPING COVERAGE ANALYSIS
-
-Measure coverage across the entire Scenario Manager workbook.
-
-Distinguish:
-
-- Total inventory rows
-- Total distinct factors
-- Direct confirmed mappings
-- Validated but unapproved mappings
-- Candidate mappings
-- Derived-factor mappings
-- Proxy-only factors
-- Unmapped factors
-- Factors not yet evaluated against HDS
-
-Report coverage by:
-
-- Worksheet
-- Asset class
-- Factor family
-- Currency
-- Benchmark
-- Shift type
-- Required market-data frequency
-
-Do not calculate confirmed HDS coverage from Excel-only analysis.
-
-If a complete HDS reference inventory cannot be obtained efficiently, show explicitly which fraction of the workbook has actually undergone HDS validation.
-
-Identify the 10 most important mapping gaps, ranked by business usefulness, number of affected factors and implementation complexity.
-
----
-
-# 9. PHASE F — HISTORICAL SHOCK CALIBRATION REQUIREMENTS
-
-For every major risk-factor family, recommend an appropriate deterministic statistical methodology.
-
-Include:
-
-- Absolute movements
-- Percentage movements
-- Basis-point changes
-- Rate and spread movements
-- FX quotation inversion
-- Volatility-point changes
-- Rolling business-day windows
-- Upper and lower tails
-- Empirical percentiles
-- Historical extrema
-- Statistical significance and sampling limitations
-- Scenario-consistent joint shocks
-- Correlation and cross-factor dependency considerations where relevant
-
-Do not treat marginal percentile shocks as automatically constituting a coherent joint stress scenario.
-
-Specify the difference between:
-
-1. Historical statistical evidence
-2. Candidate recalibrated shocks
-3. Business-approved scenario shocks
-4. Portfolio stress results
-
-The AI system must not silently replace approved scenario shocks.
-
----
-
-# 10. PHASE G — DESIGN THE HISTORICAL DATA INGESTION LAYER
-
-Investigate the most efficient architecture for creating a reusable local market-data repository.
-
-Preferred pattern:
-
-Olympus HDS
-→ Approved controlled extracts
-→ Raw immutable Parquet
-→ Data quality validation
-→ Normalized market-data tables
-→ DuckDB analytical database
-→ Calibration engine
-
-Design:
-
-- Initial historical backfill
-- Incremental data refresh
-- Reconciliation against HDS snapshots
-- Partitioning by factor family and/or market-factor ID
-- File naming and manifests
-- Schema versioning
-- Failed extraction recovery
-- Duplicate detection
-- Data-quality gates
-- Source lineage
-- Local query performance
-- Storage lifecycle and retention
-- Approved access controls
-
-Do not download the entire Olympus table.
-
-Only extract validated, relevant and authorized factors.
-
-Propose factor-family batches and a prioritization strategy.
-
-Explain how incremental refreshes can avoid repeated full historical extraction.
-
----
-
-# 11. PHASE H — CHATBOT AND ANALYTICAL PLATFORM DESIGN
-
-Design the future solution with:
-
-### Data layer
-
-Approved local Parquet files and DuckDB.
-
-### Mapping layer
-
-A versioned, evidence-based Scenario Manager-to-HDS factor registry.
-
-### Quantitative engine
-
-Deterministic Python functions performing all calculations.
-
-### LLM layer
-
-An approved enterprise LLM that translates natural-language questions into validated structured requests.
-
-### API layer
-
-FastAPI with approved calculation endpoints.
-
-### User interface
-
-A professional analytical workspace with:
-
-- Chatbot
-- Factor search
-- Historical time-series charts
-- Rolling-shock distribution
-- Percentile tables
-- Historical extreme events
-- Scenario Manager comparisons
-- Mapping evidence
-- Data quality and freshness
-- Export to Excel
-
-### Governance
-
-- Approved user authentication
-- Read-only data access by default
-- Audit trails
-- Model and methodology versioning
-- Source lineage
-- Mapping approval
-- Analyst review
-- No arbitrary LLM-generated SQL
-- No automatic production scenario updates
-
-Investigate suitable enterprise deployment options, including local prototype and approved internal shared hosting.
-
-Do not assume a personal workstation is suitable as the permanent production server.
-
----
-
-# 12. REQUIRED DELIVERABLES
-
-Create a dedicated `hds_scenario_deep_mapping` investigation folder.
-
-Produce:
-
-### 1. `EXECUTIVE_FINDINGS.md`
-
-What was verified, what remains uncertain and the major technical findings.
-
-### 2. `SCENARIO_FACTOR_MASTER.csv`
-
-Complete workbook factor inventory with normalized financial attributes.
-
-### 3. `HDS_REFERENCE_INVENTORY.csv`
-
-Verified HDS metadata obtained from approved sources, with an explicit statement of inventory completeness.
-
-### 4. `SCENARIO_HDS_MAPPING_REGISTRY.csv`
-
-A comprehensive mapping register with:
-
-- Excel identifier
-- HDS identifier(s)
-- Factor family
-- Financial dimensions
-- Mapping type
-- Required transformations
-- Evidence
-- Confidence
-- Approval status
-- Remaining issues
-
-### 5. `DERIVED_FACTOR_SPECIFICATIONS.md`
-
-Define the mathematical construction and dependencies of derived and multi-series factors.
-
-### 6. `MAPPING_COVERAGE_REPORT.md`
-
-Coverage by asset class, worksheet, mapping type and approval status.
-
-### 7. `DATA_QUALITY_AND_HISTORICAL_COVERAGE.md`
-
-Actual or explicitly unverified coverage, frequency, gaps, duplicate rules and data-quality findings.
-
-### 8. `HDS_QUERY_EXECUTION_LOG.md`
-
-Actual live queries, their purpose, elapsed time, filters, results and limitations.
-
-### 9. `HDS_EXTRACTION_AND_CACHE_DESIGN.md`
-
-Complete proposed Parquet/DuckDB ingestion and incremental-refresh design.
-
-### 10. `CHATBOT_ARCHITECTURE_AND_IMPLEMENTATION.md`
-
-Data interfaces, calculation functions, LLM tools, UI components, deployment options and security controls.
-
-### 11. `PHASED_IMPLEMENTATION_BACKLOG.md`
-
-Prioritized implementation tasks with dependencies and acceptance criteria.
-
-### 12. `OPEN_BUSINESS_QUESTIONS.md`
-
-Only the questions that require Victor, Cyrus, risk-data owners or methodology owners to resolve.
-
----
-
-# 13. EXECUTION ORDER
-
-Follow this sequence:
-
-1. Inspect all existing investigation artifacts.
-2. Confirm the workbook's complete financial taxonomy.
-3. Analyze cross-sheet definitions and hidden metadata.
-4. Inspect existing HDS extracts and query history.
-5. Identify authoritative market-factor reference sources.
-6. Run the smallest justified live HDS discovery queries.
-7. Construct candidate mappings systematically.
-8. Validate representative financial relationships.
-9. Produce mapping-coverage metrics with honest evidence classifications.
-10. Design the historical data ingestion and refresh process.
-11. Design the chatbot and analytical platform architecture.
-12. Deliver the findings and phased implementation backlog.
-
-Do not repeat previously successful HDS extracts.
-
-Do not issue thousands of one-factor queries.
-
-Do not build the chatbot during this investigation.
-
-Do not modify the original Scenario Manager `.xlsm` workbook.
-
-Do not expose credentials.
-
-Do not report guessed mappings as confirmed.
-
-## REQUIRED FINAL ANSWER
+### Required final output
 
 Return:
 
-**A. Key discoveries:** The most important new findings from real Excel and HDS evidence.
+1. Implemented files and components.
+2. Working application features.
+3. Tests executed and results.
+4. How to start the backend and frontend.
+5. Actual JPY/USD end-to-end demonstration.
+6. Functionality that remains blocked or provisional.
+7. Exact steps for adding the next validated HDS factor.
+8. Remaining security and deployment approvals.
 
-**B. Mapping coverage:** What can actually be mapped, what is derived, what remains unknown.
+**Success criterion:** A working local analytical application that loads the existing JPY/USD data, performs reproducible shock calibration, displays the results and supports future HDS factors through a versioned mapping and ingestion framework.
 
-**C. Critical financial relationships:** Important transformations, benchmarks and factor-family dependencies.
-
-**D. HDS performance:** What extraction strategy will avoid repeated slow queries.
-
-**E. Data readiness:** Which factors and historical datasets are ready for calibration.
-
-**F. Chatbot architecture:** Exactly which files, databases, APIs and services should be built.
-
-**G. Delivery roadmap:** What should be implemented first, second and third.
-
-**H. Business blockers:** What must be validated or approved externally.
-
-**I. Immediate next action:** The smallest next implementation step that advances the full platform.
-
-Success is an evidence-based, financially credible mapping strategy across the Scenario Manager universe, accompanied by a practical data-platform architecture that can support fast historical shock calibration without depending on live HDS queries for every chatbot request.
-
-Start the investigation now. Perform the analysis and return actual findings, not merely a proposal.
+Begin implementation. Do not stop after planning.
