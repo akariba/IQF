@@ -1,13 +1,175 @@
-Continue the execution, but investigate the HUF swap dataset before treating its quantitative results as reliable.
+# Shock Calibration Studio — Application-Wide Risk-Factor UX Refactor
 
-The registered dataset has only 296 observations between January 2023 and October 2026. Determine its actual source frequency, whether the extraction is complete, and why the observation count is sparse.
+Implement a consistent, professional, financial-risk-aware selection experience across the entire Shock Calibration Studio.
 
-Verify the exact HDS identity, units, quotation convention, and financial meaning of the calculated percentile.
+**This is an application-wide implementation task, not a cosmetic update to the Shock Calibration page.**
 
-Critically, distinguish 10 consecutive observations from 10 business days. Implement the appropriate historical-window methodology and document it mathematically.
+## 1. Replace HDS IDs as primary user-facing labels
 
-Do not spend another iteration only updating logs, manifests, or coverage dashboards.
+Audit all frontend pages, shared components, charts, tables, forms, modals, navigation links, chat results, data cards, and exports.
 
-Continue expanding actual HDS histories and resolving mappings, while completing the independent Opus review, LaTeX methodology PDF, and user-facing analytical functionality.
+Wherever a numeric HDS identifier is currently used as the primary label, replace it with a meaningful financial instrument or risk-factor name.
 
-Report new datasets acquired, their actual coverage and completeness, verified calculations, and implemented features.
+Examples:
+
+- `2107899` → JPY/USD — FX Spot
+- `2107833` → EUR/USD — FX Spot
+- `671000282` → Gold — COMEX 1-Month Forward
+
+Derive names from actual validated metadata. Do not infer financial descriptions from numeric identifiers alone.
+
+HDS IDs remain essential internal identifiers and must not be deleted from data models, API requests, database keys, extraction logic, or audit lineage.
+
+Make numeric IDs accessible through expandable technical details, tooltips, source metadata, and downloadable evidence.
+
+## 2. Create a shared risk-factor catalogue
+
+Implement one authoritative catalogue service and reusable frontend component that all pages consume.
+
+The catalogue must combine, without conflating:
+
+- Available local historical datasets
+- Authoritative Olympus HDS metadata
+- Scenario Manager workbook factor definitions
+- Validated and candidate mappings
+- Instrument descriptions and aliases
+- Asset class and risk family
+- Currency and country
+- Instrument type
+- Tenor and maturity
+- Quotation convention and units
+- Historical frequency and coverage
+- Dataset availability
+
+Keep Scenario Manager identifiers and HDS identifiers distinct.
+
+Do not invent mappings or imply that an available HDS series is automatically equivalent to a workbook factor.
+
+## 3. Implement searchable, risk-aware selectors
+
+Create a reusable searchable dropdown or combobox supporting:
+
+- Search by human-readable financial name
+- Search by ticker and risk-factor code
+- Search by HDS ID for technical users
+- Search by asset class
+- Currency and country filters
+- Tenor and maturity filtering
+- Available-history filtering
+- Grouped results by financial risk family
+- Keyboard navigation
+- Clear selection and loading states
+
+The primary display must always be the human-readable financial identity.
+
+A sample option structure:
+
+**JPY/USD — FX Spot**  
+Foreign Exchange · Spot · Daily · Historical data available
+
+**HUF — Interest Rate Swap**  
+Interest Rates · Swap · Historical data available
+
+**Gold — COMEX 1-Month Forward**  
+Commodities · Forward · 1M · Historical data available
+
+These are examples only. Populate the actual component from existing APIs and catalogue evidence.
+
+Support selecting multiple factors where comparison is meaningful.
+
+## 4. Apply the change across every relevant application area
+
+### Overview
+
+Replace the single highlighted HDS fixture with a meaningful overview of available financial risk categories, historical coverage, and dataset counts.
+
+Avoid making the Overview appear focused on one arbitrary factor.
+
+### Chat
+
+Support natural-language factor names and autocomplete suggestions.
+
+When the user references a financial instrument, resolve it through the shared catalogue.
+
+If the name is ambiguous, present relevant choices with currency, tenor, instrument type, and available-history status.
+
+Display selected financial names prominently in responses.
+
+Preserve the exact underlying HDS IDs for tool execution and traceability.
+
+### Market Data Explorer
+
+Make financial factor names and risk families the primary catalogue labels.
+
+Support grouped searching and filtering.
+
+Show available historical datasets separately from the wider Scenario Manager reference universe.
+
+### Shock Calibration
+
+Replace the numeric HDS Factor ID input with the shared risk-factor selector.
+
+Automatically load the selected dataset, compatible financial calculation methodology, unit, historical coverage, and chart data.
+
+Keep relevant calculation overrides accessible where appropriate.
+
+### Scenario Manager
+
+Use descriptive risk-factor names in selection, cards, and comparison results.
+
+Show original workbook identifiers in technical details.
+
+Allow users to move between workbook factor definitions and associated HDS evidence.
+
+### Data & Mapping Studio
+
+Display financial identities prominently, with workbook codes and HDS IDs as secondary technical attributes.
+
+Maintain mapping confidence and evidence without overwhelming the user with unresolved-status labels.
+
+Support searching and filtering by financial family, country, currency, and tenor.
+
+### Import & Validate
+
+Replace free-text technical identifiers with guided selections wherever the required metadata exists.
+
+Allow the user to associate an imported historical dataset with an existing factor or define a new financial identity when necessary.
+
+### Data Pipeline
+
+Display human-readable dataset names, source information, observation coverage, quality results, and extraction status.
+
+Keep internal IDs available in detailed lineage views.
+
+## 5. Consistent interaction and visual design
+
+Do not scatter different dropdown implementations across pages.
+
+Use one shared component and consistent naming rules.
+
+Keep the current professional dark theme.
+
+Avoid excessive tables, repeated status badges, and technical jargon in the primary user experience.
+
+Use compact, informative options that help quantitative analysts distinguish instruments confidently.
+
+The application must remain responsive and support large catalogues efficiently through server-side search or virtualization where needed.
+
+## 6. Test the complete experience
+
+Verify that:
+
+1. No primary analytical workflow requires the user to memorize an HDS ID.
+2. A factor can be found by financial name, ticker, tenor, or identifier.
+3. The same factor has a consistent name throughout the application.
+4. A selected factor resolves to the correct underlying dataset.
+5. Financial units and movement methods are appropriate to its instrument type.
+6. The chat and charts correctly reflect the selected factor.
+7. Scenario Manager mappings remain evidence-based.
+8. Dataset ingestion and quantitative calculations continue working.
+9. Technical IDs remain accessible for audit and debugging.
+10. Existing backend and frontend tests pass.
+
+**Implement these improvements across all relevant pages, run the application, and verify the complete user experience.**
+
+Do not stop at a design proposal or implement only the Shock Calibration page.
