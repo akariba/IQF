@@ -1,134 +1,29 @@
-# SHOCK CALIBRATION — NEXT PHASE: MULTI-ASSET DATA INGESTION AND VALIDATION
+Continue Shock Calibration development in the existing project. Do not rebuild the ingestion architecture.
 
-Continue the existing Shock Calibration POC in:
+The current framework has passed 18 tests, but only one real HDS dataset is registered.
 
-`C:\Users\ak54743\Downloads\Shock Calibration`
+**Your next objective is to demonstrate genuine multi-asset historical data ingestion.**
 
-The latest implementation has passed 14 backend tests, frontend compilation and local integration checks.
+1. Implement a reusable CSV/Parquet import workflow that accepts historical files exported from Olympus Data Workbench.
 
-The generalized calculation API is now in place. The next task is to expand the real data available to that engine.
+2. Inspect each imported file's schema and discover the correct identifier, observation date, market level, frequency, snapshot and source fields. Support explicit column mapping when exports differ.
 
-**This is an implementation task, not another architecture investigation.**
+3. Before registration, validate financial identity, units, quotation, granularity, duplicate observations, missing dates, numerical anomalies and historical coverage.
 
-## 1. Preserve the working application
+4. Preserve original files, produce normalized Parquet, register the dataset in DuckDB and expose its validation results through the existing API.
 
-Do not rebuild the frontend, backend, DuckDB layer or existing quantitative calculations.
+5. Add a simple import and dataset-validation interface to Shock Calibration Studio.
 
-Keep the current working JPY/USD dataset and regression tests.
+6. Verify whether the existing authorized personal Olympus HIVE connection can perform further bounded extracts within its normal quota. Do not retry an exhausted quota or use the previously denied service-account route.
 
-Do not download the same historical series again without a specific reason.
+7. Prioritize finding and validating the historical Turkish 10-year swap series, followed by other representative FX, credit, equity and commodity factors.
 
-## 2. Investigate additional Olympus market factors
+8. Test the same quantitative calculation engine against each newly imported dataset, using the correct financial movement conventions.
 
-Use the existing HDS discovery evidence and financial classifications from the Scenario Manager Excel.
+9. Report exactly which additional real datasets are available, which have passed validation, and which remain unresolved.
 
-Select representative historical factors across multiple asset classes, prioritizing:
+10. Preserve the existing JPY/USD dataset and working application. Do not create synthetic data and report it as real HDS coverage.
 
-- Interest-rate swaps and curves
-- FX spot and forwards
-- Credit spreads
-- Equities and indices
-- Commodities
-- Volatility, where suitable metadata exists
+**Deliver a functioning multi-asset import and validation workflow, not another architecture document.**
 
-Investigate the Turkish 10-year swap requested by Victor, but do not substitute a different instrument without verifying its definition.
-
-The Excel is a reference showing financial factor granularity. It is not a hard restriction on the available Olympus universe.
-
-## 3. Build and execute reusable historical extraction
-
-Implement a configuration-driven HDS extractor that accepts:
-
-- Verified HDS factor ID
-- Start and end dates
-- Observation frequency
-- Snapshot and as-of selection
-- Extraction batch settings
-
-Reuse the existing authorized Olympus connection and respect its quotas.
-
-Start with a small, diverse set of financially validated factors.
-
-For each selected factor, extract the historical coverage available and permitted by HDS.
-
-Do not invent 2000–present coverage where actual historical observations are unavailable.
-
-Avoid unnecessary repeated metadata queries and historical scans.
-
-The extractor operates separately from the chatbot.
-
-## 4. Validate every historical dataset
-
-Before making a dataset available to calculations, check:
-
-- Exact market-factor identity
-- Source ticker and source system
-- Underlying instrument and benchmark
-- Currency, tenor and quotation
-- Frequency and granularity
-- Duplicate observations
-- Missing dates and historical gaps
-- Null and anomalous values
-- Consistent snapshots and run IDs
-- Historical start and end dates
-- Correct financial units and scaling
-
-Create a clear quality report for each dataset.
-
-Do not silently treat unresolved instrument mappings as confirmed.
-
-## 5. Store validated historical observations
-
-Use the existing Parquet/DuckDB infrastructure.
-
-Implement:
-
-HDS extraction → Raw Parquet → Validation → Normalized Parquet → DuckDB
-
-Register every dataset in a searchable local factor catalogue.
-
-Preserve historical lineage and data-quality status.
-
-The chatbot must use the local database. No live HDS calls are permitted during user conversations.
-
-## 6. Test generic quantitative analysis
-
-Using the newly available real datasets, test the existing generalized calculation API.
-
-Demonstrate that the same engine can analyze different financial instruments with appropriate movement conventions.
-
-Verify absolute movements, relative movements, basis-point shifts, rolling windows, historical percentiles and extrema wherever financially appropriate.
-
-Do not hardcode individual factor results.
-
-Unsupported calculations must produce explicit explanations.
-
-## 7. Connect the actual LLM
-
-Inspect the existing `llm_gateway.py` implementation.
-
-Determine whether an approved enterprise LLM endpoint is already configured.
-
-If available, connect it to the existing calculation tools and test open-ended questions.
-
-If unavailable, report the specific missing integration configuration without pretending the deterministic parser is an LLM.
-
-## 8. Deliver a working multi-asset demonstration
-
-Show:
-
-1. Actual HDS factors discovered.
-2. Which factors have been successfully downloaded.
-3. Their historical coverage and observation counts.
-4. Per-factor validation results.
-5. Current Parquet/DuckDB catalogue.
-6. Demonstrations of quantitative calculations across at least two distinct factor families, if validated data is available.
-7. Actual conversational LLM integration status.
-8. Tests executed and their results.
-9. Unresolved data or methodology blockers.
-
-Do not generate another large documentation package.
-
-Make actual code changes, execute the supported validations, and demonstrate the results.
-
-**Success criterion:** Shock Calibration Studio supports multiple real historical market-data series through one reusable ingestion, validation, storage and quantitative calculation pipeline, and is ready to answer open-ended questions using locally downloaded Olympus data.
+If no additional historical files are currently accessible, implement and test the importer using an explicitly labeled test fixture, then identify the exact real HDS export needed for the next validation.
