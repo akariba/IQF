@@ -1,147 +1,144 @@
-# HDS Q3 — ROOT CAUSE INVESTIGATION AND OPTIMIZED LIVE QUERY
+# HDS JPY/USD — COMPLETE HISTORICAL DATA VALIDATION AND CALIBRATION PILOT
 
-You are acting as a Senior HDS Data Engineer and Quantitative Risk Analyst.
+The latest Olympus HDS historical query succeeded.
+
+Verified evidence:
+
+- HDS factor ID: 2107899
+- HDS factor name: FXSP.JPY.USD
+- Market-factor type: FXSP
+- Source: RTS1
+- Frequency: D
+- Run ID observed: 9518
+- Snapshot: 20261102
+- As-of: 20261030
+- Historical sample: October 1–28, 2026
+- Market levels: approximately 158.07 to 157.82
+- Query duration: 29.603 seconds
+
+The previous SQL failure was caused by comparing numeric market_factor_id to a string. That issue has been resolved.
 
 ## Objective
 
-Our previous HDS metadata query successfully identified:
+Progress from the successful 20-observation sample to a validated historical JPY/USD dataset suitable for Victor's 10-business-day shock-calibration question.
 
-- HDS market factor ID: `2107899`
-- Factor name: `FXSP.JPY.USD`
-- Factor type: `FXSP`
-- Source ticker: `JPY=`
-- Source system: `RTS1`
-- Frequency: `D`
-- Snapshot: `20261102`
-- As-of partition: `20261030`
+Do not repeat workbook profiling, metadata discovery, or previous successful queries.
 
-However, the historical observation query returned `OLYMPUS_QUERY_FAILED` after approximately 9.179 seconds.
+## Task 1 — Validate the market-data definition
 
-Your mission is to identify why it failed, retrieve a minimal historical sample if authorized, and validate the factor against Scenario Manager's `fxdl.JPY.USD`.
+Establish from authoritative source documentation or reference metadata whether FXSP.JPY.USD represents JPY per USD.
 
-Do not repeat the workbook inventory or broad HDS metadata discovery.
+Check the corresponding Scenario Manager factor fxdl.JPY.USD, including its quotation, shift type and sign convention.
 
-## Step 1 — Diagnose the previous failure
+Document whether the mapping is confirmed or provisional.
 
-Before executing any new query, inspect the existing notebook execution logs and exception details.
+## Task 2 — Design the fastest historical extraction
 
-Check whether the failure involved:
+Determine the most efficient approved extraction method for factor ID 2107899 from 2007 onward.
 
-- SQL syntax or column types
-- Query execution or resource limits
-- Snapshot and partition mismatch
-- Invalid historical-date predicates
-- Data entitlements
-- Olympus result decoding
-- Network or client errors
+Performance is critical: the last 20-row query took approximately 30 seconds.
 
-Identify the actual cause where possible. Do not guess.
+Requirements:
 
-## Step 2 — Execute this optimized SQL
+- Use the existing authorized HDS connection.
+- Preserve snapshot and as-of consistency.
+- Verify whether a single snapshot contains the required historical observations.
+- Use exact numeric market_factor_id predicates.
+- Filter to daily observations.
+- Select only necessary columns.
+- Avoid DISTINCT, unnecessary sorting and unrestricted aggregation.
+- Prefer a single controlled factor-specific historical export over many repeated small queries.
+- Use date-batched extraction only if required by platform limits.
+- Check query plans and partition pruning where available.
+- Respect datasource quotas and query limits.
+- Do not run multiple queries concurrently.
+- Never assume LIMIT alone makes a query inexpensive.
 
-If the diagnostics do not reveal an authorization or quota restriction, execute the following read-only query using the previously successful authorized Olympus connection.
+Before extracting, identify any uncertainties about the correct historical dataset, snapshot, or run-selection policy.
 
-```sql
-SELECT
-    timeseries_date,
-    market_factor_level,
-    run_id
-FROM gfolyrsk_cmrr_reporting.om_mr_hds_timeseries_mev
-WHERE snapshot_date = 20261102
-  AND as_of = 20261030
-  AND market_factor_id = 2107899
-  AND frequency = 'D'
-  AND timeseries_date >= DATE '2026-10-01'
-  AND timeseries_date <= DATE '2026-10-30'
-LIMIT 3;
-```
+## Task 3 — Obtain the historical dataset
 
-### Query optimization requirements
+If an authorized, appropriately bounded extraction is feasible, retrieve the daily series using the approved mechanism.
 
-This query deliberately:
+Retain:
 
-1. Uses the previously verified `snapshot_date`.
-2. Uses the `as_of` partition for pruning.
-3. Filters by the exact numerical market-factor ID.
-4. Restricts observations to daily frequency.
-5. Restricts historical dates to one calendar month.
-6. Selects only three required columns.
-7. Limits the result to three rows.
-8. Avoids DISTINCT, GROUP BY, ORDER BY, wildcard searches and joins.
+- market_factor_id
+- market_factor_name
+- timeseries_date
+- market_factor_level
+- frequency
+- run_id
+- snapshot_date
+- as_of
+- source_system
+- source_ticker
 
-The row limit alone does not guarantee a cheap scan. Review any available query-cost diagnostics before execution.
+Store the result in approved local storage as Parquet.
 
-Run only one query at a time. Do not automatically retry failures.
+Do not mix conflicting runs or snapshots without a documented rule.
 
-Target execution below 15 seconds, with a 30-second maximum where cancellation is supported.
+If a full export requires additional access or approval, stop and document that requirement.
 
-## Step 3 — Interpret the results
+## Task 4 — Validate data quality
 
-If the query succeeds, return the actual observations in a table:
+Calculate:
 
-| Date | Market factor level | Run ID |
-|---|---|---|
-| Actual date | Actual value | Actual run |
+- Earliest and latest observation dates
+- Total observations
+- Missing and duplicate dates
+- Unexpected gaps
+- Outliers and invalid market levels
+- Coverage by calendar year
+- Consistency of market-factor identifiers
+- Consistency of snapshot and run IDs
 
-Next:
+Use the appropriate business-day calendar, not an assumption that every weekday has an observation.
 
-1. Determine whether the market levels represent JPY per USD or USD per JPY.
-2. Verify this against the source ticker definition and an authoritative market-data reference.
-3. Compare the numeric scale with the expected FX quotation.
-4. Identify whether multiple runs could produce duplicate observations.
-5. Validate whether the series can support Victor's rolling 10-business-day FX shock calculation.
-6. Update the mapping registry only with verified evidence.
+## Task 5 — Implement the deterministic calculation
 
-Do not infer quotation direction solely from the factor name.
+For each valid 10-business-day window, calculate the percentage appreciation of JPY.
 
-If the query returns zero observations, do not conclude the series is unavailable. Report that the requested date window has no returned rows and identify the next most selective coverage check.
+If market levels represent JPY per USD, use:
 
-## Step 4 — Failure handling
+JPY_appreciation = previous_level / current_level - 1
 
-If the query fails again:
+For a +10% JPY appreciation, calculate its empirical historical percentile rank.
 
-- Capture the sanitized underlying Olympus error message.
-- Determine whether the error occurred during SQL execution or result retrieval.
-- Distinguish query failure from zero returned observations.
-- Do not perform repeated retries or broaden the query automatically.
-- Recommend the minimum corrective action.
+Also calculate:
 
-If the platform reports rate limiting or access denial, stop remote querying immediately.
+- Worst JPY appreciation over ten business days
+- Worst JPY depreciation
+- 98th percentile appreciation
+- 99th percentile appreciation
+- 99.5th percentile appreciation
+- Number of valid rolling windows
+- Dates corresponding to major historical moves
 
-Do not switch identities or attempt authentication workarounds.
+Make percentile interpolation and tie handling explicit.
 
-Never print passwords, tokens, temporary credential contents or authentication secrets.
+Validate the calculations independently using a small known sample.
 
-## Step 5 — Calibration methodology
+## Task 6 — Produce the analytical result
 
-If the FX data is validated, define the correct methodology for Victor's question:
+Generate:
 
-"What historical percentile corresponds to a +10% JPY appreciation against USD over rolling 10-business-day periods from 2007 to the latest available observation?"
+1. Historical market-data coverage report.
+2. Data-quality summary.
+3. JPY/USD rolling 10-business-day movement distribution.
+4. Empirical percentile rank of a +10% JPY appreciation.
+5. Historical percentile table.
+6. Top historical movements with dates.
+7. Full calculation methodology and data lineage.
+8. Evidence-based mapping status to Scenario Manager.
 
-Specify:
+Do not invent statistics if historical extraction is incomplete.
 
-- Correct exchange-rate quotation direction
-- Whether inversion is necessary
-- Simple percentage-return formula
-- Rolling 10-business-day construction
-- Trading calendar and missing-data rules
-- Historical percentile-rank calculation
-- Duplicate snapshot/run handling
-- Data lineage and reproducibility checks
+## Task 7 — Recommend the next phase
 
-Do not perform a full historical extraction yet.
+Explain how the validated JPY/USD dataset and calculations can be exposed to an enterprise LLM chatbot through approved, deterministic Python functions.
 
-## Final deliverables
+Do not implement the chatbot yet.
 
-Return:
+Report the historical extraction approach and performance implications before any expensive query. Execute only when the chosen approach is permitted and appropriately bounded.
 
-1. Root cause or remaining uncertainty for `OLYMPUS_QUERY_FAILED`.
-2. Exact SQL executed.
-3. Actual execution duration and status.
-4. Historical observations, if retrieved.
-5. FX quotation validation.
-6. HDS-to-Excel mapping status.
-7. Remaining technical blockers.
-8. The next optimized historical-extraction query, proposed but not executed.
-
-**Execution instruction:** Diagnose the previous failure first. Then run only the single bounded SQL query above if access, quota and query-cost checks permit it. Return the actual evidence and stop.
+Deliver actual results where available, and clearly document anything still blocked.
