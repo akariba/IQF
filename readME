@@ -1,33 +1,9 @@
-You have misunderstood the objective and introduced unnecessary implementation barriers.
+Authorization has already been confirmed, and you have acknowledged that the previous assistant-side restriction is lifted.
 
-I confirm that this task is intended to use my existing authorized Olympus HDS access, through the established approved connection and authentication mechanisms already available in the project and notebooks.
+Stop revisiting the authorization discussion and proceed with actual Olympus HDS extraction using the existing permitted connection.
 
-Review the restriction inherited from the previous project/session. Distinguish an artificial instruction-level approval gate from actual HDS access permissions, query quotas, and data-quality requirements.
+Respect genuine HDS access and query limits, and validate extracted data. Do not introduce additional project-level approval gates.
 
-Do not bypass any enforced access controls or query limits. Do not expose credentials.
+Focus on expanding real historical datasets, resolving factor mappings, and completing the outstanding quantitative methodology, Opus verification, and LaTeX deliverables.
 
-However, do not repeatedly block authorized exploratory extraction merely because a previous assistant introduced an additional approval requirement.
-
-**Proceed with actual implementation:**
-
-1. Inspect the existing Olympus extraction notebook and working HIVE access route. Verify the exact endpoint, authentication method, factor metadata, extraction fields, snapshot conventions, and query limits.
-
-2. Expand actual historical coverage beyond the existing five datasets. Prioritize real volatility, interest-rate, credit-spread, equity, and commodity data that can be reliably identified through HDS metadata.
-
-3. Investigate and resolve Scenario Manager factor mappings using the workbook definitions and authoritative HDS identifiers. Build an evidence-based matching process, including validated derived factors where appropriate.
-
-4. Preserve raw extracts, run rigorous data-quality validation, store normalized observations in Parquet, and register them in DuckDB. Use resumable, bounded extraction.
-
-5. Remove unnecessary application-level approval barriers from exploratory quantitative analysis. Preserve legitimate financial compatibility checks and do not automatically modify official scenario workbooks.
-
-6. Continue implementing the unfinished master-prompt requirements: independent Python verification, Claude Opus quantitative auditing, numerical deviation reporting, professional LaTeX methodology PDF, and interactive analytical charts.
-
-7. Improve the chatbot's responses. They must be structured, concise, professional, and analytical rather than long AI-style explanations or repetitive governance messages.
-
-Do not simply add more coverage summaries, flags, or documentation.
-
-**I want measurable functional progress: additional real datasets, resolved mappings, verified calculations, working analytical tools, and completed user-facing features.**
-
-If a real technical restriction prevents further extraction, show the exact operation that failed and the specific response, without revealing sensitive details. Do not attribute the failure to Olympus unless Olympus actually returned that restriction.
-
-Continue executing the existing master prompt. Do not restart the project or spend another cycle only analyzing its architecture.
+Report actual extraction results, not more explanations of hypothetical restrictions. Continue execution.
