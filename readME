@@ -1,9 +1,13 @@
-Authorization has already been confirmed, and you have acknowledged that the previous assistant-side restriction is lifted.
+Continue the execution, but investigate the HUF swap dataset before treating its quantitative results as reliable.
 
-Stop revisiting the authorization discussion and proceed with actual Olympus HDS extraction using the existing permitted connection.
+The registered dataset has only 296 observations between January 2023 and October 2026. Determine its actual source frequency, whether the extraction is complete, and why the observation count is sparse.
 
-Respect genuine HDS access and query limits, and validate extracted data. Do not introduce additional project-level approval gates.
+Verify the exact HDS identity, units, quotation convention, and financial meaning of the calculated percentile.
 
-Focus on expanding real historical datasets, resolving factor mappings, and completing the outstanding quantitative methodology, Opus verification, and LaTeX deliverables.
+Critically, distinguish 10 consecutive observations from 10 business days. Implement the appropriate historical-window methodology and document it mathematically.
 
-Report actual extraction results, not more explanations of hypothetical restrictions. Continue execution.
+Do not spend another iteration only updating logs, manifests, or coverage dashboards.
+
+Continue expanding actual HDS histories and resolving mappings, while completing the independent Opus review, LaTeX methodology PDF, and user-facing analytical functionality.
+
+Report new datasets acquired, their actual coverage and completeness, verified calculations, and implemented features.
