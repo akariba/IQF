@@ -1,21 +1,79 @@
-Continue executing the existing master implementation prompt. Do not restart the project or repeat the full architecture assessment.
+Continue implementing the original Shock Calibration Studio master prompt. Your latest status confirms that the historical ingestion and deterministic calibration components are only a partial delivery.
 
-You have already inspected the relevant project structure. Now transition from investigation to implementation.
+**Do not consider the project complete. Do not restart the investigation or repeat existing completed work.**
 
-Use `olympus_client_risk_v6.ipynb` as the primary reference for Olympus data access, alongside the existing Shock Calibration extraction pipeline. Inspect other notebooks only where necessary to reuse relevant functionality.
+Execute the remaining requirements in the following order:
 
-Prioritize actual deliverables:
+**1. Quantitative methodology and numerical validation**
 
-1. Expand genuine Olympus HDS historical-data coverage across multiple financial risk-factor families, preserving source identification, extraction checkpoints, and data-quality validation.
-2. Resolve Scenario Manager-to-HDS factor mappings using actual financial metadata and evidence.
-3. Audit and correct the deterministic Python mathematical calculations.
-4. Implement the Claude Opus independent quantitative verification workflow, with separate numerical recomputation and deviation reporting.
-5. Generate the professional LaTeX methodology PDF based on the implemented equations.
-6. Simplify the interface, remove unnecessary approval barriers, improve professional chat formatting, and display interactive calculation charts.
-7. Run end-to-end tests and confirm which functionality actually works.
+Audit the actual Python mathematical functions, including rolling movements, empirical percentiles, FX conventions, rate and spread changes, volatility, sampling windows, and missing-data treatment.
 
-Continue with the existing 10-task plan, but prioritize working code and verified outputs. Avoid unrelated repository searches and repeated analysis summaries.
+Determine which methods originate from Victor's requirements, which come from the Scenario Manager workbook, and which were introduced during development.
 
-At each meaningful milestone, briefly report actual files changed, tests executed, new historical datasets obtained, and remaining blockers. Do not claim a deliverable is complete without verification.
+Build an independent numerical verification implementation that recalculates results from the same underlying observations without simply reusing the production calculation function.
 
-Proceed with implementation now.
+Test actual historical datasets from different asset classes and identify mathematical or financial-unit discrepancies.
+
+**2. Claude Opus independent quantitative review**
+
+Reuse the existing CCR enterprise LLM gateway, model configuration, authentication, token refresh, and usage accounting.
+
+Connect Claude Opus as a separate quantitative-review agent.
+
+Workflow:
+
+Deterministic Python calculation → Opus analytical review → independent numerical verification → numerical comparison → discrepancy diagnosis → final research response.
+
+Opus must review the methodology and initiate independent deterministic recomputation. It must not invent numerical results through language-only reasoning.
+
+For each verified calculation, display the original Python result, independently reproduced result, absolute deviation, relative deviation where meaningful, tolerance, and verification outcome.
+
+Investigate any mismatch before presenting it as verified.
+
+**3. Professional LaTeX methodology**
+
+Generate a properly compiled LaTeX PDF and corresponding `.tex` source documenting the actual implemented calculations.
+
+Include financial definitions, statistical equations, assumptions, examples, units, percentile conventions, factor-specific methods, and references to actual Python functions.
+
+Add a methodology-viewing and PDF-export feature to the application.
+
+**4. Broader Olympus coverage and mappings**
+
+Continue expanding genuine historical datasets through the authorized Olympus extraction pipeline, using bounded, resumable extraction within enforced query limits.
+
+Prioritize additional genuine financial factors from multiple asset classes, especially volatility and interest-rate/credit factors relevant to Victor's questions.
+
+Implement repeatable mapping discovery against the Scenario Manager factor universe. Resolve actual factor identities using Olympus metadata and financial conventions.
+
+Do not equate unrelated series or invent mappings.
+
+Provide actual dataset counts, observation counts, coverage dates, mapping evidence, and data-quality results.
+
+**5. Application simplification and analytical quality**
+
+Remove unnecessary exploratory approval gates, repetitive provisional-methodology labels, and confusing fixture terminology, without concealing genuine data limitations.
+
+Make the LLM responses concise, structured, objective, and suitable for a professional quantitative analyst. Avoid decorative AI-style Markdown and repeated caveats.
+
+Display interactive charts alongside results rather than making users scroll to a separate evidence section.
+
+Make factor-specific calculation methods automatically selected from financial metadata, with explanations and optional overrides.
+
+Consolidate redundant data ingestion and pipeline screens where appropriate.
+
+**6. Complete end-to-end testing**
+
+Verify using real historical observations:
+
+User question → Enterprise LLM → Python calculation → Opus review → independent recalculation → deviation report → interactive chart → LaTeX methodology export.
+
+Test several financial-factor families and contextual follow-up questions.
+
+Verify the original five datasets remain accessible.
+
+Fix integration issues and continue implementation without repeated analysis-only reports.
+
+At each meaningful milestone, summarize actual code changes and tests. At completion, explicitly distinguish implemented, tested, and genuinely unavailable external functionality.
+
+Proceed with execution now.
