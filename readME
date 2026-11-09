@@ -1,69 +1,49 @@
-Review the entire existing Shock Calibration project.
+Continue the existing Shock Calibration POC.
 
-I need a SHORT, FACTUAL, END-TO-END summary of
-what has ACTUALLY been implemented so far.
+The end-to-end audit has confirmed the current implementation status. Do not repeat the audit or generate more architecture documents.
 
-IMPORTANT:
-- Do not modify any code.
-- Do not implement new features.
-- Do not generate documentation files.
-- Inspect the existing code, database, and tests.
-- Keep your response under 350 words.
-- Use compact bullet points suitable for screenshots.
+Our objective is a functional quantitative AI chatbot using locally downloaded Olympus historical market data across financial asset classes.
 
-Structure your response as follows:
+**Priority 1 — Finish data ingestion**
 
-1. END-TO-END ARCHITECTURE
-Show the actual implemented data flow:
-Olympus HDS → Extraction → Validation →
-Parquet → DuckDB → Quantitative Engine →
-Backend API → LLM/Chatbot → Frontend.
+Fix the failing import API promotion test and verify that a new CSV or Parquet historical dataset can be imported, validated, registered in DuckDB and used immediately by the calculation engine.
 
-Mark each component:
-WORKING / PARTIAL / NOT IMPLEMENTED.
+Implement the missing frontend import and validation screen.
 
-2. DATA CURRENTLY AVAILABLE
-- Actual historical datasets loaded
-- Factor IDs and asset classes
-- Observation counts and historical coverage
-- Data-quality validation results
-- Contents of DuckDB
-- Real data versus test/mock data
+Test the complete process, not just individual functions.
 
-3. IMPLEMENTED FUNCTIONALITY
-Briefly explain what actually works:
-- Historical ingestion
-- Data validation
-- Quantitative calculations
-- Percentiles and rolling movements
-- API endpoints
-- Chatbot
-- Frontend
+**Priority 2 — Expand real historical datasets**
 
-4. AI/LLM STATUS
-Is a real LLM connected and operational?
-If not, what is currently powering the chat?
+Stop focusing on the existing FX example.
 
-5. TESTING
-What tests have actually passed?
-What functionality has been verified end-to-end?
+Use actual available Olympus metadata and the Scenario Manager risk-factor taxonomy to identify representative factors across interest rates, credit, equities, commodities and FX.
 
-6. MISSING CAPABILITIES
-List the main gaps preventing us from delivering
-Victor's multi-asset Shock Calibration chatbot.
+Determine the exact historical files needed, their HDS factor IDs, observation frequencies, date ranges and financial definitions.
 
-7. OVERALL STATUS
-Give a concise assessment:
-What is genuinely operational today?
-What remains incomplete?
+Use available authorized historical exports or permitted bounded downloads, without repeating queries against an exhausted quota.
 
-RULES:
-Be precise and evidence-based.
-Distinguish implemented code from tested functionality.
-Do not claim support for an asset class without
-real historical observations.
-Do not confuse a generic API with multi-asset coverage.
-Do not present a fallback parser as a real LLM.
+Prioritize Victor's Turkish 10-year swap requirement, but never replace it with an unverified instrument.
 
-OUTPUT ONLY THE SHORT SUMMARY.
-No lengthy explanations or recommendations.
+**Priority 3 — Connect genuine AI**
+
+Inspect the available approved enterprise AI integration options.
+
+Connect a real LLM to the existing analytical tools if an accessible provider is available.
+
+Support flexible natural-language questions, factor discovery, dynamic tool selection and quantitative explanations.
+
+The chatbot must use locally stored historical observations, not query HDS during conversations.
+
+Do not present the demo parser as a real LLM.
+
+**Priority 4 — Demonstrate**
+
+Show an end-to-end workflow:
+
+Historical dataset → Validation → Parquet → DuckDB → Python calculation → Chatbot response.
+
+Demonstrate multiple financial factor families wherever actual validated historical data is available.
+
+Provide a concise report of working functionality, tests, real data coverage and remaining blockers.
+
+This is a POC. Prioritize functional implementation rather than production-grade infrastructure.
