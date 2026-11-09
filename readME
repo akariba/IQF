@@ -1,29 +1,69 @@
-Continue Shock Calibration development in the existing project. Do not rebuild the ingestion architecture.
+Review the entire existing Shock Calibration project.
 
-The current framework has passed 18 tests, but only one real HDS dataset is registered.
+I need a SHORT, FACTUAL, END-TO-END summary of
+what has ACTUALLY been implemented so far.
 
-**Your next objective is to demonstrate genuine multi-asset historical data ingestion.**
+IMPORTANT:
+- Do not modify any code.
+- Do not implement new features.
+- Do not generate documentation files.
+- Inspect the existing code, database, and tests.
+- Keep your response under 350 words.
+- Use compact bullet points suitable for screenshots.
 
-1. Implement a reusable CSV/Parquet import workflow that accepts historical files exported from Olympus Data Workbench.
+Structure your response as follows:
 
-2. Inspect each imported file's schema and discover the correct identifier, observation date, market level, frequency, snapshot and source fields. Support explicit column mapping when exports differ.
+1. END-TO-END ARCHITECTURE
+Show the actual implemented data flow:
+Olympus HDS → Extraction → Validation →
+Parquet → DuckDB → Quantitative Engine →
+Backend API → LLM/Chatbot → Frontend.
 
-3. Before registration, validate financial identity, units, quotation, granularity, duplicate observations, missing dates, numerical anomalies and historical coverage.
+Mark each component:
+WORKING / PARTIAL / NOT IMPLEMENTED.
 
-4. Preserve original files, produce normalized Parquet, register the dataset in DuckDB and expose its validation results through the existing API.
+2. DATA CURRENTLY AVAILABLE
+- Actual historical datasets loaded
+- Factor IDs and asset classes
+- Observation counts and historical coverage
+- Data-quality validation results
+- Contents of DuckDB
+- Real data versus test/mock data
 
-5. Add a simple import and dataset-validation interface to Shock Calibration Studio.
+3. IMPLEMENTED FUNCTIONALITY
+Briefly explain what actually works:
+- Historical ingestion
+- Data validation
+- Quantitative calculations
+- Percentiles and rolling movements
+- API endpoints
+- Chatbot
+- Frontend
 
-6. Verify whether the existing authorized personal Olympus HIVE connection can perform further bounded extracts within its normal quota. Do not retry an exhausted quota or use the previously denied service-account route.
+4. AI/LLM STATUS
+Is a real LLM connected and operational?
+If not, what is currently powering the chat?
 
-7. Prioritize finding and validating the historical Turkish 10-year swap series, followed by other representative FX, credit, equity and commodity factors.
+5. TESTING
+What tests have actually passed?
+What functionality has been verified end-to-end?
 
-8. Test the same quantitative calculation engine against each newly imported dataset, using the correct financial movement conventions.
+6. MISSING CAPABILITIES
+List the main gaps preventing us from delivering
+Victor's multi-asset Shock Calibration chatbot.
 
-9. Report exactly which additional real datasets are available, which have passed validation, and which remain unresolved.
+7. OVERALL STATUS
+Give a concise assessment:
+What is genuinely operational today?
+What remains incomplete?
 
-10. Preserve the existing JPY/USD dataset and working application. Do not create synthetic data and report it as real HDS coverage.
+RULES:
+Be precise and evidence-based.
+Distinguish implemented code from tested functionality.
+Do not claim support for an asset class without
+real historical observations.
+Do not confuse a generic API with multi-asset coverage.
+Do not present a fallback parser as a real LLM.
 
-**Deliver a functioning multi-asset import and validation workflow, not another architecture document.**
-
-If no additional historical files are currently accessible, implement and test the importer using an explicitly labeled test fixture, then identify the exact real HDS export needed for the next validation.
+OUTPUT ONLY THE SHORT SUMMARY.
+No lengthy explanations or recommendations.
