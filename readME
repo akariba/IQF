@@ -1,79 +1,33 @@
-Continue implementing the original Shock Calibration Studio master prompt. Your latest status confirms that the historical ingestion and deterministic calibration components are only a partial delivery.
+You have misunderstood the objective and introduced unnecessary implementation barriers.
 
-**Do not consider the project complete. Do not restart the investigation or repeat existing completed work.**
+I confirm that this task is intended to use my existing authorized Olympus HDS access, through the established approved connection and authentication mechanisms already available in the project and notebooks.
 
-Execute the remaining requirements in the following order:
+Review the restriction inherited from the previous project/session. Distinguish an artificial instruction-level approval gate from actual HDS access permissions, query quotas, and data-quality requirements.
 
-**1. Quantitative methodology and numerical validation**
+Do not bypass any enforced access controls or query limits. Do not expose credentials.
 
-Audit the actual Python mathematical functions, including rolling movements, empirical percentiles, FX conventions, rate and spread changes, volatility, sampling windows, and missing-data treatment.
+However, do not repeatedly block authorized exploratory extraction merely because a previous assistant introduced an additional approval requirement.
 
-Determine which methods originate from Victor's requirements, which come from the Scenario Manager workbook, and which were introduced during development.
+**Proceed with actual implementation:**
 
-Build an independent numerical verification implementation that recalculates results from the same underlying observations without simply reusing the production calculation function.
+1. Inspect the existing Olympus extraction notebook and working HIVE access route. Verify the exact endpoint, authentication method, factor metadata, extraction fields, snapshot conventions, and query limits.
 
-Test actual historical datasets from different asset classes and identify mathematical or financial-unit discrepancies.
+2. Expand actual historical coverage beyond the existing five datasets. Prioritize real volatility, interest-rate, credit-spread, equity, and commodity data that can be reliably identified through HDS metadata.
 
-**2. Claude Opus independent quantitative review**
+3. Investigate and resolve Scenario Manager factor mappings using the workbook definitions and authoritative HDS identifiers. Build an evidence-based matching process, including validated derived factors where appropriate.
 
-Reuse the existing CCR enterprise LLM gateway, model configuration, authentication, token refresh, and usage accounting.
+4. Preserve raw extracts, run rigorous data-quality validation, store normalized observations in Parquet, and register them in DuckDB. Use resumable, bounded extraction.
 
-Connect Claude Opus as a separate quantitative-review agent.
+5. Remove unnecessary application-level approval barriers from exploratory quantitative analysis. Preserve legitimate financial compatibility checks and do not automatically modify official scenario workbooks.
 
-Workflow:
+6. Continue implementing the unfinished master-prompt requirements: independent Python verification, Claude Opus quantitative auditing, numerical deviation reporting, professional LaTeX methodology PDF, and interactive analytical charts.
 
-Deterministic Python calculation → Opus analytical review → independent numerical verification → numerical comparison → discrepancy diagnosis → final research response.
+7. Improve the chatbot's responses. They must be structured, concise, professional, and analytical rather than long AI-style explanations or repetitive governance messages.
 
-Opus must review the methodology and initiate independent deterministic recomputation. It must not invent numerical results through language-only reasoning.
+Do not simply add more coverage summaries, flags, or documentation.
 
-For each verified calculation, display the original Python result, independently reproduced result, absolute deviation, relative deviation where meaningful, tolerance, and verification outcome.
+**I want measurable functional progress: additional real datasets, resolved mappings, verified calculations, working analytical tools, and completed user-facing features.**
 
-Investigate any mismatch before presenting it as verified.
+If a real technical restriction prevents further extraction, show the exact operation that failed and the specific response, without revealing sensitive details. Do not attribute the failure to Olympus unless Olympus actually returned that restriction.
 
-**3. Professional LaTeX methodology**
-
-Generate a properly compiled LaTeX PDF and corresponding `.tex` source documenting the actual implemented calculations.
-
-Include financial definitions, statistical equations, assumptions, examples, units, percentile conventions, factor-specific methods, and references to actual Python functions.
-
-Add a methodology-viewing and PDF-export feature to the application.
-
-**4. Broader Olympus coverage and mappings**
-
-Continue expanding genuine historical datasets through the authorized Olympus extraction pipeline, using bounded, resumable extraction within enforced query limits.
-
-Prioritize additional genuine financial factors from multiple asset classes, especially volatility and interest-rate/credit factors relevant to Victor's questions.
-
-Implement repeatable mapping discovery against the Scenario Manager factor universe. Resolve actual factor identities using Olympus metadata and financial conventions.
-
-Do not equate unrelated series or invent mappings.
-
-Provide actual dataset counts, observation counts, coverage dates, mapping evidence, and data-quality results.
-
-**5. Application simplification and analytical quality**
-
-Remove unnecessary exploratory approval gates, repetitive provisional-methodology labels, and confusing fixture terminology, without concealing genuine data limitations.
-
-Make the LLM responses concise, structured, objective, and suitable for a professional quantitative analyst. Avoid decorative AI-style Markdown and repeated caveats.
-
-Display interactive charts alongside results rather than making users scroll to a separate evidence section.
-
-Make factor-specific calculation methods automatically selected from financial metadata, with explanations and optional overrides.
-
-Consolidate redundant data ingestion and pipeline screens where appropriate.
-
-**6. Complete end-to-end testing**
-
-Verify using real historical observations:
-
-User question → Enterprise LLM → Python calculation → Opus review → independent recalculation → deviation report → interactive chart → LaTeX methodology export.
-
-Test several financial-factor families and contextual follow-up questions.
-
-Verify the original five datasets remain accessible.
-
-Fix integration issues and continue implementation without repeated analysis-only reports.
-
-At each meaningful milestone, summarize actual code changes and tests. At completion, explicitly distinguish implemented, tested, and genuinely unavailable external functionality.
-
-Proceed with execution now.
+Continue executing the existing master prompt. Do not restart the project or spend another cycle only analyzing its architecture.
