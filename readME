@@ -1,502 +1,61 @@
-# SHOCK CALIBRATION STUDIO — CONSOLIDATED EXECUTION, LLM INTEGRATION & END-TO-END VALIDATION
-
-## Mission
-
-Act as Principal Full-Stack Engineer, Quantitative Analytics Developer, and LLM Integration Engineer.
-
-Your mission is to complete and improve the existing **Shock Calibration Studio**, reuse the internal enterprise LLM gateway from **CCR Correlation Rebuild**, and deliver a fully functioning conversational quantitative analytics application.
-
-**This is an implementation and execution task, not an architecture review.**
-
-Work autonomously, reuse existing capabilities, fix identified issues, run the application, and verify that its functionality works end to end.
-
-This is a forward-looking POC. Apply sound engineering practices without introducing unnecessary production-grade infrastructure, excessive abstractions, speculative requirements, or repeated approval checkpoints.
-
-## 1. Project locations
-
-**Target project — all implementation must happen here:**
-
-`C:\Users\ak54743\Downloads\Shock Calibration`
-
-**Source project — reuse its enterprise LLM infrastructure:**
-
-`C:\Users\ak54743\Downloads\Param\CCR Correlation Rebuild`
-
-The target already contains:
-
-- React/TypeScript frontend
-- FastAPI backend
-- Historical data ingestion
-- Parquet storage
-- DuckDB analytical layer
-- Quantitative calculation engine
-- Market-factor metadata
-- Data mapping and validation components
-- Chat interface
-- Analytical visualization pages
-
-Preserve and improve these existing implementations rather than replacing them.
-
-The source project contains an existing internal LLM integration that must be investigated and reused wherever compatible.
-
-Do not modify the source project.
-
-## 2. Reuse the complete CCR enterprise LLM infrastructure
-
-Inspect the source project's backend, frontend, configuration, and supporting modules.
-
-Locate the actual LLM request execution path.
-
-Investigate and reuse the existing implementations of:
-
-### A. Gateway connectivity
-
-- Enterprise LLM endpoint discovery
-- Gateway client and request transport
-- API request/response contracts
-- Model invocation
-- Model/provider routing
-- Streaming responses, where supported
-- Connection retries and timeouts
-- Error classification and handling
-
-Determine which components are operational rather than merely present in source code.
-
-### B. Authentication and token refresh
-
-Identify the source project's existing authentication mechanism and refresh-token lifecycle.
-
-Reuse its established approach for:
-
-- Initial token acquisition
-- Access-token refresh
-- Token expiration detection
-- Refresh-before-expiry behavior
-- Handling authentication failures
-- Retrying a request after authorized token renewal
-- Preventing unnecessary repeated authentication
-- Maintaining authentication across conversation turns
-
-Use the same supported identity, authentication configuration, and credential-loading mechanisms as the existing CCR project.
-
-Do not invent a new login process or bypass authentication.
-
-Do not copy static credentials into source code, logs, or frontend bundles.
-
-### C. Token usage and context management
-
-Investigate how the CCR gateway manages:
-
-- Input token counts
-- Output token counts
-- Total token consumption
-- Context window limits
-- Conversation history
-- Maximum output tokens
-- Request budgets
-- Model-specific token limits
-- Truncation or summarization
-- Tool-result context management
-
-Reuse existing token-usage accounting where available.
-
-Display actual usage when returned by the gateway. If usage information is unavailable, identify it as unavailable rather than inventing estimates.
-
-Optimize contextual tool responses to avoid sending large historical datasets directly to the LLM.
-
-### D. Model inventory and settings
-
-Identify the models supported by the existing gateway.
-
-Reuse the source project's model configuration and supported settings, including where applicable:
-
-- Model identifiers
-- Provider/endpoint selection
-- Default model
-- Temperature
-- Maximum output tokens
-- Context window
-- Thinking/reasoning parameters
-- Tool calling
-- Streaming configuration
-- Timeouts
-- Retry settings
-- Model fallback behavior
-
-Preserve validated provider-specific requirements.
-
-Do not assume every model supports identical parameters.
-
-Create a usable **LLM Settings** panel in Shock Calibration Studio, where the available configuration permits:
-
-- Selecting an available model
-- Viewing the active model
-- Adjusting supported generation settings
-- Viewing connection status
-- Viewing token usage
-- Resetting conversation context
-- Testing gateway connectivity
-
-Do not expose credentials in the UI.
-
-Avoid duplicating configuration unnecessarily. Adapt the working CCR settings architecture.
-
-## 3. Connect the LLM to the quantitative engine
-
-Implement this complete execution flow:
-
-**User question → Enterprise LLM → Intent interpretation → Market-factor resolution → Tool selection → DuckDB retrieval → Python quantitative calculation → LLM explanation → Interactive results**
-
-The LLM is responsible for interpreting the question, managing conversation context, selecting analytical tools, and explaining the results.
-
-Python is responsible for numerical calculations.
-
-DuckDB and Parquet are responsible for historical data retrieval.
-
-Do not ask the LLM to calculate financial statistics from memory or fabricate historical observations.
-
-### Analytical capabilities
-
-Support open-ended questions involving:
-
-- Historical market-factor movements
-- Rolling business-day changes
-- Percentage and absolute changes
-- Basis-point and spread changes
-- Historical extremes
-- Empirical percentiles
-- Exceedance probabilities
-- Volatility calculations
-- Historical coverage
-- Comparisons between financial factors
-- Scenario shock calibration
-- Cross-factor relationships where suitable real observations exist
-- Historical stress periods
-- Follow-up analytical questions
-
-Use the correct financial conventions for FX, rates, spreads, equities, credit instruments, commodities, and other supported families.
-
-If the user's request is underspecified, the assistant should make reasonable analytical choices when appropriate, explain them, and ask only for genuinely necessary clarification.
-
-The application must be architecturally general across financial factors, rather than restricted to JPY/USD.
-
-## 4. Fix current application defects
-
-The existing screenshots reveal several issues that require investigation.
-
-### A. HTTP 500 errors
-
-The Chat interface displays a dataset catalogue request failure.
-
-The Import & Validate interface also reports HTTP 500.
-
-Investigate:
-
-- FastAPI route registration
-- React API client requests
-- Vite proxy configuration
-- Request and response schema consistency
-- Database initialization
-- DuckDB connection lifecycle
-- Data-file paths
-- JSON serialization
-- Unhandled backend exceptions
-
-Fix the actual underlying causes.
-
-Verify the affected endpoints through the running application.
-
-### B. Missing dataset catalogue
-
-The Chat interface currently reports no available local datasets despite the existing historical dataset.
-
-Ensure that registered datasets are discovered and displayed consistently in:
-
-- Chat
-- Market Data Explorer
-- Shock Calibration
-- Import & Validate
-- Data Pipeline
-
-All pages should use the same authoritative dataset catalogue.
-
-### C. Market-factor search
-
-The Market Data Explorer sometimes returns zero results.
-
-Inspect factor-search queries, identifier normalization, catalogue loading, and frontend filtering.
-
-Ensure users can search the Scenario Manager factor universe separately from locally available historical datasets.
-
-Display both the factor's metadata status and whether historical observations are available.
-
-### D. Undefined mappings
-
-The Data & Mapping Studio currently displays undefined entries.
-
-Investigate the mapping-registry records and frontend/backend field contracts.
-
-Repair parsing and rendering where the underlying data exists.
-
-Where an actual mapping is unresolved, display a meaningful status such as **Unmapped**, **Candidate**, or **Pending validation**, rather than a broken undefined value.
-
-Never create fabricated HDS mappings to populate the interface.
-
-### E. Quantitative unit and formatting inconsistencies
-
-The Overview and Shock Calibration screens display potentially inconsistent values, including a 538.40% figure and a 5.384 spread-change result.
-
-Trace the calculation and presentation logic.
-
-Verify whether the values represent:
-
-- Percentage changes
-- Decimal returns
-- Absolute changes
-- Basis points
-- Spread-level movements
-- Inverse FX quotations
-
-Keep numerical value, calculation method, unit, and display formatting explicitly separate.
-
-Do not automatically append a percentage symbol to an absolute movement.
-
-Apply the correct display convention to each financial factor.
-
-Cross-check the frontend results against the Python quantitative engine.
-
-### F. Scenario Manager mapping
-
-Repair any broken retrieval or display of workbook factor metadata.
-
-Use the existing Scenario Manager factor inventory and mapping records.
-
-Clearly differentiate workbook factor identifiers, HDS market-factor identifiers, proposed matches, and validated relationships.
-
-Do not require an authoritative mapping simply to explore an available HDS series. However, do not silently equate different instruments or promote an unverified relationship.
-
-## 5. Complete the conversational analytical frontend
-
-Use the existing visual design as the foundation.
-
-Improve the current three-column workspace.
-
-### Left panel
-
-- Conversation history
-- Market-factor search
-- Historical dataset catalogue
-- Factor-family filtering
-- Data availability
-- Import & Validate navigation
-
-### Center panel
-
-- Functional enterprise LLM chat
-- Multi-turn context
-- Natural-language analytical requests
-- Streaming where supported
-- Tool execution status
-- Structured quantitative explanations
-- Suggested follow-up questions
-- Clear error and loading states
-
-### Right panel
-
-Dynamically display analytical results returned by the actual calculation engine:
-
-- Historical time-series charts
-- Rolling-movement charts
-- Distribution charts
-- Historical percentiles
-- Extreme-movement dates
-- Factor metadata
-- Calculation assumptions
-- Dataset coverage
-
-The analytical view should respond to the active conversation rather than remain a static placeholder.
-
-Keep the interface professional, readable, and uncluttered.
-
-## 6. Complete historical data ingestion and discovery
-
-Reuse the existing Olympus HDS extraction and local import architecture.
-
-The objective is to expand historical coverage across the Scenario Manager risk-factor universe.
-
-Continue investigating additional market-factor families, including:
-
-- FX
-- Interest rates
-- Credit spreads
-- Equities
-- Commodities
-- Volatility
-- Basis and derived risk factors
-
-For Olympus extraction:
-
-- Use the established authorized connection and supported query route.
-- Prefer exact HDS factor identifiers.
-- Use appropriate snapshot/as-of filtering.
-- Limit query scope and select only required columns.
-- Extract historical observations in bounded date batches where useful and permitted.
-- Save completed batches immediately.
-- Support checkpoint-based continuation.
-- Avoid repeating previously completed downloads.
-- Respect Olympus query quotas and stop when an enforced limit is reached.
-
-Splitting historical data into batches is intended to reduce query size and preserve progress, not circumvent quota limits.
-
-For existing CSV/Parquet files:
-
-- Inspect and map schemas.
-- Validate financial identifiers and observation granularity.
-- Check duplicates, missing dates, frequency, units, and invalid values.
-- Preserve source metadata.
-- Store raw and normalized Parquet.
-- Register valid datasets in DuckDB.
-- Make imported data immediately discoverable by the chatbot and analytical tools.
-
-Do not make the availability of every financial factor a prerequisite for implementing generic analytical functionality.
-
-## 7. Implement genuine LLM tool calling
-
-Inspect the existing Shock Calibration analytical tools and the tool-calling design in CCR Correlation Rebuild.
-
-Reuse compatible function-calling patterns.
-
-Expose analytical capabilities through well-defined tools, such as:
-
-- List available datasets
-- Search financial factors
-- Retrieve factor definitions
-- Inspect historical coverage
-- Retrieve time-series observations
-- Calculate rolling movements
-- Calculate empirical percentiles
-- Find historical extremes
-- Compare historical factors
-- Run supported shock-calibration calculations
-- Retrieve dataset provenance
-
-Use the current project's actual function names and interfaces wherever practical.
-
-Allow the LLM to select and combine tools dynamically.
-
-Keep numerical processing deterministic and return structured results suitable for both the chatbot and charts.
-
-Tool errors should be returned in a form that allows the conversation to continue.
-
-## 8. Execute end-to-end integration tests
-
-Start the full application.
-
-Confirm that React, FastAPI, DuckDB, the quantitative engine, and the internal LLM gateway communicate correctly.
-
-Execute real model requests through the reused CCR gateway.
-
-Test the following workflows:
-
-**Test A — LLM connectivity**
-
-Send a real prompt through the gateway and confirm that the selected model returns a response.
-
-Record the active model and actual request status.
-
-**Test B — Token refresh**
-
-Verify the existing refresh mechanism using an appropriate test or controlled expiry simulation.
-
-Confirm that a valid refresh permits the workflow to continue without exposing credentials.
-
-**Test C — Quantitative tool calling**
-
-Ask a natural-language question requiring historical calculations.
-
-Confirm that the LLM invokes the relevant Python analytical tool.
-
-Verify the returned results against an independently calculated reference.
-
-**Test D — Multi-turn reasoning**
-
-Ask a question, then follow up by changing the historical period, percentile, or observation window.
-
-Verify that conversation context is preserved and the relevant calculation is rerun.
-
-**Test E — Visual analytical response**
-
-Verify that a successful analytical response updates the right-side charts and statistical panels.
-
-**Test F — Dataset discovery and import**
-
-Import a valid historical file and confirm that it becomes available through the dataset catalogue and calculation engine.
-
-**Test G — Multi-asset extensibility**
-
-Verify that the generic analytical workflow operates with different financial movement methods and dataset schemas, using real historical observations wherever available.
-
-Clearly identify any tests using synthetic fixtures.
-
-**Test H — Existing UI regressions**
-
-Verify that the HTTP 500 errors, undefined mappings, catalogue inconsistencies, and quantitative formatting defects have been resolved.
-
-Do not claim that an integration works merely because the application compiles or the API health endpoint responds.
-
-## 9. Performance and development approach
-
-Keep the implementation efficient.
-
-- Reuse working CCR gateway components.
-- Reuse Shock Calibration's existing Python calculation engine.
-- Query DuckDB locally for analytical operations.
-- Avoid submitting entire historical datasets to the LLM.
-- Return concise numerical results and chart-ready data from tools.
-- Preserve conversation context efficiently.
-- Track actual LLM token consumption when supported.
-- Avoid unnecessary model calls for deterministic operations.
-- Avoid repeated historical extraction.
-- Fix errors as they arise.
-
-Perform normal tests throughout development without pausing for repeated architectural reviews.
-
-Do not create unrelated frameworks, duplicate services, or speculative infrastructure.
-
-## 10. Completion criteria
-
-The task is complete when:
-
-1. Shock Calibration Studio starts successfully.
-2. The existing CCR enterprise LLM gateway has been reused and connected.
-3. Authentication and token refresh work through the supported mechanism.
-4. Model selection and compatible settings are available.
-5. Token usage is reported accurately when provided by the gateway.
-6. The chatbot performs real model inference.
-7. The LLM dynamically invokes quantitative Python tools.
-8. Financial calculations use actual locally stored historical data.
-9. Chat responses generate interactive analytical results.
-10. Dataset catalogue, mapping, and import pages function correctly.
-11. The previously identified HTTP 500 and formatting issues are resolved.
-12. Tests verify the complete user-to-model-to-calculation-to-frontend flow.
-
-If an external dependency is genuinely unavailable, finish all independent implementation work, report the exact blocker, and distinguish tested functionality from unverified functionality.
-
-Do not declare success when the UI merely renders, when a model responds without tool execution, or when a calculation succeeds without returning results to the user.
-
-## Final reporting
-
-Provide a concise completion report containing:
-
-- Working local application URL
-- Reused CCR LLM modules
-- Active model and available model options
-- Authentication and token-refresh status
-- Token-usage reporting status
-- Function-calling status
-- Quantitative engine integration
-- Data catalogue and ingestion status
-- Tests passed or failed
-- Remaining issues, if any
-
-**Begin execution immediately. Inspect the source LLM gateway, implement the integration, correct existing defects, run the application, and verify actual functionality.**
+Copilot master execution prompt — Shock Calibration Studio
+Work in the existing application, not a new prototype.
+- Project: C:\Users\ak54743\Downloads\Shock Calibration
+- Reference enterprise LLM integration: C:\Users\ak54743\Downloads\Param\CCR Correlation Rebuild
+- Inspect the user's Olympus client notebook (the screenshot shows a name resembling olympus_client_risk_v6.ipynb; locate the actual file and confirm the name) and the original Scenario Manager workbook before coding.
+Mission and non-negotiables
+Deliver a working, auditable, multi-asset historical scenario-shock research platform, not a JPY/USD demonstration or a UI with thousands of unresolved factors. The authoritative numeric layer is deterministic Python over authenticated, traceable historical observations. Claude Opus is a separate quantitative reviewer, not a substitute for numerical code. The LLM may select tools, propose research, inspect assumptions, audit independently calculated outputs, and write objective explanations. Do not manufacture mappings, histories, charts, validation results, approval states, or confidence scores. Do not bypass actual enterprise data-access controls. Do not stop after generating code: run and test the end-to-end workflows.
+1. Establish the factual baseline before edits
+Inventory the actual repository: Python calculation functions and FastAPI endpoints; React routes, tool contracts and chart components; DuckDB tables, Parquet files, original/raw data files, registry, stored scenarios, mappings; available notebooks; API gateway providers and model names. Run existing tests and record failures. Trace one full question from chat through model/tool dispatch, HDS resolution, query, calculation, visualization, and final response. Build a concise gap matrix with observed behavior, code location, root cause, fix, verification. Preserve working parts.
+
+The prior UI screenshots showed approximately 4,347 registry factors, 4,184 unmapped, 162 derived relationships, 1 direct HDS mapping and a single JPY/USD spot extract. Treat these as historical screenshot observations, not current verified totals; recalculate them from the system. Specifically investigate HTTP 500s, empty catalogues, undefined mappings, formatting glitches, misleading counts, and charts below the chat response.
+2. Verify Olympus HDS extraction from the real notebook
+Inspect the actual Olympus notebook, connection setup, query examples, client APIs, required identifiers, request parameters, frequency, schema, permissible data scope, sample requests, authentication approach, paging, and rate/query limits. Reuse proven notebook functions and patterns rather than guessing Olympus API contracts or inventing URLs. Verify that HDS ID 2107899 / FXSP.JPY.USD genuinely corresponds to the claimed source and quote orientation. Document the evidence. Never expose tokens or credentials in logs, UI or exports.
+
+Build a reusable, resumable acquisition pipeline: discover authorized series → resolve factor identifiers → fetch bounded batches respecting limits → persist immutable raw extracts and source metadata → validate and normalize → partition Parquet → catalogue in DuckDB → publish to analytical tools. Include checkpoint/retry/backoff, incremental refresh, deduplication, reproducible manifests, provenance and detailed extraction outcomes. Never claim the full HDS universe has been downloaded merely because a sample query succeeded.
+
+Validate timestamp/time zone, trading calendar, frequency, unit, quote direction, tenor, currency, factor family, source identifier, observation count, coverage, gaps, duplicate dates, missing values, nonfinite values, suspicious zero/negative values, stale runs, outliers and implausible jumps. Preserve original measurements and flag anomalies; do not silently winsorize, interpolate, forward-fill, invert, or rescale. Compare raw Olympus values against stored Parquet/DuckDB and displayed charts; log counts, checksums and transformation steps. Distinguish missing from legitimately non-trading days. Make bad records inspectable and quarantine only when necessary.
+3. Expand meaningful multi-asset historical coverage
+The objective is the authorized Olympus HDS factor universe relevant to the Scenario Manager workbook, not the JPY/USD pair. Inventory all workbook risk-factor families, identifiers, tenors and units. Search HDS metadata for candidates, then prioritize verified coverage across: FX spot and volatility, rates/yield curves, credit spreads/CDS, bond futures basis and any additional actual workbook families (equity, commodities, inflation, etc.) supported by authorized HDS data. Discover first; do not assume all these classes are accessible.
+
+For each candidate, report exact workbook factor, HDS ID/ticker, semantic type, source metadata, field, unit, quote/curve/tenor conventions, mapping evidence, historical interval, observation count and quality result. Fetch in small bounded batches and continue progressively across families. Produce coverage dashboards showing total workbook factors, confirmed direct mappings, supported derived factors, candidate mappings requiring evidence, no HDS match, downloaded usable histories, unavailable or inaccessible data, and per-family progress. Make partial coverage usable without pretending it is complete.
+4. Repair mapping rigorously—not cosmetically
+Inspect the existing 4,347-factor reference registry and factor names from the workbook. Replace simplistic identifier matching with controlled rules using risk-factor family, instrument semantics, quoted currencies, direction, field, tenor, unit, curve/basis construction, and vendor metadata. Distinguish direct HDS mapping from a documented mathematical derivation (where all underlying series are available). Keep evidence and provenance per relationship. Provide reviewable suggested mappings; allow confirmation inside the tool for exploratory mapping when permissions permit, without calling that formal enterprise approval. Automate safe mappings when evidence is unambiguous; do not hallucinate a match or claim a mapping is validated just to increase percentages.
+
+fxvg.JPY.USD is an FX-volatility risk factor, not the FXSP.JPY.USD spot series. Never run spot returns as volatility-point changes. Find the actual historical implied volatility series, tenor and quote convention; if it is genuinely absent, show the exact unresolved dependency and search result—not repeated generic unsupported messages. Similarly, investigate Bond Futures Basis (bfdl.*) via authentic basis observations or a fully documented, verified construction. Compare workbook shifts and repeated-tenor values without assuming these were independently calibrated.
+5. Identify and validate the true quantitative methodology
+Inspect every Python numeric function and trace the methodology's origin: Victor's documented request, workbook conventions, an existing internal standard, or a Copilot/developer proposal. Do not attribute invented formulas to Victor. Make the factor-specific mathematical decision explicit: absolute differences, percentage/log movements, FX appreciation versus depreciation and inverse quotes, basis-point changes, volatility-point changes, rates/curve changes, rolling horizon definitions, overlapping windows, empirical quantiles, tail exceedance, shocks and workbook comparison. Avoid an unexplained generic menu of movement types; infer compatible choices from factor semantics and allow advanced override with warnings.
+
+Check mathematically and financially: definition of horizon (N observations vs N calendar/business days), missing/irregular dates, as-of conventions, data frequency, percentage scale, units, sign conventions, negative/near-zero level handling, quantile interpolation and tails, number of observations, percentile confidence/limitations, and use of historical stress observations. Explicitly investigate implausible results such as a previously displayed 538.40% movement. Do not hide suspect results; correct calculation/labeling errors or explain verified extreme observations.
+
+The deterministic Python engine is the single source of truth. Separate factor-family calculation functions and register them with explicit input/output schemas, units, parameter defaults, versioned methodology IDs and tests. Derive each chart from the exact same result object, not a separate LLM-generated number. Use independently checked numerical reference examples and property-based/edge-case tests.
+6. Produce a rigorous LaTeX methodology and exportable PDF
+Generate a complete, professionally typeset .tex document and compile a PDF in a reproducible build. This must describe the actual implemented algorithms, not generic theory: each formula, symbols, units, conventions, assumptions, sampling, source data, Python function and location, version, worked numerical example, validation case, limitations, and methodology provenance. Include factor-specific sections for every implemented family. Export downloadable .tex and PDF, plus a per-result View methodology action opening the relevant rendered LaTeX equations, input dataset metadata and code/function version. If the PDF toolchain is absent, add a reproducible documented installation/build workflow and do not falsely claim that the PDF compiled.
+7. Implement two genuinely independent quantitative passes
+Pass A: deterministic production engine. Query validated observations from DuckDB and calculate results in Python. Return immutable typed evidence: factor ID, HDS IDs, field, units, date range, time series or sample hash, horizon, quantile convention, methodology ID/version, inputs, statistics, chart data, outputs, warnings and source references.
+
+Pass B: Claude Opus quantitative auditor. Reuse the enterprise gateway integration from the reference project; discover the real approved model identifier and request schema and verify live connectivity. Pass Opus the original question, semantic metadata, calculation specification, data manifest and sufficient authorized observations or reproducible aggregates. Opus must independently critique the method and call a separate deterministic verification implementation rather than produce numerical quantiles by freehand language-model reasoning. The verifier must be algorithmically independent where feasible (e.g. independent numpy/pandas/scipy calculation or separate implementation, not the same production function called twice). Check normalization, percentiles, tails, horizon, signs, source alignment and units. Expose actual tool invocation trace (without credentials) and evidence of Opus participation. Do not claim that two LLM text answers constitute independent numerical verification.
+
+Compare results using absolute deviation in the native unit and relative deviation where meaningful. Define measure-specific, documented tolerances (and handle reference results near zero without undefined ratios). Example: production p99 = 4.87%, independent p99 = 4.87%, absolute difference = 0.00 percentage points, relative difference = 0.0% only when genuinely computed. For mismatches, show both values, methods, affected assumptions, diagnostic evidence and status investigate; re-run after resolving the mismatch, never let Opus silently overwrite Python numbers. An Opus agreement is analytical review, not proof that underlying HDS data or methodology is correct.
+Required Opus reviewer instruction (implement as a version-controlled system prompt)
+You are an independent senior quantitative risk-methodology reviewer of Shock Calibration Studio. Treat the Python production result as a hypothesis to audit, not a statement to paraphrase. Inspect the source factor definition, workbook shock conventions, historical-data manifest, timestamps, units, currency direction, tenors, sample sizes, missing-data rules, transformation formula, sampling window, empirical percentile method and chart correspondence. Identify any methodological ambiguity or unsupported assumption. Invoke the independent deterministic verification tool to reproduce every material statistic; never invent a percentile or trust a mental-arithmetic estimate as an official second result. Compare the independently computed and production results using the declared absolute/relative tolerances, with correct native financial units. If consistent, explicitly state what was independently reproduced and what was not. If inconsistent, provide a concise discrepancy report with plausible causes and the next executable diagnostic step; do not replace the production output with fabricated or silently corrected values. Write a factual, neutral quantitative research interpretation, using clear sections, tables only when helpful, rendered mathematics when material, and concise limitations. Do not expose irrelevant engineering metadata or excessive self-referential cautionary text. Return structured, schema-valid fields for review_status, checked_metrics, deviations, methodology_findings, data_quality_findings, user_explanation, and recommended_actions.
+
+Add input/output schema checks, timeouts, explicit unavailable-model fallback to deterministic output with independent review not run, and hard validation that Opus cannot mutate canonical numeric values. Prioritize quality and correctness over arbitrary token minimization.
+8. Rework chat into professional research output with immediate charts
+For each numeric question, render in the same result panel: risk factor and question; prominent numeric result with correct units; relevant interactive chart beside/immediately under the answer; sample period/observation count; concise methodology; Python and Opus verification status plus actual deviations; limitations only when material; actions to inspect observations, change parameters, and export data, chart and LaTeX PDF. Support historical line charts, rolling movements, histograms, empirical CDF/tails, percentile markers, multi-factor comparison, and workbook scenario shock overlaid on its historical distribution. Never use fictitious plots. Follow-up queries must preserve factor context and change only specified dimensions. All numbers in text, chart and export must derive from one versioned calculation result.
+
+Avoid repetitive AI-style markdown, overlong caveats, raw tool dumps and verbose approval banners. Use concise institutional quantitative-research language. Display important warnings once with clear corrective steps. Show structured tables/labels where useful, not pages of arbitrary bullets.
+9. Clarify product navigation and remove misleading labels
+Overview must not feature LIVE FIXTURE — 2107899 — FXSP.JPY.USD as though this single sample is the platform. Remove software-testing language from user-facing UI. Feature portfolio-level HDS coverage, successfully loaded datasets, data freshness and analysis readiness; show JPY/USD only as one example if confirmed. Distinguish raw dataset count from mapped factors and analytically usable factors. Verify historic claim of ~5,175 JPY/USD observations rather than trusting display.
+
+Simplify Import & Validate and Data Pipeline into a coherent Data Sources & Quality workflow with discover/connect, ingest, validate, review history and refresh actions, preserving advanced operations if useful. Show what each action does and its actual result. Keep Data & Mapping Studio as an evidence-backed searchable factor registry. Scenario Manager must show workbook baseline shift, unit, methodology, calculated candidate shift and difference, with preview/export; never automatically overwrite the authoritative workbook or mislabel an exploratory result as enterprise-approved. Replace blanket provisional methodology, approval required, unsupported, pending validation language with precise statuses reflecting real facts. Do not remove actual required access/security approvals or erase genuinely unresolved mappings.
+10. Correct the shock-calibration controls
+Investigate why the UI offers FX appreciation, FX depreciation, percentage change, absolute change, basis-point change and spread change for every factor, and whether Victor ever requested those options. Choose factor-appropriate methods automatically and expose others only if semantically valid. Explain target exceedance and how it maps to percentile/tail probability; if not implemented, either implement correctly with tests and a definition, or remove the inert control. Check input constraints and empty/error states. Do not imply a percentile by arbitrary UI default is a formally approved scenario calibration.
+11. Tests and end-to-end acceptance
+Run backend/frontend tests and browser checks; fix 500s, undefined mappings, catalogue failures and chart errors. Add unit tests for FX inverse quote direction, returns and movement signs, absolute/basis-point/vol-point units, empirical percentile interpolation, overlap, missing observations, outliers, duplicate timestamps, incorrect factor mappings, zero denominator, invalid tenors, and reproducibility. Compare raw Olympus extract → Parquet → DuckDB → Python → API → React → PDF with hashes/counts/value spot checks. Benchmark large registry pages and acquisition without blocking chat. Verify Opus independently calls the reviewer tool and that a deliberately introduced mismatch is correctly identified.
+
+Execute demonstrable, real-data vertical slices for at least (a) JPY/USD spot and (b) one additional verified non-FX family if Olympus access actually permits it; add FX volatility and bond-futures basis next when real series/construction is available. For every tested family show valid source data, dates, mapping evidence, deterministic result, independent reproduction, quantitative deviation, interactive chart, methodology PDF and workbook comparison where compatible. Never simulate success or invent an accessible HDS ID when access is denied.
+12. Deliverables and execution order
+Implement in this order: (1) repo/notebook/workbook audit and blocking bug fixes; (2) HDS provenance and quality pipeline; (3) large-scale factor-family discovery/mapping and wider usable historical coverage; (4) audited deterministic methods; (5) independent Opus reviewer; (6) chart/chat integration and practical UI cleanup; (7) LaTeX/PDF exports; (8) end-to-end real-data tests and reporting. Parallelize safely where independent.
+
+Return a final engineering report with: actual files changed; discovered Olympus API/notebook source and confirmed query limits; pre/post coverage numbers by family; downloaded data ranges and quality results; mapping evidence and unresolved reasons; each methodology's provenance; Python-vs-independent verifier results and deviations; proof of Opus invocation; screenshots/URLs of working charts where possible; LaTeX/PDF locations; tests run and outcomes; genuinely blocked tasks, including inaccessible sources. Do not report aspirational functionality as completed. Focus on a robust quantitative system, not an enlarged dashboard.
