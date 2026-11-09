@@ -1,162 +1,125 @@
-# SHOCK CALIBRATION STUDIO — BUILD THE WORKING FOUNDATION
+# SHOCK CALIBRATION STUDIO — STOP EXPANSION AND AUDIT IMPLEMENTATION
 
-Act as Principal Quantitative Developer, Data Platform Engineer and Senior Full-Stack Architect.
+You are currently implementing Shock Calibration Studio.
 
-The Scenario Manager and HDS mapping investigation is complete for the current evidence set. We have one real historical JPY/USD extraction, 4,347 workbook factors, and an evidence-based mapping registry.
+Before continuing, stop creating new features and conduct an implementation integrity review.
 
-**Stop generating additional feasibility reports. Begin implementing a working, testable application foundation.**
+This is NOT a request to redesign, restart, or abandon the application.
 
-## Mission
+## 1. Scope verification
 
-Build a local, read-only historical shock calibration application that uses existing extracted HDS data and the Scenario Manager workbook.
+Review all current file modifications.
 
-The architecture must support adding further validated market factors without redesigning the application.
+There are approximately 55 changed files.
 
-### Stage 1 — Audit existing artifacts
+Classify each into:
 
-Locate and validate the existing:
+- Necessary backend implementation
+- Necessary frontend implementation
+- Tests and configuration
+- Data ingestion and mapping
+- Existing investigation artifacts
+- Unrelated files that should remain unchanged
 
-- JPY/USD Parquet dataset.
-- Historical extraction manifest.
-- Calibration statistics.
-- Scenario factor master.
-- HDS mapping registry.
-- Data-quality findings.
-- Existing backend and frontend components, if any.
+Identify unintended changes. Do not discard or overwrite existing user work.
 
-Reuse established working code.
+Keep the Shock Calibration Studio application isolated in its own project directory.
 
-Do not rerun the completed HDS extraction.
+## 2. Verify actual data integration
 
-Do not modify unrelated projects, notebooks or the original macro-enabled workbook.
+Locate the previously downloaded JPY/USD HDS dataset containing 5,175 observations.
 
-### Stage 2 — Implement data storage
+Confirm that:
 
-Create a DuckDB analytical layer on approved local storage.
+- The application loads the real Parquet data.
+- DuckDB or the approved storage layer actually queries those observations.
+- Calculations are performed dynamically by Python.
+- The reported percentile results can be reproduced.
+- Dataset lineage includes HDS factor 2107899, run 9518 and the source snapshot.
+- The frontend does not display hardcoded calibration results as though they were live calculations.
+- The mapping registry distinguishes HDS-evidenced candidates from business-approved mappings.
 
-Implement versioned tables or views for:
+Do not download the same data again.
 
-- Historical market-factor observations.
-- Factor metadata.
-- Scenario Manager factor inventory.
-- Mapping registry.
-- Calibration methodology.
-- Calculation runs and results.
-- Source and data-quality lineage.
+## 3. Review architecture consistency
 
-Ensure no data silently changes between snapshots.
+Verify the complete workflow:
 
-### Stage 3 — Implement calibration functions
+Scenario Manager Excel
+→ Risk-factor inventory
+→ Mapping registry
+→ HDS historical dataset
+→ DuckDB
+→ Python calculation engine
+→ FastAPI
+→ React interface
 
-Develop deterministic, unit-tested Python functions for:
+Every integration must either work or be explicitly marked incomplete.
 
-1. Retrieval of historical levels.
-2. Rolling business-day market movements.
-3. FX appreciation and depreciation.
-4. Absolute rate and basis-point changes.
-5. Empirical percentile ranks.
-6. Historical quantiles.
-7. Historical extrema.
-8. Missing-data and duplicate checks.
-9. Comparison with existing scenario shifts.
+## 4. Verify implementation quality
 
-Implement JPY/USD first, using the existing actual HDS extraction.
+Run applicable tests for:
 
-Treat its quotation convention and official business-day calendar as provisional until validated.
+- Data loading
+- Mapping lookup
+- FX rolling-window calculations
+- Percentile computation
+- API responses
+- Frontend-to-backend communication
+- Unsupported factor handling
+- Data lineage
+- Excel factor search
 
-Unimplemented or unvalidated factor families must return clear unsupported-status responses, not invented results.
+Report actual test outcomes.
 
-### Stage 4 — Implement FastAPI
+Do not declare the application working because files were created.
 
-Create read-only endpoints for:
+## 5. Permission and security review
 
-- Factor search.
-- Factor details and mapping evidence.
-- Historical observations.
-- Calibration calculations.
-- Historical percentile tables.
-- Historical extreme movements.
-- Scenario comparison.
-- Data-quality and freshness information.
+Before asking permission for a PowerShell command or frontend page-read operation, report:
 
-Validate all inputs.
+- Exact command
+- Purpose
+- URL, host or file being accessed
+- Whether the operation is read-only
+- Whether confidential data or credentials could be exposed
 
-Never expose unrestricted SQL execution to the chatbot.
+For an approved local smoke test, use only the intended loopback application URL.
 
-### Stage 5 — Build a working analytical interface
+Do not query Olympus during this audit or use credentials in frontend code.
 
-Build a modern React interface named **Shock Calibration Studio**.
+## 6. Stop unnecessary expansion
 
-Include these sections:
+Do not:
 
-**Chat:** Natural-language quantitative questions and sourced answers.
+- Create additional generic architecture documents.
+- Add unrelated libraries.
+- Modify unrelated notebooks.
+- Build features unsupported by available data.
+- Simulate unresolved HDS mappings as confirmed.
+- Replace the original Excel workbook.
+- Expand into production hosting or enterprise authentication prematurely.
 
-**Market Data Explorer:** Factor search, history, coverage, available dates and source details.
+## 7. Return a concise implementation audit
 
-**Shock Calibration:** Rolling-window settings, percentiles, histograms, historical extrema and methodology.
+Provide:
 
-**Scenario Manager:** Workbook risk factors, existing shifts, proposed historical evidence and mapping status.
+A. Files created and modified.
 
-**Data & Mapping Studio:** HDS-to-Excel mapping registry, candidate evidence, derived dependencies and unresolved factors.
+B. Features actually implemented.
 
-**Data Pipeline:** Extraction manifests, dataset versions, validation status and freshness.
+C. Features tested successfully.
 
-Use a clean analytical workspace with distinct pages. Avoid a densely packed newsletter-style interface.
+D. Actual JPY/USD data integration status.
 
-### Stage 6 — Enterprise LLM integration
+E. Frontend and API connectivity status.
 
-Define controlled calculation tools for an approved enterprise LLM.
+F. Problems and regressions.
 
-The LLM must translate questions to validated parameters and call the quantitative API.
+G. Unintended file changes.
 
-The LLM must not calculate financial results itself, invent unsupported mappings or execute arbitrary SQL.
+H. Exact next three implementation actions.
 
-If the approved LLM endpoint is unavailable, the deterministic UI and API must still function. Provide a clearly identified demonstration query parser for the existing JPY/USD use cases without presenting it as a live LLM.
+Then continue only with the minimum changes necessary to make the existing JPY/USD calibration workflow operate end to end.
 
-### Stage 7 — Testing
-
-Implement tests for:
-
-- JPY/USD calculation reproducibility.
-- Quote inversion and sign handling.
-- Percentile calculations.
-- Historical date gaps.
-- Mapping status.
-- Unsupported factors.
-- API validation.
-- Dataset lineage.
-- Excel comparison.
-- Frontend integration.
-
-Use existing verified results as regression fixtures.
-
-### Stage 8 — Actual execution
-
-This is an implementation task.
-
-Create the required project structure, code and tests.
-
-Run the backend and frontend where supported.
-
-Test the existing JPY/USD analytical workflow end to end.
-
-Do not claim functionality works without executing relevant tests.
-
-Do not query Olympus or transfer proprietary data outside the approved environment.
-
-### Required final output
-
-Return:
-
-1. Implemented files and components.
-2. Working application features.
-3. Tests executed and results.
-4. How to start the backend and frontend.
-5. Actual JPY/USD end-to-end demonstration.
-6. Functionality that remains blocked or provisional.
-7. Exact steps for adding the next validated HDS factor.
-8. Remaining security and deployment approvals.
-
-**Success criterion:** A working local analytical application that loads the existing JPY/USD data, performs reproducible shock calibration, displays the results and supports future HDS factors through a versioned mapping and ingestion framework.
-
-Begin implementation. Do not stop after planning.
+**Success criterion: A verified, working application using real downloaded HDS observations, not simply a large amount of generated code.**
