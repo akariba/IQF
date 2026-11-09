@@ -1,13 +1,174 @@
-Investigate why the Olympus extraction returns 100, 296 and 500 rows but blocks requests for 1,000.
+# Shock Calibration Studio — Correct the Analytical Architecture and User Experience
 
-Identify the exact source of the restriction: application configuration, extraction code, query-level limits, or an actual Olympus/HIVE response. Show the complete error and the relevant code.
+The current application is failing its core objective despite having working technical components.
 
-Do not impose an arbitrary 500-row limit on historical dataset coverage.
+**This is a corrective implementation task. Do not add another coverage dashboard or produce another architecture report.**
 
-If 500 is the maximum permitted per request, implement supported pagination or bounded historical date batches, with checkpointing, deduplication and complete date-range validation, while respecting aggregate query quotas and service restrictions.
+Preserve the existing authorized Olympus extraction, DuckDB/Parquet storage, deterministic Python engine, enterprise LLM integration and validated source artifacts.
 
-Our objective is to retrieve the full accessible historical period for each factor, not just the first 500 observations.
+## 1. Fix the fundamental chatbot failure
 
-Verify the actual oldest and newest dates, total observations, source frequency and missing periods after extraction.
+The current chatbot incorrectly treats Scenario Manager mapping as a prerequisite for HDS historical calculations.
 
-Do not bypass enforced limits. Fix any unnecessary application-side restriction and confirm whether historical coverage can be completed through the authorized extraction mechanism.
+Evidence: the local dataset catalogue contains a HUF interest-rate swap series with a 120M tenor and 296 historical observations, yet the chatbot refuses the user's 99th percentile question because it cannot find the equivalent workbook factor.
+
+Trace the exact failure through LLM intent interpretation, factor search, dataset resolution, tool selection and quant API calls.
+
+Implement two distinct workflows:
+
+**Historical Research Mode**
+
+Natural-language question → Resolve available HDS series → Retrieve actual historical observations → Select instrument-appropriate mathematical method → Execute Python calculation → Present numerical answer and charts.
+
+No Scenario Manager mapping is required to analyze an independently identified historical series.
+
+**Scenario Comparison Mode**
+
+Resolve a Scenario Manager workbook factor → Establish its evidence-backed HDS mapping → Calculate the historical shock → Compare against the existing workbook shift.
+
+Missing workbook mappings should affect only the scenario comparison, not the ability to perform unrelated HDS research.
+
+The user should not have to select these modes manually when intent is clear.
+
+## 2. Repair financial factor discovery
+
+Create one authoritative search service spanning:
+
+- Registered HDS historical datasets
+- HDS metadata and identifiers
+- Scenario Manager workbook factors
+- Evidence-backed factor mappings
+
+Do not conflate the existence of an HDS series with the existence of a workbook mapping.
+
+Search by financial name, instrument, currency, tenor, ticker, factor code and HDS identifier.
+
+Rank exact matches first. Use LLM-assisted interpretation only where useful.
+
+Clearly distinguish a locally available 120M HUF swap series from a potentially unrelated workbook curve.
+
+If the requested series is available, the chatbot must not claim that historical data is unavailable solely because a workbook mapping does not exist.
+
+## 3. Rebuild the analytical chat experience
+
+Make the chatbot the primary experience, not a technical evidence viewer.
+
+A successful quantitative question must produce:
+
+**Finding:** Direct numerical result, units, percentile and historical horizon.
+
+**Historical evidence:** Dataset name, date coverage, observation count and actual sampling frequency.
+
+**Interactive chart:** Relevant time series, rolling movements, distribution or percentile visualization.
+
+**Methodology:** Mathematical formula, conventions and a link to the LaTeX methodology PDF.
+
+**Verification:** Independent calculation comparison, and Opus quantitative review when available.
+
+**Limitations:** Only material qualifications, stated concisely.
+
+Avoid raw JSON, internal tool names, repetitive approval messages, excessive Markdown emphasis and long AI-style disclaimers.
+
+Display interactive charts directly alongside the relevant response. Do not render a duplicate wall of chat text under “No chartable result.”
+
+Preserve conversation context and meaningful follow-up questions.
+
+Improve token efficiency without sacrificing financial accuracy.
+
+## 4. Correct mathematical behavior
+
+Perform a detailed audit of factor-specific methods.
+
+Separate:
+
+- Daily observations from monthly observations
+- Consecutive valid observations from business-day horizons
+- Absolute changes from relative returns
+- FX spot movements from volatility-point changes
+- Interest-rate and spread shifts from percentage returns
+- Calibration results from existing workbook scenario shifts
+
+Use the correct financial units and sampling method.
+
+Do not automatically apply a percentage-change methodology to an interest-rate swap simply because it was the first available calculation function.
+
+Select appropriate methods from verified metadata, with user overrides where reasonable.
+
+Where a mathematical convention cannot be established, ask a concise clarification or report precisely which parameter is missing.
+
+## 5. Replace the Mapping Studio workflow
+
+Stop presenting an enormous alphabetical register of unmapped factors as the primary interface.
+
+Organize by financial risk family and provide:
+
+- Searchable workbook factor catalogue
+- Available HDS historical sources
+- Exact and candidate mapping matches
+- Financial compatibility checks
+- Source metadata and evidence
+- Actual mapping coverage and progress
+- Clear actions to investigate unresolved factors
+
+Implement a repeatable candidate-discovery and validation process.
+
+Never invent HDS mappings or substitute financially incompatible series.
+
+Allow independent HDS research even when a workbook mapping remains unresolved.
+
+## 6. Redesign Shock Calibration and Scenario Manager
+
+The main calibration page should contain a searchable financial factor selector, analytical horizon, recommended movement method, calculation action and interactive results.
+
+The instrument should determine sensible default units and methodology.
+
+Move HDS IDs, internal flags and technical metadata into expandable details.
+
+The Scenario Manager page should focus on comparing calculated historical shocks with existing Excel shock values.
+
+Keep official workbook updates separate from exploratory research.
+
+Remove unnecessary internal approval gates from read-only analysis while retaining accurate data-quality information.
+
+## 7. Simplify data management
+
+Consolidate overlapping technical ingestion and pipeline screens into a clear Data Sources workspace.
+
+Show available datasets, financial categories, source frequency, actual coverage, missing periods, quality, and extraction status.
+
+Investigate the previous zero-row date-range result using the exact factor, source, timeseries date, snapshot and as-of filters.
+
+Do not interpret a zero-row result from one filtered query as evidence that no history exists.
+
+Continue expanding authorized HDS data coverage across financial risk families within actual access and quota limits.
+
+## 8. Prove the functionality end to end
+
+First reproduce the HUF 120M chatbot failure.
+
+Then fix it and execute the exact same user question against the locally available HUF historical dataset.
+
+Verify that the chatbot:
+
+1. Identifies the correct HUF historical series.
+2. Finds the registered local observations.
+3. Identifies the actual observation frequency and available period.
+4. Uses an appropriate interest-rate movement convention.
+5. Runs the deterministic Python calculation.
+6. Produces the requested percentile for a clearly stated horizon.
+7. Returns the numerical finding and an interactive chart.
+8. Performs independent numerical verification.
+9. Does not invent a Scenario Manager mapping.
+10. Explains the result professionally and concisely.
+
+Repeat comparable end-to-end tests for FX, equities and commodities using genuine registered datasets.
+
+Verify the enterprise LLM tool-calling path rather than relying only on backend unit tests.
+
+Complete the existing Opus review and LaTeX methodology integration where unfinished.
+
+**Acceptance criterion:** A quantitative analyst can open the application, ask a supported historical market-risk question and obtain a reproducible, charted, financially interpretable answer without having to understand HDS identifiers or mapping-registry internals.
+
+Implement and test this workflow first. Then apply the corrected interaction pattern consistently throughout the application.
+
+Do not conclude with a design proposal. Deliver actual working functionality and report the tests executed.
