@@ -1,331 +1,94 @@
-# HDS ↔ Scenario Manager — Comprehensive Data Discovery, Mapping and Calibration Feasibility Assessment
+## CONTINUE HDS–SCENARIO MANAGER INVESTIGATION — OFFLINE MAPPING FIRST
 
-## ROLE
+You have completed the initial workbook assessment.
 
-You are acting as:
+Your findings indicate:
+- 89 worksheets
+- 71 scenario data worksheets
+- 4,523 scenario inventory rows
+- 4,347 distinct risk factors
+- 62 hidden or very-hidden worksheets
+- 6,002 formula cells
+- 6 duplicated identifier groups
 
-- Principal Market Risk Data Engineer
-- Senior Quantitative Analyst specialising in historical shock calibration
-- HDS / Olympus Data Platform Specialist
-- Financial Data Integration Architect
-- Data Quality and Risk-Factor Mapping Specialist
+The HDS Python interface has returned `RATE_LIMIT_EXCEEDED_PER_DAY`.
 
-Your mission is to investigate the existing Citi HDS market-data environment and the supplied Scenario Manager Excel workbook, establish the correct relationships between their risk factors, and produce a technically validated findings report and implementation plan.
+**Do not retry Python HDS queries until the quota is officially available. Do not attempt to circumvent the quota or switch identities.**
 
-**This is an investigation and feasibility assessment, not a chatbot implementation task.**
+### Priority 1 — Analyze existing workbook metadata
 
-Do not modify production data, overwrite the workbook, implement an application or build an interface at this stage.
+Investigate all hidden and visible supporting worksheets using read-only parsing.
 
----
+Identify:
+- Risk-factor naming conventions
+- Identifier construction rules
+- Market benchmarks
+- Currency definitions
+- Tenor definitions
+- Commodity classifications
+- Interest-rate curve structures
+- Volatility surface structures
+- Existing lookup tables and identifier mappings
+- Formula relationships and referenced named ranges
 
-# 1. BUSINESS CONTEXT
+Do not execute macros or overwrite the workbook.
 
-The CCR portfolio analytics team is exploring an AI-assisted historical scenario shock recalibration capability.
+Determine whether any existing metadata directly connects Scenario Manager identifiers to HDS names or market-data tickers.
 
-A market-risk stakeholder has provided an Excel-based Scenario Manager workbook containing risk factors and prescribed historical scenario shocks.
+### Priority 2 — Build the mapping taxonomy
 
-The proposed analytical capability should eventually support questions such as:
+Classify all 4,347 distinct risk factors into financial risk-factor families.
 
-**Example 1 — FX**
+Determine which classes could plausibly use direct HDS series and which require derived calculations.
 
-"Using daily data, what historical percentile corresponds to a 10-business-day appreciation of JPY against USD of +10%, using observations from 2007 to the present?"
+Identify mappings supported by actual workbook evidence, not guessed string similarity.
 
-**Example 2 — Interest rates**
+### Priority 3 — Prepare optimized Olympus SQL
 
-"What is the worst historical rolling 10-business-day move of the Turkish 10-year swap rate, and what are its 98th, 99th and 99.5th percentiles?"
+Generate a small, prioritized collection of read-only SQL queries for execution through the authorized Data Workbench UI.
 
-Eventually, the system should also compare current Excel scenario shock definitions against statistically calculated historical shock candidates.
+Each query must:
+- Filter by a verified `as_of` partition.
+- Use selective market-factor identifiers or prefixes.
+- Return only necessary columns.
+- Avoid unnecessary full-table scans.
+- Avoid expensive unrestricted DISTINCT operations.
+- Include a purpose and expected evidence.
+- Explain possible failure or ambiguity.
+- Respect platform rate and access limits.
 
-The immediate objective is to determine whether the existing HDS data can support this functionality, how its market factors map to Scenario Manager factors, and what implementation is required.
+Prioritize discovery of:
+1. FX JPY/USD
+2. Turkish 10-year swaps
+3. ARA coal
+4. Representative bond futures basis factors
 
-# 2. AVAILABLE DATA SOURCES
+First check whether approved factor-reference tables or metadata views provide mappings more efficiently than the historical time-series table.
 
-## A. Scenario Manager workbook
+### Priority 4 — Separate evidence from speculation
 
-Locate the supplied `.xlsm` Scenario Manager workbook in the current workspace.
+For every proposed mapping, classify it as:
 
-It is a macro-enabled Excel workbook containing multiple risk-factor worksheets.
+- Confirmed
+- Candidate requiring validation
+- Derived relationship
+- Proxy requiring approval
+- Unmapped
 
-Previously observed categories include:
+Do not report numerical mapping coverage until the necessary HDS evidence exists.
 
-- Commodity prices
-- Bond futures basis
-- Other market-risk factor classes and subgroups to be discovered
-
-Observed columns include:
-
-- `riskfactor`
-- `rf_type`
-- `group`
-- `name`
-- `sub_group`
-- `unit`
-- `shift_type`
-- `shift`
-- `comments`
-
-Do not assume that all worksheets have identical schemas.
-
-Example scenario identifier:
-
-`cmdl.COAL.ARA.COAL`
-
-This identifier belongs to the Scenario Manager naming convention. It does not necessarily correspond directly to an HDS market-factor identifier.
-
-Inspect every relevant worksheet, its structure and risk-factor definitions.
-
-Use read-only Excel parsing. Preserve VBA, formatting, formulas and original workbook integrity. Do not execute macros. Do not overwrite the source file.
-
-## B. HDS Market Data
-
-The identified HDS table is:
-
-`gfolyrsk_cmrr_reporting.om_mr_hds_timeseries_mev`
-
-Previously observed columns include:
-
-- `mr_market_factor_level_mev_sk`
-- `run_id`
-- `timeseries_date`
-- `market_factor_id`
-- `market_factor_name`
-- `market_factor_type`
-- `mkf_refresh_date`
-- `source_system`
-- `source_ticker`
-- `ticker_valid_from`
-- `feed_code`
-- `frequency`
-- `market_factor_level`
-- `signoff_timestamp`
-- `dwh_business_date`
-- `as_of`
-- `snapshot_date`
-
-Verify these against the actual accessible schema.
-
-Important technical facts:
-
-1. HDS is accessible through Olympus Data Workbench, although some Python access paths may not have permission.
-2. The table is large and queries can be slow.
-3. `as_of` is a partition column and should be used for partition pruning.
-4. The value `20260630` has previously been used successfully as an `as_of` filter, but is not necessarily the latest partition.
-5. Historical observations may have different frequencies and multiple snapshots.
-6. Results may contain repeated market factors across historical dates, runs and snapshots.
-
-Previously observed HDS identifiers include:
-
-- `CMFP.COAL_ICE_NEWC.001M`
-- `CMFP.COAL_ICE_NEWC.012M`
-
-These appeared to represent Newcastle coal price series.
-
-They are not confirmed matches for the Scenario Manager ARA coal factor.
-
-Do not assume direct equivalence.
-
----
-
-# 3. CRITICAL PERFORMANCE REQUIREMENTS
-
-**HDS performance is a major constraint. Treat query efficiency as a mandatory requirement.**
-
-The objective is to discover mappings with the minimum practical number of remote queries.
-
-## 3.1 Query rules
-
-You MUST:
-
-1. Prefer existing metadata, cached schemas, approved reference tables and small lookup datasets over scanning the full HDS time-series table.
-2. Use explicit partition predicates such as `as_of = 20260630` when appropriate.
-3. Select only the necessary columns.
-4. Apply selective filters before requesting data.
-5. Use exact factor identifiers or narrow prefixes whenever available.
-6. Limit returned rows for exploratory queries.
-7. Reuse previous successful results rather than repeating queries.
-8. Cache metadata and mapping discoveries locally in the approved workspace.
-9. Explore query plans where supported and useful.
-10. Use read-only queries exclusively.
-11. Prefer bulk metadata discovery over one query per Excel risk factor.
-12. Record execution duration and approximate results size.
-
-Avoid:
-
-- `SELECT *` against large tables.
-- Full historical extraction during discovery.
-- Unrestricted table-wide `DISTINCT` or `GROUP BY`.
-- Global `ORDER BY` on large historical datasets.
-- Repeated leading-wildcard searches (`LIKE '%...%'`) against the entire table.
-- Full-table `COUNT(*)` operations simply to estimate size.
-- Unbounded joins between historical observations and Excel factor inventories.
-- Fetching market-factor levels when only factor metadata is required.
-
-**A SQL `LIMIT` restricts returned rows but does not necessarily prevent expensive scans. Never treat `LIMIT` alone as a performance safeguard.**
-
-## 3.2 Query execution budget
-
-Initial investigation limits:
-
-- Maximum 15 remote HDS queries.
-- Target execution time under 15 seconds per query.
-- Maximum 30 seconds for an individual query before stopping, where cancellation or timeout is supported.
-- Avoid repeating expensive unsuccessful queries.
-- Use a configured query timeout if the approved client supports one.
-- Reassess the approach after two slow or unsuccessful queries.
-
-These are investigation budgets, not a reason to bypass platform controls.
-
-If the query engine does not expose safe cancellation, avoid launching queries whose cost cannot be reasonably bounded.
-
-If a representative task needs a larger extract, document the required retrieval strategy instead of immediately downloading the dataset.
-
-## 3.3 Access and security
-
-Use only approved, already-authorized HDS connection methods.
-
-A previous Python access attempt returned `DATA_ACCESS_DENIED`.
-
-Treat this as an access-control result, not a technical obstacle to circumvent.
-
-You may examine existing approved connector documentation and non-secret connection code to identify supported access methods.
-
-You must NOT:
-
-- Search personal directories for passwords or credentials.
-- Open credential files or token stores.
-- Print environment variables containing secrets.
-- Copy authentication material from another runtime.
-- Change client identity or impersonate another user.
-- Attempt to bypass HDS access controls.
-- Transfer confidential datasets to unapproved external services.
-
-If the authorized connection does not work, report the precise blocker and provide queries that can be executed in the approved Data Workbench.
-
-Do not claim successful HDS access unless a read-only query actually succeeds.
-
----
-
-# 4. PHASE 1 — COMPLETE EXCEL WORKBOOK PROFILING
-
-Before querying HDS, fully investigate the Excel workbook.
-
-Use Python libraries such as `openpyxl` for read-only workbook inspection.
-
-## Tasks
-
-### 4.1 Worksheet inventory
-
-For each worksheet, identify:
-
-- Worksheet name
-- Number of data rows
-- Column names and data types
-- Risk-factor count
-- Distinct risk-factor types
-- Distinct groups and subgroups
-- Unit conventions
-- Shift types
-- Missing or duplicated factor identifiers
-- Existing shift coverage
-- Relevant formulas
-- Hidden or supporting lookup sheets
-- Potential mapping tables or metadata already contained in the workbook
-
-Distinguish scenario data sheets from configuration, informational and calculation sheets.
-
-### 4.2 Risk-factor classification
-
-Classify the workbook's risk factors into analytical families such as:
-
-- FX spot and FX forwards
-- Interest-rate curves and swaps
-- Credit spreads
-- Equities
-- Commodity prices
-- Commodity volatility
-- Interest-rate volatility
-- Bond futures basis
-- Other classes discovered in the workbook
-
-Determine which classes require:
-
-- Absolute shocks
-- Relative percentage shocks
-- Basis-point shocks
-- Volatility shocks
-- Spread shocks
-- Multiple underlying market series
-- Tenor or maturity-specific calculations
-
-Use actual workbook definitions instead of guessing from names.
-
-### 4.3 Generate an Excel factor inventory
-
-Create a structured inventory containing:
-
-`worksheet, row_number, riskfactor, factor_family, group, name, sub_group, unit, shift_type, current_shift, comments`
-
-Add useful technical fields:
-
-`normalized_name, potential_underlying, mapping_complexity, data_requirements`
-
-The normalized name is only a search aid. It is not evidence of a validated HDS mapping.
-
-### 4.4 Report workbook findings
+### Priority 5 — Produce an actionable findings report
 
 Return:
 
-- Total distinct risk factors
-- Distribution by risk-factor family
-- Distribution by unit and shift type
-- Duplicate and missing identifiers
-- Complex or derived factors
-- Existing mapping-related information
-- Potential data-quality concerns
+1. What we conclusively learned from the workbook.
+2. Whether the hidden worksheets contain useful market-data mapping information.
+3. How the 4,347 risk factors are distributed by asset class.
+4. What HDS access remains blocked.
+5. The exact prioritized SQL discovery queries ready for Data Workbench.
+6. The smallest representative dataset required for a working calibration prototype.
+7. The proposed scalable mapping and historical-extraction design.
 
-Do not start HDS extraction until the workbook inventory is complete.
+Do not build a chatbot, download large datasets, edit the source workbook, or execute any more remote Python HDS queries.
 
----
-
-# 5. PHASE 2 — INVESTIGATE AVAILABLE HDS METADATA
-
-Determine the most efficient authorized way to discover HDS factors.
-
-## 5.1 Connection assessment
-
-Inspect the approved Python and Olympus access routes.
-
-Identify:
-
-- Which HDS access method actually works
-- Whether the connection is read-only
-- Available metadata and reference-data interfaces
-- Query timeout support
-- Result-size limitations
-- Whether result caching exists
-- Whether batch querying is supported
-- Whether a factor lookup or identifier dictionary is available
-
-Do not troubleshoot authorization failures by attempting to access credentials.
-
-## 5.2 Source and identifier discovery
-
-Find out whether the environment contains approved reference tables or services mapping:
-
-- Scenario Manager risk-factor names
-- HDS `market_factor_id`
-- HDS `market_factor_name`
-- `source_ticker`
-- Market-factor type
-- Curve, benchmark, region or underlying
-- Currency and quotation
-- Tenor and maturity
-- Unit and scaling convention
-
-Prefer an authoritative reference-data mapping where available.
-
-Avoid reverse-engineering individual factor names if an approved mapping already exists.
-
-## 5.3 HDS metadata profile
-
-Determine,
+Continue the analysis using existing authorized local data and documentation. Return the actual findings, evidence and prioritized next actions—not merely a plan to investigate.
