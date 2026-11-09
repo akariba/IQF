@@ -1,49 +1,149 @@
-Continue the existing Shock Calibration POC.
+Continue developing the existing Shock Calibration Studio.
 
-The end-to-end audit has confirmed the current implementation status. Do not repeat the audit or generate more architecture documents.
+Your immediate objective is to deliver a working, interactive
+AI-powered quantitative analytics application.
 
-Our objective is a functional quantitative AI chatbot using locally downloaded Olympus historical market data across financial asset classes.
+The historical data ingestion, validation, Parquet/DuckDB
+storage, quantitative engine, and backend APIs have already
+been implemented. Build on these components.
 
-**Priority 1 — Finish data ingestion**
+WORKING APPROACH
 
-Fix the failing import API promotion test and verify that a new CSV or Parquet historical dataset can be imported, validated, registered in DuckDB and used immediately by the calculation engine.
+Focus on execution and visible functional progress.
 
-Implement the missing frontend import and validation screen.
+This is a POC, so keep engineering practical.
+Avoid unnecessary production-grade infrastructure,
+excessive abstractions, and speculative requirements.
 
-Test the complete process, not just individual functions.
+Make reasonable technical decisions independently.
+Implement, test, fix issues, and continue progressing.
+Do not repeatedly stop for assessments or approvals.
 
-**Priority 2 — Expand real historical datasets**
+1. BUILD THE CONVERSATIONAL ANALYTICS WORKSPACE
 
-Stop focusing on the existing FX example.
+Create a modern financial analytics interface inspired
+by ChatGPT and professional quantitative research tools.
 
-Use actual available Olympus metadata and the Scenario Manager risk-factor taxonomy to identify representative factors across interest rates, credit, equities, commodities and FX.
+Left sidebar:
+- Conversation history
+- Searchable risk-factor catalogue
+- Available historical datasets
+- Historical data ingestion
 
-Determine the exact historical files needed, their HDS factor IDs, observation frequencies, date ranges and financial definitions.
+Center:
+- Full conversational chatbot
+- Natural-language financial questions
+- Contextual follow-up questions
+- Clear quantitative explanations
+- Suggested analytical questions
 
-Use available authorized historical exports or permitted bounded downloads, without repeating queries against an exhausted quota.
+Right panel:
+- Interactive historical time-series charts
+- Rolling market movements
+- Historical shock distributions
+- Percentiles and statistical summaries
+- Comparison of multiple risk factors
+- Historical coverage and calculation methodology
 
-Prioritize Victor's Turkish 10-year swap requirement, but never replace it with an unverified instrument.
+Make the interface polished, intuitive, and responsive.
 
-**Priority 3 — Connect genuine AI**
+2. CONNECT THE CHATBOT TO THE QUANTITATIVE ENGINE
 
-Inspect the available approved enterprise AI integration options.
+Implement the complete workflow:
 
-Connect a real LLM to the existing analytical tools if an accessible provider is available.
+Natural-language question
+→ Financial intent interpretation
+→ Market factor identification
+→ Historical data retrieval from DuckDB
+→ Python quantitative calculations
+→ Analytical response
+→ Interactive visualizations
 
-Support flexible natural-language questions, factor discovery, dynamic tool selection and quantitative explanations.
+Support flexible financial questions rather than
+a fixed set of predefined queries.
 
-The chatbot must use locally stored historical observations, not query HDS during conversations.
+Reuse existing calculation tools and APIs.
 
-Do not present the demo parser as a real LLM.
+Ensure financial movement conventions are appropriate
+to the selected instrument.
 
-**Priority 4 — Demonstrate**
+3. ENABLE REAL LLM CAPABILITIES
 
-Show an end-to-end workflow:
+Integrate an available approved enterprise LLM
+using the existing environment and integrations.
 
-Historical dataset → Validation → Parquet → DuckDB → Python calculation → Chatbot response.
+Enable tool calling, financial reasoning, factor
+discovery, and conversational context.
 
-Demonstrate multiple financial factor families wherever actual validated historical data is available.
+Python should execute numerical calculations.
+The LLM should interpret questions, select tools,
+and explain the computed results.
 
-Provide a concise report of working functionality, tests, real data coverage and remaining blockers.
+If a real LLM connection is unavailable, continue
+building the complete application using the existing
+calculation interface.
 
-This is a POC. Prioritize functional implementation rather than production-grade infrastructure.
+Keep the integration ready for an approved model.
+Clearly distinguish local query handling from
+genuine LLM-powered interaction.
+
+4. CONTINUE HISTORICAL DATA INGESTION
+
+Expand beyond the existing FX dataset.
+
+Support interest rates, FX, credit, equity,
+and commodity risk factors.
+
+Use Olympus HDS through authorized access.
+
+Adapt extraction to Olympus limitations:
+- Query smaller historical periods where useful.
+- Persist successful extraction batches.
+- Resume from previously completed batches.
+- Respect enforced query quotas.
+- Continue application development independently
+  when Olympus is unavailable.
+
+Use existing CSV/Parquet imports whenever historical
+data is already available.
+
+Maintain appropriate data-quality checks and
+financial instrument identification.
+
+Do not make complete historical coverage a
+prerequisite for application development.
+
+5. IMPLEMENT AND RUN
+
+Develop the frontend and backend together.
+
+Connect the conversational interface to real
+historical calculations.
+
+Make charts and analytical panels respond dynamically
+to the user's questions.
+
+Run the application, resolve integration errors,
+and verify the complete user interaction.
+
+Continue improving functionality as you work.
+
+EXPECTED RESULT
+
+A running Shock Calibration Studio where I can:
+
+- Ask natural-language quantitative questions.
+- Explore available financial market factors.
+- Calculate historical shocks and percentiles.
+- Visualize historical market movements.
+- Compare financial instruments.
+- Import and analyze additional historical datasets.
+- Ask follow-up questions within the conversation.
+
+Prioritize delivering a usable application now.
+
+At completion, provide the application URL, a brief
+summary of implemented functionality, and any remaining
+external dependencies.
+
+Proceed with implementation.
